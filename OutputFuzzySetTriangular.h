@@ -12,7 +12,7 @@ public:
   virtual ~OutputFuzzySetTriangular() = default;
   std::array<double, 3> _t;
 protected:
-  virtual void write(std::ostream& os) const override;
+
 };
 
 #endif // OUTPUTFUZZYSETTRIANGULAR_H

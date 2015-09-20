@@ -12,7 +12,6 @@ public:
   virtual ~InputFuzzySetTriangular() = default;
 protected:
   std::array<double, 3> _t;
-  virtual void write(std::ostream& os) const override;
   virtual double membership() const override;
 };
 

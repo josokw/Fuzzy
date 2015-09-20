@@ -11,7 +11,7 @@ public:
   OutputFuzzySet(const std::string& name): FuzzySet{name} {}
   void setMbs(double mbs) const { _mbs = mbs; }
 protected:
-  virtual void write(std::ostream& os) const {}
+  virtual void write(std::ostream& os) const override;
 };
 
 #endif // OUTPUTFUZZYSET_H

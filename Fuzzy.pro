@@ -9,7 +9,9 @@ SOURCES += main.cpp \
     InputFuzzySet.cpp \
     OutputFuzzySet.cpp \
     InputFuzzySetTriangular.cpp \
-    OutputFuzzySetTriangular.cpp
+    OutputFuzzySetTriangular.cpp \
+    InputFuzzySetTrapezoidal.cpp \
+    OutputFuzzySetTrapezoidal.cpp
 
 include(deployment.pri)
 qtcAddDeployment()
@@ -21,5 +23,7 @@ HEADERS += \
     InputFuzzySetTriangular.h \
     OutputFuzzySetTriangular.h \
     FuzzyLogic.h \
-    Defuzzification.h
+    Defuzzification.h \
+    InputFuzzySetTrapezoidal.h \
+    OutputFuzzySetTrapezoidal.h
 

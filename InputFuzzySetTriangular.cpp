@@ -7,10 +7,6 @@ InputFuzzySetTriangular::InputFuzzySetTriangular(const std::string& name,
   , _t{t1, t2, t3}
 {}
 
-void InputFuzzySetTriangular::write(std::ostream &os) const {
-  os << _name << " input = " << _input << " mbs = " << _mbs;
-}
-
 double InputFuzzySetTriangular::membership() const {
   _mbs = 0;
   if(_input > _t[0] && _input <= _t[1]) {

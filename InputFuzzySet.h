@@ -13,7 +13,7 @@ public:
 protected:
   double _input = 0;
   mutable double _mbs = 0;
-  virtual void write(std::ostream& os) const = 0;
+  virtual void write(std::ostream& os) const override;
   virtual double membership() const = 0;
 };
 
