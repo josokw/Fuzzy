@@ -1,7 +1,7 @@
 #ifndef DEFUZZIFICATION
 #define DEFUZZIFICATION
 
-#include "OutputFuzzySetTriangular.h"
+#include "OutputFuzzySet.h"
 #include <array>
 #include <cmath>
 #include <iostream>
@@ -32,12 +32,11 @@ double defuzMeanOfMaximum(
       ++index;
     }
 
-  std::cout << "hIndex " << highestIndex
-            << "  hMBS " << highestMBS
+  std::cout << "index " << highestIndex
+            << "  MBS " << highestMBS
             << "  MOM = " << fs[highestIndex]->meanOfMaximum() << std::endl;
 
   return fs[highestIndex]->meanOfMaximum();
 }
 
 #endif // DEFUZZIFICATION
-
