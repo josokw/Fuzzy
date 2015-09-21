@@ -3,11 +3,19 @@
 
 #include "OutputFuzzySetTriangular.h"
 #include <array>
+#include <cmath>
 #include <iostream>
+
+const double EPSILON = 1e-4;
+
+inline
+bool equals(double d1, double d2) {
+  return std::fabs(d1 - d2) < EPSILON;
+}
 
 template<int N>
 double defuzMeanOfMaximumTriangular(
-    const std::array<OutputFuzzySetTriangular*, N>& fs)
+    const std::array<OutputFuzzySet*, N>& fs)
 {
   std::cout << "\n-- Defuzzification by MoM method:\n";
   for(auto& f : fs) {
@@ -24,7 +32,11 @@ double defuzMeanOfMaximumTriangular(
       ++index;
     }
 
-  return fs[highestIndex]->_t[1];
+  std::cout << "hIndex " << highestIndex
+            << "  hMBS " << highestMBS
+            << "  MOM = " << fs[highestIndex]->meanOfMaximum() << std::endl;
+
+  return fs[highestIndex]->meanOfMaximum();
 }
 
 #endif // DEFUZZIFICATION

@@ -1,6 +1,7 @@
 #include "Defuzzification.h"
 #include "FuzzyLogic.h"
 #include "InputFuzzySetTriangular.h"
+#include "InputFuzzySetTrapezoidal.h"
 #include "OutputFuzzySetTriangular.h"
 
 #include <array>
@@ -19,20 +20,20 @@ int main()
   InputFuzzySetTriangular great("Service = great", 5, 7.5, 10);
 
   // Liguistic variable Food
-  InputFuzzySetTriangular rancid("Food = rancid", 0, 1.5, 4);
-  InputFuzzySetTriangular delicious("Food = delicious", 6, 8.5, 10);
+  InputFuzzySetTrapezoidal rancid("Food = rancid", 0, 0, 1.5, 4);
+  InputFuzzySetTrapezoidal delicious("Food = delicious", 6, 8.5, 10, 10);
 
   // Linguistic variable Tip
   OutputFuzzySetTriangular cheap("Tip = cheap", 0, 5, 10);
   OutputFuzzySetTriangular average("Tip = average", 10, 15, 20);
-  OutputFuzzySetTriangular generous("Tip = generous", 20, 30, 40);
+  OutputFuzzySetTriangular generous("Tip = generous", 20, 25, 30);
 
-  std::array<InputFuzzySet*, 3> fuzzyFood{&poor, &good, &great};
-  std::array<InputFuzzySet*, 2> fuzzyService{&rancid, &delicious};
-  std::array<OutputFuzzySetTriangular*, 3> fuzzyTip{&cheap, &average, &generous};
+  std::array<InputFuzzySet*, 3> fuzzyService{&poor, &good, &great};
+  std::array<InputFuzzySet*, 2> fuzzyFood{&rancid, &delicious};
+  std::array<OutputFuzzySet*, 3> fuzzyTip{&cheap, &average, &generous};
 
-  for(int service = 0; service < 11; ++service) {
-      for(int food = 0; food < 11; ++food) {
+  for(int food = 0; food < 11; ++food) {
+      for(int service = 0; service < 11; ++service) {
           cout << "-------- Service = "<< service << " Food = " << food << endl;
           for(auto& fs : fuzzyService) {
               fs->setInput(service);
@@ -47,8 +48,8 @@ int main()
           average.setMbs(good.getMbs());
           generous.setMbs((great or delicious).getMbs());
 
-          cout << "\nTip = "
-               << defuzMeanOfMaximumTriangular<3>(fuzzyTip) << endl << endl;
+          cout << "Tip = " << int(defuzMeanOfMaximumTriangular<3>(fuzzyTip))
+               << "%" << endl;
           getchar();
         }
     }

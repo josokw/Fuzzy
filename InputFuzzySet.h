@@ -12,7 +12,6 @@ public:
   void setInput(double input) { _input = input; membership(); }
 protected:
   double _input = 0;
-  mutable double _mbs = 0;
   virtual void write(std::ostream& os) const override;
   virtual double membership() const = 0;
 };

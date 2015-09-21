@@ -1,7 +1,6 @@
 #ifndef INPUTFUZZYSETTRAPEZOIDAL_H
 #define INPUTFUZZYSETTRAPEZOIDAL_H
 
-
 #include "InputFuzzySet.h"
 #include <array>
 

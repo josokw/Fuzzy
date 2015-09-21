@@ -12,13 +12,13 @@ class FuzzySet {
   friend OutputFuzzySet operator&&(const FuzzySet& lhs, const FuzzySet& rhs);
   friend OutputFuzzySet operator!(const FuzzySet& fs);
 public:
-  FuzzySet() = default;
-  FuzzySet(const std::string& name): _name{name} {}
+  FuzzySet(): _name{}, _mbs{0} {}
+  FuzzySet(const std::string& name): _name{name}, _mbs{0} {}
   virtual ~FuzzySet() = default;
   double getMbs() const { return _mbs; }
 protected:
   std::string _name = "";
-  mutable double _mbs = 0;
+  mutable double _mbs;
   virtual void write(std::ostream& os) const = 0;
 };
 

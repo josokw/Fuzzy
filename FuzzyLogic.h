@@ -3,11 +3,12 @@
 
 #include "FuzzySet.h"
 #include "OutputFuzzySet.h"
+#include <iostream>
 
 inline
 OutputFuzzySet operator||(const FuzzySet& lhs, const FuzzySet& rhs) {
   OutputFuzzySet result;
-  result._mbs = std::max(lhs.getMbs(), rhs.getMbs());
+  result._mbs = std::max(lhs._mbs, rhs._mbs);
   return result;
 }
 
@@ -26,4 +27,3 @@ OutputFuzzySet operator!(const FuzzySet& fs) {
 }
 
 #endif // FUZZYLOGIC
-

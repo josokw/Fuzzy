@@ -11,21 +11,40 @@ InputFuzzySetTrapezoidal::InputFuzzySetTrapezoidal(const std::string& name,
 {}
 
 double InputFuzzySetTrapezoidal::membership() const {
-  _mbs = 0;
-  if(_input > _t[0] && _input <= _t[1]) {
-      _mbs = (_t[1] - _input) / (_t[1] - _t[0]);
-    }
-  else
+   if(_input < _t[0])
     {
-      if(_input > _t[2] && _input <= _t[3]) {
-          _mbs = (_input - _t[3]) / (_t[2] - _t[3]);
+      _mbs = 0;
+    }
+  else if(_input <= _t[1])
+    {
+      if(_t[0] == _t[1])
+        {
+          _mbs = 1;
         }
       else
         {
-          if(_input > _t[1] && _input < _t[2] ) {
-              _mbs = 1;
-            }
+          _mbs = (_input - _t[0]) / (_t[1] - _t[0]);
         }
     }
+  else if(_input <= _t[2])
+    {
+      _mbs = 1;
+    }
+  else if(_input <= _t[3])
+    {
+      if(_t[2] == _t[3])
+        {
+          _mbs = 1;
+        }
+      else
+        {
+          _mbs = 1 - ((_input - _t[2]) / (_t[3] - _t[2]));
+        }
+    }
+  else
+    {
+      _mbs = 0;
+    }
+
   return _mbs;
 }
