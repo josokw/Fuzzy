@@ -1,5 +1,4 @@
 #include "OutputFuzzySetTrapezoidal.h"
-#include <iostream>
 
 OutputFuzzySetTrapezoidal::OutputFuzzySetTrapezoidal(const std::string& name,
                                                    double t1, double t2,

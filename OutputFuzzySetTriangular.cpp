@@ -1,5 +1,4 @@
 #include "OutputFuzzySetTriangular.h"
-#include <iostream>
 
 OutputFuzzySetTriangular::OutputFuzzySetTriangular(const std::string& name,
                                                    double t1, double t2,

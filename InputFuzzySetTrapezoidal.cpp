@@ -1,6 +1,4 @@
 #include "InputFuzzySetTrapezoidal.h"
-
-#include "InputFuzzySetTrapezoidal.h"
 #include <iostream>
 
 InputFuzzySetTrapezoidal::InputFuzzySetTrapezoidal(const std::string& name,
