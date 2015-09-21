@@ -47,8 +47,8 @@ int main()
           cheap = poor or rancid;
           average = good;
           generous = great or delicious;
-
-          cout << "Tip = " << int(defuzMeanOfMaximumTriangular<3>(fuzzyTip))
+          // Defuzzification
+          cout << "Tip = " << int(defuzMeanOfMaximum<3>(fuzzyTip))
                << "%" << endl;
           getchar();
         }

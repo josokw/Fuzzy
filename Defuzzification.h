@@ -14,7 +14,7 @@ bool equals(double d1, double d2) {
 }
 
 template<int N>
-double defuzMeanOfMaximumTriangular(
+double defuzMeanOfMaximum(
     const std::array<OutputFuzzySet*, N>& fs)
 {
   std::cout << "\n-- Defuzzification by MoM method:\n";
