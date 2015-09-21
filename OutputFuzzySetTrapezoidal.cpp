@@ -7,3 +7,9 @@ OutputFuzzySetTrapezoidal::OutputFuzzySetTrapezoidal(const std::string& name,
   : OutputFuzzySet{name}
   , _t{t1, t2, t3, t4}
 {}
+
+OutputFuzzySetTrapezoidal&
+OutputFuzzySetTrapezoidal::operator=(const OutputFuzzySet& other){
+  _mbs = other.getMbs();
+  return *this;
+}

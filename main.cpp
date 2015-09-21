@@ -44,9 +44,9 @@ int main()
               cout << *fs << endl;
             }
           // Rule base
-          cheap.setMbs((poor or rancid).getMbs());
-          average.setMbs(good.getMbs());
-          generous.setMbs((great or delicious).getMbs());
+          cheap = poor or rancid;
+          average = good;
+          generous = great or delicious;
 
           cout << "Tip = " << int(defuzMeanOfMaximumTriangular<3>(fuzzyTip))
                << "%" << endl;

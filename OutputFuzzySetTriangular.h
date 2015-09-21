@@ -10,6 +10,7 @@ public:
   OutputFuzzySetTriangular(const std::string& name,
                            double t0, double t1, double t2);
   virtual ~OutputFuzzySetTriangular() = default;
+  OutputFuzzySetTriangular& operator=(const OutputFuzzySet& other);
   virtual double meanOfMaximum() const override { return _t[1]; }
 protected:
   std::array<double, 3> _t;

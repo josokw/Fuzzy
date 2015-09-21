@@ -9,8 +9,7 @@ class OutputFuzzySet : public FuzzySet
 public:
   OutputFuzzySet(): FuzzySet{} {}
   OutputFuzzySet(const std::string& name): FuzzySet{name} {}
-  OutputFuzzySet& operator=(const OutputFuzzySet& other)
-  { this->_mbs = other._mbs; return *this; }
+  OutputFuzzySet(const FuzzySet& fs) { _mbs = fs.getMbs(); }
   void setMbs(double mbs) { _mbs = mbs; }
   virtual double meanOfMaximum() const { return 0; }
 protected:

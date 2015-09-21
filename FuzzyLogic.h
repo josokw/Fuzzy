@@ -3,7 +3,6 @@
 
 #include "FuzzySet.h"
 #include "OutputFuzzySet.h"
-#include <iostream>
 
 inline
 OutputFuzzySet operator||(const FuzzySet& lhs, const FuzzySet& rhs) {
@@ -15,14 +14,14 @@ OutputFuzzySet operator||(const FuzzySet& lhs, const FuzzySet& rhs) {
 inline
 OutputFuzzySet operator&&(const FuzzySet& lhs, const FuzzySet& rhs) {
   OutputFuzzySet result;
-  result._mbs = std::min(lhs.getMbs(), rhs.getMbs());
+  result._mbs = std::min(lhs._mbs, rhs._mbs);
   return result;
 }
 
 inline
 OutputFuzzySet operator!(const FuzzySet& fs) {
   OutputFuzzySet result;
-  result._mbs = 1 - fs.getMbs();
+  result._mbs = 1 - fs._mbs;
   return result;
 }
 
