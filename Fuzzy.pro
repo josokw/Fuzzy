@@ -25,5 +25,6 @@ HEADERS += \
     FuzzyLogic.h \
     Defuzzification.h \
     InputFuzzySetTrapezoidal.h \
-    OutputFuzzySetTrapezoidal.h
+    OutputFuzzySetTrapezoidal.h \
+    AppInfo.h
 
