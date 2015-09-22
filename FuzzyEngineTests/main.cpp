@@ -5,11 +5,11 @@
 
 using namespace std;
 
-SUITE(classOutputFuzzySetTriangular)
+SUITE(FuzzyEngine)
 {
   TEST(OutputFuzzySetTriangular)
   {
-    cout << "OutputFuzzySetTriangular MOM\n";
+    cout << "OutputFuzzySetTriangular symmetrical MOM\n";
     OutputFuzzySetTriangular ifz("Test", 0, 5, 10);
     ifz.setMbs(0.5);
     CHECK_EQUAL(5.0, ifz.meanOfMaximum());
@@ -20,7 +20,7 @@ SUITE(classOutputFuzzySetTriangular)
 
   TEST(OutputFuzzySetTrapezoidal)
   {
-    cout << "OutputFuzzySetTrapezoidal MOM\n";
+    cout << "OutputFuzzySetTrapezoidal symmetrical MOM\n";
     OutputFuzzySetTrapezoidal ifz("Test", 0, 5, 10, 15);
     ifz.setMbs(0.5);
     CHECK_EQUAL(7.5, ifz.meanOfMaximum());
