@@ -8,10 +8,10 @@ class OutputFuzzySetTrapezoidal : public OutputFuzzySet
 {
 public:
   OutputFuzzySetTrapezoidal(const std::string& name,
-                           double t0, double t1, double t2, double t3);
+                            double t0, double t1, double t2, double t3);
   virtual ~OutputFuzzySetTrapezoidal() = default;
   OutputFuzzySetTrapezoidal& operator=(const OutputFuzzySet& other);
-  virtual double meanOfMaximum() const override { return (_t[2] - _t[1]) / 2; }
+  virtual double meanOfMaximum() const override { return (_t[1] + _t[2]) / 2; }
 protected:
   std::array<double, 4> _t;
 };
