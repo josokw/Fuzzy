@@ -12,6 +12,8 @@ public:
   OutputFuzzySet(const FuzzySet& fs) { _mbs = fs.getMbs(); }
   void setMbs(double mbs) { _mbs = mbs; }
   virtual double meanOfMaximum() const { return 0; }
+  virtual double firstOfMaxima() const { return 0; }
+  virtual double lastOfMaxima() const { return 0; }
 protected:
   virtual void write(std::ostream& os) const override;
 };

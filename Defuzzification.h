@@ -6,37 +6,59 @@
 #include <cmath>
 #include <iostream>
 
-const double EPSILON = 1e-4;
+namespace {
 
-inline
-bool equals(double d1, double d2) {
-  return std::fabs(d1 - d2) < EPSILON;
+  const double EPSILON = 1e-4;
+
+  inline
+  bool equals(double d1, double d2) {
+    return std::fabs(d1 - d2) < EPSILON;
+  }
+
+  template<int N>
+  const OutputFuzzySet* findHighestMbsSet(
+      const std::array<OutputFuzzySet*, N>& fs) {
+    for(auto& f : fs) {
+        std::cout << *f << std::endl;
+      }
+    double highestMBS = 0;
+    int highestIndex = 0;
+    int index = 0;
+    for(auto& f : fs) {
+        if(f->getMbs() > highestMBS) {
+            highestMBS = f->getMbs();
+            highestIndex = index;
+          }
+        ++index;
+      }
+
+    std::cout << "index " << highestIndex
+              << "  MBS " << highestMBS
+              << std::endl;
+
+    return fs[highestIndex];
+  }
 }
 
 template<int N>
 double defuzMeanOfMaximum(
-    const std::array<OutputFuzzySet*, N>& fs)
-{
+    const std::array<OutputFuzzySet*, N>& fs) {
   std::cout << "\n-- Defuzzification by MoM method:\n";
-  for(auto& f : fs) {
-      std::cout << *f << std::endl;
-    }
-  double highestMBS = 0;
-  int highestIndex = 0;
-  int index = 0;
-  for(auto& f : fs) {
-      if(f->getMbs() > highestMBS) {
-          highestMBS = f->getMbs();
-          highestIndex = index;
-        }
-      ++index;
-    }
+  return findHighestMbsSet<N>(fs)->meanOfMaximum();
+}
 
-  std::cout << "index " << highestIndex
-            << "  MBS " << highestMBS
-            << "  MOM = " << fs[highestIndex]->meanOfMaximum() << std::endl;
+template<int N>
+double defuzFirstOfMaxima(
+    const std::array<OutputFuzzySet*, N>& fs) {
+  std::cout << "\n-- Defuzzification by FoM method:\n";
+  return findHighestMbsSet<N>(fs)->firstOfMaxima();
+}
 
-  return fs[highestIndex]->meanOfMaximum();
+template<int N>
+double defuzLastOfMaxima(
+    const std::array<OutputFuzzySet*, N>& fs) {
+  std::cout << "\n-- Defuzzification by LoM method:\n";
+  return findHighestMbsSet<N>(fs)->lastOfMaxima();
 }
 
 #endif // DEFUZZIFICATION

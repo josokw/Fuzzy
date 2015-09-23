@@ -47,8 +47,13 @@ int main()
           average = good;
           generous = great or delicious;
           // Defuzzification
-          cout << "Tip = " << int(defuzMeanOfMaximum<3>(fuzzyTip))
+          cout << "-- MOM Tip = " << int(defuzMeanOfMaximum<3>(fuzzyTip))
                << "%" << endl;
+          cout << "-- FOM Tip = " << int(defuzFirstOfMaxima<3>(fuzzyTip))
+               << "%" << endl;
+          cout << "-- LOM Tip = " << int(defuzLastOfMaxima<3>(fuzzyTip))
+               << "%" << endl;
+
           getchar();
         }
     }

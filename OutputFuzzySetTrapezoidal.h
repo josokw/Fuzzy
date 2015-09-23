@@ -12,6 +12,8 @@ public:
   virtual ~OutputFuzzySetTrapezoidal() = default;
   OutputFuzzySetTrapezoidal& operator=(const OutputFuzzySet& other);
   virtual double meanOfMaximum() const override { return (_t[1] + _t[2]) / 2; }
+  virtual double firstOfMaxima() const override { return _t[1]; }
+  virtual double lastOfMaxima() const override { return _t[2]; }
 protected:
   std::array<double, 4> _t;
 };

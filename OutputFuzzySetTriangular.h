@@ -12,6 +12,8 @@ public:
   virtual ~OutputFuzzySetTriangular() = default;
   OutputFuzzySetTriangular& operator=(const OutputFuzzySet& other);
   virtual double meanOfMaximum() const override { return _t[1]; }
+  virtual double firstOfMaxima() const override { return _t[1]; }
+  virtual double lastOfMaxima() const override { return _t[1]; }
 protected:
   std::array<double, 3> _t;
 };
