@@ -19,10 +19,13 @@ LIBS += -lunittest++
 
 CONFIG(debug, debug|release) {
 #LIBS += ../FuzzyDebug/*.o
+  LIBS += ../FuzzyDebug/FuzzySet.o
+  LIBS += ../FuzzyDebug/InputFuzzySet.o
+  LIBS += ../FuzzyDebug/OutputFuzzySet.o
+  LIBS += ../FuzzyDebug/InputFuzzySetTrapezoidal.o
+  LIBS += ../FuzzyDebug/InputFuzzySetTriangular.o
   LIBS += ../FuzzyDebug/OutputFuzzySetTrapezoidal.o
   LIBS += ../FuzzyDebug/OutputFuzzySetTriangular.o
-  LIBS += ../FuzzyDebug/OutputFuzzySet.o
-  LIBS += ../FuzzyDebug/FuzzySet.o
 }
 CONFIG(release, debug|release) {
   LIBS += ../FuzzyRelease/OutputFuzzySetTraiangular.o

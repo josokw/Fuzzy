@@ -1,3 +1,5 @@
+#include "InputFuzzySetTriangular.h"
+#include "InputFuzzySetTrapezoidal.h"
 #include "OutputFuzzySetTriangular.h"
 #include "OutputFuzzySetTrapezoidal.h"
 #include <unittest++/UnitTest++.h>
@@ -7,20 +9,61 @@ using namespace std;
 
 SUITE(FuzzyEngine)
 {
-  TEST(OutputFuzzySetTriangular)
+  TEST(mbs_InputFuzzySetTriangular)
   {
-    cout << "OutputFuzzySetTriangular symmetrical MOM\n";
-    OutputFuzzySetTriangular ifz("Test", 0, 5, 10);
-    ifz.setMbs(0.5);
-    CHECK_EQUAL(5.0, ifz.meanOfMaximum());
-    ifz.setMbs(0.1);
-    CHECK_EQUAL(5.0, ifz.meanOfMaximum());
+    cout << "-- InputFuzzySetTriangular mbs\n";
+    InputFuzzySetTriangular ifz("Test", 5, 10, 15);
+    ifz.setInput(2.5);
+    CHECK_EQUAL(0.0, ifz.getMbs());
+    ifz.setInput(7.5);
+    CHECK_EQUAL(0.5, ifz.getMbs());
+    ifz.setInput(12.5);
+    CHECK_EQUAL(0.5, ifz.getMbs());
+    ifz.setInput(15.0);
+    CHECK_EQUAL(0.0, ifz.getMbs());
+    ifz.setInput(17.5);
+    CHECK_EQUAL(0.0, ifz.getMbs());
     cout << endl;
   }
 
-  TEST(OutputFuzzySetTrapezoidal)
+  TEST(mbs_InputFuzzySetTrapezoidal)
   {
-    cout << "OutputFuzzySetTrapezoidal symmetrical MOM\n";
+    cout << "-- InputFuzzySetTrapezoidal mbs\n";
+    InputFuzzySetTrapezoidal ifz("Test", 0, 5, 10, 15);
+    ifz.setInput(2.5);
+    CHECK_EQUAL(0.5, ifz.getMbs());
+    ifz.setInput(7.5);
+    CHECK_EQUAL(1.0, ifz.getMbs());
+    ifz.setInput(12.5);
+    CHECK_EQUAL(0.5, ifz.getMbs());
+    ifz.setInput(-5);
+    CHECK_EQUAL(0.0, ifz.getMbs());
+    cout << endl;
+  }
+
+  TEST(MOMsym_OutputFuzzySetTriangular)
+  {
+    cout << "-- OutputFuzzySetTriangular symmetrical MOM\n";
+    OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+    ofz.setMbs(0.5);
+    CHECK_EQUAL(5.0, ofz.meanOfMaximum());
+    ofz.setMbs(0.1);
+    CHECK_EQUAL(5.0, ofz.meanOfMaximum());
+    cout << endl;
+  }
+
+  TEST(MOM_OutputFuzzySetTriangular)
+  {
+    cout << "-- OutputFuzzySetTriangular not symmetrical MOM\n";
+    OutputFuzzySetTriangular ofz("Test", 0, 10, 30);
+    ofz.setMbs(0.5);
+    CHECK_EQUAL(25.0 / 2, ofz.meanOfMaximum());
+    cout << endl;
+  }
+
+  TEST(MOMsym_OutputFuzzySetTrapezoidal)
+  {
+    cout << "-- OutputFuzzySetTrapezoidal symmetrical MOM\n";
     OutputFuzzySetTrapezoidal ifz("Test", 0, 5, 10, 15);
     ifz.setMbs(0.5);
     CHECK_EQUAL(7.5, ifz.meanOfMaximum());
@@ -28,6 +71,16 @@ SUITE(FuzzyEngine)
     CHECK_EQUAL(7.5, ifz.meanOfMaximum());
     cout << endl;
   }
+
+  TEST(MOM_OutputFuzzySetTrapezoidal)
+  {
+    cout << "-- OutputFuzzySetTrapezoidal not symmetrical MOM\n";
+    OutputFuzzySetTrapezoidal ifz("Test", 0, 10, 20, 40);
+    ifz.setMbs(0.5);
+    CHECK_EQUAL(35.0 / 2, ifz.meanOfMaximum());
+    cout << endl;
+  }
+
 }
 
 int main()
