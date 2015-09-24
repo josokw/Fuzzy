@@ -53,6 +53,8 @@ int main()
                << "%" << endl;
           cout << "-- LOM Tip = " << int(defuzLastOfMaxima<3>(fuzzyTip))
                << "%" << endl;
+          cout << "-- WA  Tip = " << int(defuzWeightedAverage<3>(fuzzyTip))
+               << "%" << endl;
 
           getchar();
         }

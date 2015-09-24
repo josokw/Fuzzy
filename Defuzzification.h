@@ -61,4 +61,19 @@ double defuzLastOfMaxima(
   return findHighestMbsSet<N>(fs)->lastOfMaxima();
 }
 
+template<int N>
+double defuzWeightedAverage(
+    const std::array<OutputFuzzySet*, N>& fs) {
+  std::cout << "\n-- Defuzzification by WA method:\n";
+
+  double numerator = 0;
+  double denomenator = 0;
+
+  for(auto& f : fs) {
+     numerator += f->getMbs() * f->meanOfMaximum();
+     denomenator += f->getMbs();
+    }
+  return denomenator != 0.0 ? numerator / denomenator : 0;
+}
+
 #endif // DEFUZZIFICATION
