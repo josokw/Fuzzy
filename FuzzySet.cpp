@@ -3,6 +3,5 @@
 
 std::ostream& operator<<(std::ostream& os, const FuzzySet& fs)
 {
-  fs.write(os);
-  return os;
+  return fs.write(os);
 }

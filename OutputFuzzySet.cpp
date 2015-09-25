@@ -1,6 +1,6 @@
 #include "OutputFuzzySet.h"
 #include <iostream>
 
-void OutputFuzzySet::write(std::ostream &os) const {
-  os << _name << " mbs = " << _mbs;
+std::ostream& OutputFuzzySet::write(std::ostream &os) const {
+  return os << _name << " mbs = " << _mbs;
 }

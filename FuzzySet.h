@@ -19,7 +19,7 @@ public:
 protected:
   std::string _name = "";
   mutable double _mbs;
-  virtual void write(std::ostream& os) const = 0;
+  virtual std::ostream& write(std::ostream& os) const = 0;
 };
 
 #endif // FUZZYSET_H

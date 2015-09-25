@@ -2,10 +2,10 @@
 #include <iostream>
 
 InputFuzzySetTrapezoidal::InputFuzzySetTrapezoidal(const std::string& name,
-                                                   double t1, double t2,
-                                                   double t3, double t4)
+                                                   double t0, double t1,
+                                                   double t2, double t3)
   : InputFuzzySet{name}
-  , _t{t1, t2, t3, t4}
+  , _t{t0, t1, t2, t3}
 {}
 
 double InputFuzzySetTrapezoidal::membership() const {

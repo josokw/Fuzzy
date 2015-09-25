@@ -15,7 +15,7 @@ public:
   virtual double firstOfMaxima() const { return 0; }
   virtual double lastOfMaxima() const { return 0; }
 protected:
-  virtual void write(std::ostream& os) const override;
+  virtual std::ostream& write(std::ostream& os) const override;
 };
 
 #endif // OUTPUTFUZZYSET_H

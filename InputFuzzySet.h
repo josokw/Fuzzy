@@ -12,7 +12,7 @@ public:
   void setInput(double input) { _input = input; membership(); }
 protected:
   double _input = 0;
-  virtual void write(std::ostream& os) const override;
+  virtual std::ostream& write(std::ostream& os) const override;
   virtual double membership() const = 0;
 };
 

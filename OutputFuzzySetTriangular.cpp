@@ -1,10 +1,10 @@
 #include "OutputFuzzySetTriangular.h"
 
 OutputFuzzySetTriangular::OutputFuzzySetTriangular(const std::string& name,
-                                                   double t1, double t2,
-                                                   double t3)
+                                                   double t0, double t1,
+                                                   double t2)
   : OutputFuzzySet{name}
-  , _t{t1, t2, t3}
+  , _t{t0, t1, t2}
 {}
 
 OutputFuzzySetTriangular&

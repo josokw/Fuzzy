@@ -1,6 +1,6 @@
 #include "InputFuzzySet.h"
 #include <iostream>
 
-void InputFuzzySet::write(std::ostream &os) const {
-  os << _name << " input = " << _input << " mbs = " << _mbs;
+std::ostream& InputFuzzySet::write(std::ostream &os) const {
+  return os << _name << " input = " << _input << " mbs = " << _mbs;
 }

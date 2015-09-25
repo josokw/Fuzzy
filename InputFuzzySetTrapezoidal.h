@@ -8,7 +8,7 @@ class InputFuzzySetTrapezoidal : public InputFuzzySet
 {
 public:
   InputFuzzySetTrapezoidal(const std::string& name,
-                          double t0, double t1, double t2, double t4);
+                           double t0, double t1, double t2, double t3);
   virtual ~InputFuzzySetTrapezoidal() = default;
 protected:
   std::array<double, 4> _t;

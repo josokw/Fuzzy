@@ -13,7 +13,7 @@ using namespace std;
 
 int main()
 {
-  cout << "-- " APPNAME_VERSION " --------------------------------------- \n\n";
+  cout << "-- " APPNAME_VERSION " ----------------------------" << endl << endl;
 
   // Linguistic variable Service
   InputFuzzySetTriangular poor("Service = poor", 0, 2.5 ,5);
@@ -34,6 +34,7 @@ int main()
   for(int food = 0; food < 11; ++food) {
       for(int service = 0; service < 11; ++service) {
           cout << "-------- Service = "<< service << " Food = " << food << endl;
+          // Set inputs
           for(auto& fs : fuzzyService) {
               fs->setInput(service);
               cout << *fs << endl;
