@@ -5,5 +5,5 @@ Build management only implemented for Linux.
 
 Contains some unit tests: sudo apt-get install libunitest++-dev
 
-Create in dir Fuzzy to subdirs: FuzzyDebug and FuzzyRelease. Use them at project configuring.
+Create in dir Fuzzy two subdirs: FuzzyDebug and FuzzyRelease. Use them at project configuring.
 These files are used in the .pro files.
