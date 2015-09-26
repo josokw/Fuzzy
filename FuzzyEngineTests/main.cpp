@@ -108,6 +108,20 @@ SUITE(FuzzyEngine)
     cout << endl;
   }
 
+  TEST(FuzzyLogic_not)
+  {
+    cout << "-- Fuzzy logic NOT" << endl;
+    InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
+    InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
+    OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+    ifz1.setInput(12.5);
+    ifz2.setInput(12.5);
+    ofz = not(ifz1 or ifz2);
+    CHECK_EQUAL(0.5, ofz.getMbs());
+    cout << endl;
+  }
+
+
 }
 
 int main()
