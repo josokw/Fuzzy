@@ -14,10 +14,26 @@ CONFIG(release, debug|release) {
 }
 
 SOURCES += \
-   FuzzyEngine.cpp
+   FuzzyEngine.cpp \
+   FuzzySet.cpp \
+   InputFuzzySet.cpp \
+   InputFuzzySetTrapezoidal.cpp \
+   InputFuzzySetTriangular.cpp \
+   OutputFuzzySet.cpp \
+   OutputFuzzySetTrapezoidal.cpp \
+   OutputFuzzySetTriangular.cpp
 
 HEADERS += \
-   FuzzyEngine.h
+   FuzzyEngine.h \
+   Defuzzification.h \
+   FuzzyLogic.h \
+   FuzzySet.h \
+   InputFuzzySet.h \
+   InputFuzzySetTrapezoidal.h \
+   InputFuzzySetTriangular.h \
+   OutputFuzzySet.h \
+   OutputFuzzySetTrapezoidal.h \
+   OutputFuzzySetTriangular.h
 
 #unix {
 #    target.path = /usr/lib
