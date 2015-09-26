@@ -1,3 +1,4 @@
+#include "FuzzyLogic.h"
 #include "InputFuzzySetTriangular.h"
 #include "InputFuzzySetTrapezoidal.h"
 #include "OutputFuzzySetTriangular.h"
@@ -11,7 +12,7 @@ SUITE(FuzzyEngine)
 {
   TEST(mbs_InputFuzzySetTriangular)
   {
-    cout << "-- InputFuzzySetTriangular mbs\n";
+    cout << "-- InputFuzzySetTriangular mbs" << endl;
     InputFuzzySetTriangular ifz("Test", 5, 10, 15);
     ifz.setInput(2.5);
     CHECK_EQUAL(0.0, ifz.getMbs());
@@ -28,7 +29,7 @@ SUITE(FuzzyEngine)
 
   TEST(mbs_InputFuzzySetTrapezoidal)
   {
-    cout << "-- InputFuzzySetTrapezoidal mbs\n";
+    cout << "-- InputFuzzySetTrapezoidal mbs" << endl;
     InputFuzzySetTrapezoidal ifz("Test", 0, 5, 10, 15);
     ifz.setInput(2.5);
     CHECK_EQUAL(0.5, ifz.getMbs());
@@ -43,7 +44,7 @@ SUITE(FuzzyEngine)
 
   TEST(MOMsym_OutputFuzzySetTriangular)
   {
-    cout << "-- OutputFuzzySetTriangular symmetrical MOM\n";
+    cout << "-- OutputFuzzySetTriangular symmetrical MOM" << endl;
     OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
     ofz.setMbs(0.5);
     CHECK_EQUAL(5.0, ofz.meanOfMaximum());
@@ -54,7 +55,7 @@ SUITE(FuzzyEngine)
 
   TEST(MOM_OutputFuzzySetTriangular)
   {
-    cout << "-- OutputFuzzySetTriangular not symmetrical MOM\n";
+    cout << "-- OutputFuzzySetTriangular not symmetrical MOM" << endl;
     OutputFuzzySetTriangular ofz("Test", 0, 10, 30);
     ofz.setMbs(0.5);
     CHECK_EQUAL(25.0 / 2, ofz.meanOfMaximum());
@@ -63,7 +64,7 @@ SUITE(FuzzyEngine)
 
   TEST(MOMsym_OutputFuzzySetTrapezoidal)
   {
-    cout << "-- OutputFuzzySetTrapezoidal symmetrical MOM\n";
+    cout << "-- OutputFuzzySetTrapezoidal symmetrical MOM" << endl;
     OutputFuzzySetTrapezoidal ifz("Test", 0, 5, 10, 15);
     ifz.setMbs(0.5);
     CHECK_EQUAL(7.5, ifz.meanOfMaximum());
@@ -74,10 +75,36 @@ SUITE(FuzzyEngine)
 
   TEST(MOM_OutputFuzzySetTrapezoidal)
   {
-    cout << "-- OutputFuzzySetTrapezoidal not symmetrical MOM\n";
+    cout << "-- OutputFuzzySetTrapezoidal not symmetrical MOM" << endl;
     OutputFuzzySetTrapezoidal ifz("Test", 0, 10, 20, 40);
     ifz.setMbs(0.5);
     CHECK_EQUAL(35.0 / 2, ifz.meanOfMaximum());
+    cout << endl;
+  }
+
+  TEST(FuzzyLogic_or)
+  {
+    cout << "-- Fuzzy logic OR" << endl;
+    InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
+    InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
+    OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+    ifz1.setInput(12.5);
+    ifz2.setInput(12.5);
+    ofz = ifz1 or ifz2;
+    CHECK_EQUAL(0.5, ofz.getMbs());
+    cout << endl;
+  }
+
+  TEST(FuzzyLogic_and)
+  {
+    cout << "-- Fuzzy logic AND" << endl;
+    InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
+    InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
+    OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+    ifz1.setInput(10);
+    ifz2.setInput(10);
+    ofz = ifz1 and ifz2;
+    CHECK_EQUAL(0, ofz.getMbs());
     cout << endl;
   }
 
@@ -85,5 +112,7 @@ SUITE(FuzzyEngine)
 
 int main()
 {
-  return UnitTest::RunAllTests();
+  auto result = UnitTest::RunAllTests();
+  cout << endl;
+  return result;
 }
