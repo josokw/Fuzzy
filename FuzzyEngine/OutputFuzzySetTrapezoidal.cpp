@@ -8,7 +8,7 @@ OutputFuzzySetTrapezoidal::OutputFuzzySetTrapezoidal(const std::string& name,
 {}
 
 OutputFuzzySetTrapezoidal&
-OutputFuzzySetTrapezoidal::operator=(const OutputFuzzySet& other){
+OutputFuzzySetTrapezoidal::operator=(const OutputFuzzySet& other) {
   _mbs = other.getMbs();
   return *this;
 }

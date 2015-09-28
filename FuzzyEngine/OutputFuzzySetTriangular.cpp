@@ -8,7 +8,7 @@ OutputFuzzySetTriangular::OutputFuzzySetTriangular(const std::string& name,
 {}
 
 OutputFuzzySetTriangular&
-OutputFuzzySetTriangular::operator=(const OutputFuzzySet& other){
+OutputFuzzySetTriangular::operator=(const OutputFuzzySet& other) {
   _mbs = other.getMbs();
   return *this;
 }

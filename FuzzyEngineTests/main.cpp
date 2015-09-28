@@ -10,9 +10,8 @@ using namespace std;
 
 SUITE(FuzzyEngine)
 {
-  TEST(mbs_InputFuzzySetTriangular)
-  {
-    cout << "-- InputFuzzySetTriangular mbs" << endl;
+  TEST(mbs_InputFuzzySetTriangular) {
+    cout << "-- mbs_InputFuzzySetTriangular" << endl;
     InputFuzzySetTriangular ifz("Test", 5, 10, 15);
 
     ifz.setInput(2.5);
@@ -28,9 +27,8 @@ SUITE(FuzzyEngine)
     cout << endl;
   }
 
-  TEST(mbs_InputFuzzySetTrapezoidal)
-  {
-    cout << "-- InputFuzzySetTrapezoidal mbs" << endl;
+  TEST(mbs_InputFuzzySetTrapezoidal) {
+    cout << "-- mbs_InputFuzzySetTrapezoidal" << endl;
     InputFuzzySetTrapezoidal ifz("Test", 0, 5, 10, 15);
 
     ifz.setInput(2.5);
@@ -44,52 +42,59 @@ SUITE(FuzzyEngine)
     cout << endl;
   }
 
-  TEST(MOMsym_OutputFuzzySetTriangular)
-  {
-    cout << "-- OutputFuzzySetTriangular symmetrical MOM" << endl;
+  TEST(defuz_sym_OutputFuzzySetTriangular) {
+    cout << "-- defuz_sym_OutputFuzzySetTriangular symmetrical" << endl;
     OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
 
     ofz.setMbs(0.5);
     CHECK_EQUAL(5.0, ofz.meanOfMaximum());
+    CHECK_EQUAL(5.0, ofz.firstOfMaxima());
+    CHECK_EQUAL(5.0, ofz.lastOfMaxima());
     ofz.setMbs(0.1);
     CHECK_EQUAL(5.0, ofz.meanOfMaximum());
+    CHECK_EQUAL(5.0, ofz.firstOfMaxima());
+    CHECK_EQUAL(5.0, ofz.lastOfMaxima());
     cout << endl;
   }
 
-  TEST(MOM_OutputFuzzySetTriangular)
-  {
-    cout << "-- OutputFuzzySetTriangular not symmetrical MOM" << endl;
+  TEST(defuz_nosym_OutputFuzzySetTriangular)  {
+    cout << "-- defuz_nosym_OutputFuzzySetTriangular" << endl;
     OutputFuzzySetTriangular ofz("Test", 0, 10, 30);
 
     ofz.setMbs(0.5);
     CHECK_EQUAL(25.0 / 2, ofz.meanOfMaximum());
+    CHECK_EQUAL(0.0, ofz.firstOfMaxima());
+    CHECK_EQUAL(30.0, ofz.lastOfMaxima());
     cout << endl;
   }
 
-  TEST(MOMsym_OutputFuzzySetTrapezoidal)
-  {
-    cout << "-- OutputFuzzySetTrapezoidal symmetrical MOM" << endl;
-    OutputFuzzySetTrapezoidal ifz("Test", 0, 5, 10, 15);
+  TEST(defuz_sym_OutputFuzzySetTrapezoidal) {
+    cout << "-- defuz_sym_OutputFuzzySetTrapezoidal" << endl;
+    OutputFuzzySetTrapezoidal ofz("Test", 0, 5, 10, 15);
 
-    ifz.setMbs(0.5);
-    CHECK_EQUAL(7.5, ifz.meanOfMaximum());
-    ifz.setMbs(0.1);
-    CHECK_EQUAL(7.5, ifz.meanOfMaximum());
+    ofz.setMbs(0.5);
+    CHECK_EQUAL(7.5, ofz.meanOfMaximum());
+    CHECK_EQUAL(5.0, ofz.firstOfMaxima());
+    CHECK_EQUAL(10.0, ofz.lastOfMaxima());
+    ofz.setMbs(0.1);
+    CHECK_EQUAL(7.5, ofz.meanOfMaximum());
+    CHECK_EQUAL(0.0, ofz.firstOfMaxima());
+    CHECK_EQUAL(5.0, ofz.lastOfMaxima());
     cout << endl;
   }
 
-  TEST(MOM_OutputFuzzySetTrapezoidal)
-  {
-    cout << "-- OutputFuzzySetTrapezoidal not symmetrical MOM" << endl;
-    OutputFuzzySetTrapezoidal ifz("Test", 0, 10, 20, 40);
+  TEST(defuz_notsym_OutputFuzzySetTrapezoidal) {
+    cout << "-- defuz_notsym_OutputFuzzySetTrapezoidal" << endl;
+    OutputFuzzySetTrapezoidal ofz("Test", 0, 10, 20, 40);
 
-    ifz.setMbs(0.5);
-    CHECK_EQUAL(35.0 / 2, ifz.meanOfMaximum());
+    ofz.setMbs(0.5);
+    CHECK_EQUAL(35.0 / 2, ofz.meanOfMaximum());
+    CHECK_EQUAL(0.0 / 2, ofz.firstOfMaxima());
+    CHECK_EQUAL(40.0 / 2, ofz.lastOfMaxima());
     cout << endl;
   }
 
-  TEST(FuzzyLogic_or)
-  {
+  TEST(FuzzyLogic_or) {
     cout << "-- Fuzzy logic OR" << endl;
     InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
     InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
@@ -102,8 +107,7 @@ SUITE(FuzzyEngine)
     cout << endl;
   }
 
-  TEST(FuzzyLogic_and)
-  {
+  TEST(FuzzyLogic_and) {
     cout << "-- Fuzzy logic AND" << endl;
     InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
     InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
@@ -116,8 +120,7 @@ SUITE(FuzzyEngine)
     cout << endl;
   }
 
-  TEST(FuzzyLogic_not)
-  {
+  TEST(FuzzyLogic_not) {
     cout << "-- Fuzzy logic NOT" << endl;
     InputFuzzySetTriangular ifz("Test", 5, 10, 15);
     OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
@@ -134,8 +137,7 @@ SUITE(FuzzyEngine)
 
 }
 
-int main()
-{
+int main() {
   auto result = UnitTest::RunAllTests();
   cout << endl;
   return result;
