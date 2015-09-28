@@ -1,5 +1,5 @@
 # Fuzzy
-Fuzzy: basic tipping problem using Fuzzy Engine code (using modern C++: gcc 4.9.2).
+Fuzzy: basic tipping problem using Fuzzy Engine code (using modern C++: gcc 4.8.4).
 
 Build management only implemented for Linux.
 
