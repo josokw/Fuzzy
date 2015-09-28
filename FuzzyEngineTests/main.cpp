@@ -14,6 +14,7 @@ SUITE(FuzzyEngine)
   {
     cout << "-- InputFuzzySetTriangular mbs" << endl;
     InputFuzzySetTriangular ifz("Test", 5, 10, 15);
+
     ifz.setInput(2.5);
     CHECK_EQUAL(0.0, ifz.getMbs());
     ifz.setInput(7.5);
@@ -31,6 +32,7 @@ SUITE(FuzzyEngine)
   {
     cout << "-- InputFuzzySetTrapezoidal mbs" << endl;
     InputFuzzySetTrapezoidal ifz("Test", 0, 5, 10, 15);
+
     ifz.setInput(2.5);
     CHECK_EQUAL(0.5, ifz.getMbs());
     ifz.setInput(7.5);
@@ -46,6 +48,7 @@ SUITE(FuzzyEngine)
   {
     cout << "-- OutputFuzzySetTriangular symmetrical MOM" << endl;
     OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+
     ofz.setMbs(0.5);
     CHECK_EQUAL(5.0, ofz.meanOfMaximum());
     ofz.setMbs(0.1);
@@ -57,6 +60,7 @@ SUITE(FuzzyEngine)
   {
     cout << "-- OutputFuzzySetTriangular not symmetrical MOM" << endl;
     OutputFuzzySetTriangular ofz("Test", 0, 10, 30);
+
     ofz.setMbs(0.5);
     CHECK_EQUAL(25.0 / 2, ofz.meanOfMaximum());
     cout << endl;
@@ -66,6 +70,7 @@ SUITE(FuzzyEngine)
   {
     cout << "-- OutputFuzzySetTrapezoidal symmetrical MOM" << endl;
     OutputFuzzySetTrapezoidal ifz("Test", 0, 5, 10, 15);
+
     ifz.setMbs(0.5);
     CHECK_EQUAL(7.5, ifz.meanOfMaximum());
     ifz.setMbs(0.1);
@@ -77,6 +82,7 @@ SUITE(FuzzyEngine)
   {
     cout << "-- OutputFuzzySetTrapezoidal not symmetrical MOM" << endl;
     OutputFuzzySetTrapezoidal ifz("Test", 0, 10, 20, 40);
+
     ifz.setMbs(0.5);
     CHECK_EQUAL(35.0 / 2, ifz.meanOfMaximum());
     cout << endl;
@@ -88,6 +94,7 @@ SUITE(FuzzyEngine)
     InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
     InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
     OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+
     ifz1.setInput(12.5);
     ifz2.setInput(12.5);
     ofz = ifz1 or ifz2;
@@ -101,6 +108,7 @@ SUITE(FuzzyEngine)
     InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
     InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
     OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+
     ifz1.setInput(10);
     ifz2.setInput(10);
     ofz = ifz1 and ifz2;
@@ -111,16 +119,18 @@ SUITE(FuzzyEngine)
   TEST(FuzzyLogic_not)
   {
     cout << "-- Fuzzy logic NOT" << endl;
-    InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
-    InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
+    InputFuzzySetTriangular ifz("Test", 5, 10, 15);
     OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
-    ifz1.setInput(12.5);
-    ifz2.setInput(12.5);
-    ofz = not(ifz1 or ifz2);
-    CHECK_EQUAL(0.5, ofz.getMbs());
+
+    ifz.setInput(13.75);
+    ofz = not ifz;
+    CHECK_EQUAL(0.75, ofz.getMbs());
+
+    ifz.setInput(20);
+    ofz = not ifz;
+    CHECK_EQUAL(1.0, ofz.getMbs());
     cout << endl;
   }
-
 
 }
 
