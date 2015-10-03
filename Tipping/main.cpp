@@ -44,9 +44,9 @@ int main()
               cout << *fs << endl;
             }
           // Rule base
-          cheap = poor or rancid;
-          average = good;
-          generous = great or delicious;
+          cheap = (poor or rancid) * 1.0;
+          average = good * 1.0;
+          generous = (great or delicious) * 1.0;
           // Defuzzification
           cout << "-- MOM Tip = " << int(defuzMeanOfMaximum<3>(fuzzyTip))
                << "%" << endl;

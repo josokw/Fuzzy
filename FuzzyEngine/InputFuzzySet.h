@@ -5,6 +5,7 @@
 
 class InputFuzzySet : public FuzzySet
 {
+  friend OutputFuzzySet operator*(const InputFuzzySet& lhs, double rhs);
 public:
   InputFuzzySet() = default;
   InputFuzzySet(const std::string& name): FuzzySet{name} {}

@@ -4,8 +4,11 @@
 #include "FuzzySet.h"
 #include <string>
 
+class OutputFuzzySet;
+
 class OutputFuzzySet : public FuzzySet
 {
+  friend OutputFuzzySet operator*(const OutputFuzzySet& lhs, double rhs);
 public:
   OutputFuzzySet(): FuzzySet{} {}
   OutputFuzzySet(const std::string& name): FuzzySet{name} {}
