@@ -1,5 +1,12 @@
 #include "AppInfo.h"
 #include "RCcircuit.h"
+
+#include "Defuzzification.h"
+#include "FuzzyLogic.h"
+#include "InputFuzzySetTriangular.h"
+#include "InputFuzzySetTrapezoidal.h"
+#include "OutputFuzzySetTriangular.h"
+
 #include <iostream>
 
 using namespace std;
