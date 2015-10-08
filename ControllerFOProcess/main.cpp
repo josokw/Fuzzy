@@ -36,12 +36,12 @@ int main()
             control_posL{"control_posL", 2700, 3500, 4100};
 
     std::array<InputFuzzySet*, 5> errors{&error_negl, &error_neg,
-                                         &error_no,
-                                         &error_pos, &error_posL};
+                &error_no,
+                &error_pos, &error_posL};
 
     std::array<OutputFuzzySet*, 5> controls{&control_negL, &control_neg,
-                                           &control_no,
-                                           &control_pos, &control_posL};
+                &control_no,
+                &control_pos, &control_posL};
     // Rules
     control_negL = error_negl;
     control_neg = error_neg;
@@ -55,16 +55,32 @@ int main()
     const double Tsimulation{Tsample / 10};
     const double RCtime{0.2};
     RCcircuit RC{Tsimulation, 0, RCtime};
-    double input{0.0};
+    double setpoint{0.0};
+    double error{0.0};
+    double output{0.0};
 
     // Step function
-    for(int i = 0; i < 200; ++i) {
-        RC.input(input);
-        cout << "t = " << i * Tsimulation << " input = " << input
-             << " output = " << RC.output() << endl;
+    for(int i = 0; i < 1000; ++i) {
         if (i > 9) {
-            input = 1.0;
+            setpoint = 2000.0;
         }
+        error = setpoint - RC.output();
+        for(auto& ifs: errors){
+            ifs->setInput(error);
+        }
+
+        // Rules
+        control_negL = error_negl;
+        control_neg = error_neg;
+        control_no = error_no;
+        control_pos = error_pos;
+        control_posL = error_posL;
+
+        output = defuzMeanOfMaximum<5>(controls);
+        RC.input(output);
+
+        cout << "t = " << i * Tsimulation << " input = " << setpoint
+             << " output = " << RC.output() << endl;
     }
 
 
