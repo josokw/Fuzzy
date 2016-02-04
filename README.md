@@ -5,5 +5,5 @@ Build management only implemented for Linux.
 
 Contains some unit tests: sudo apt-get install libunittest++-dev
 
-Create in dir Fuzzy two subdirs: FuzzyDebug and FuzzyRelease. Use them at project configuring.
-These directories are used in the .pro files.
+Use the directories FuzzyDebug and FuzzyRelease for QtCreator project configuring.
+These directories are used in the .pro files and they contain a .gitignore file.
