@@ -4,8 +4,8 @@ CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += C++11
 
-INCLUDEPATH += ../../FuzzyEngine
-DEPENDPATH += ../../FuzzyEngine
+INCLUDEPATH += $$PWD/../FuzzyEngine
+DEPENDPATH += $$PWD/../FuzzyEngine
 
 SOURCES += \
    main.cpp
@@ -18,11 +18,11 @@ qtcAddDeployment()
 
 unix {
     CONFIG(debug, debug|release) {
-        LIBS += -L../../FuzzyDebug/FuzzyEngine -lFuzzyEngineDebug
-        #PRE_TARGETDEPS += ../../FuzzyDebug/FuzzyEngine/libFuzzyEngineDebug.a
+        LIBS += -L$$OUT_PWD/../../FuzzyDebug/FuzzyEngine -lFuzzyEngineDebug
+        PRE_TARGETDEPS += $$OUT_PWD/../../FuzzyDebug/FuzzyEngine/libFuzzyEngineDebug.a
     }
     CONFIG(release, debug|release) {
-        LIBS += -L../../FuzzyRelease/FuzzyEngine -lFuzzyEngine
-        #PRE_TARGETDEPS += ../../FuzzyRelease/FuzzyEngine/libFuzzyEngine.a
+        LIBS += -L$$OUT_PWD/FuzzyDebug/FuzzyEngin -lFuzzyEngine
+        PRE_TARGETDEPS += $$OUT_PWD/../../FuzzyRelease/FuzzyEngine/libFuzzyEngine.a
     }
 }
