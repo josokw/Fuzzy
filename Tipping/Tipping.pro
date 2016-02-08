@@ -22,7 +22,7 @@ unix {
         PRE_TARGETDEPS += $$OUT_PWD/../../FuzzyDebug/FuzzyEngine/libFuzzyEngineDebug.a
     }
     CONFIG(release, debug|release) {
-        LIBS += -L$$OUT_PWD/FuzzyDebug/FuzzyEngin -lFuzzyEngine
+        LIBS += -L$$OUT_PWD/../../FuzzyRelease/FuzzyEngine -lFuzzyEngine
         PRE_TARGETDEPS += $$OUT_PWD/../../FuzzyRelease/FuzzyEngine/libFuzzyEngine.a
     }
 }
