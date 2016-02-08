@@ -4,6 +4,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += C++11
 
+include(deployment.pri)
+qtcAddDeployment()
+
 INCLUDEPATH += $$PWD/../FuzzyEngine
 DEPENDPATH += $$PWD/../FuzzyEngine
 
@@ -12,9 +15,6 @@ SOURCES += \
 
 HEADERS += \
    AppInfo.h
-
-include(deployment.pri)
-qtcAddDeployment()
 
 unix {
     CONFIG(debug, debug|release) {
