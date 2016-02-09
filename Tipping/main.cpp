@@ -4,6 +4,7 @@
 #include "InputFuzzySetTriangular.h"
 #include "InputFuzzySetTrapezoidal.h"
 #include "OutputFuzzySetTriangular.h"
+#include "TippingFIS.h"
 
 #include <array>
 #include <iostream>
@@ -14,6 +15,8 @@ using namespace std;
 int main()
 {
   cout << "-- " APPNAME_VERSION " ----------------------------" << endl << endl;
+
+  TippingFIS tipping;
 
   // Linguistic variable Service
   InputFuzzySetTriangular poor("Service = poor", 0, 2.5 ,5);
@@ -56,6 +59,8 @@ int main()
                << "%" << endl;
           cout << "-- WA  Tip = " << int(defuzWeightedAverage<3>(fuzzyTip))
                << "%" << endl;
+
+          cout << "--MOM Tip object: " << tipping.inferTip(food, service) << endl;
 
           getchar();
         }

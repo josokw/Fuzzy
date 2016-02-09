@@ -11,10 +11,12 @@ INCLUDEPATH += $$PWD/../FuzzyEngine
 DEPENDPATH += $$PWD/../FuzzyEngine
 
 SOURCES += \
-   main.cpp
+   main.cpp \
+   TippingFIS.cpp
 
 HEADERS += \
-   AppInfo.h
+   AppInfo.h \
+   TippingFIS.h
 
 unix {
     CONFIG(debug, debug|release) {
