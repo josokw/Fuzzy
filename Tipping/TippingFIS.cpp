@@ -1,8 +1,7 @@
 #include "TippingFIS.h"
-#include "Defuzzification.h"
 #include "FuzzyLogic.h"
 
-int TippingFIS::inferTip(int food, int service) {
+int TippingFIS::inferTip(int food, int service, DEFUZ defuzFunction) {
   // Set inputs
   for(auto& fs : fuzzyService) {
     fs->setInput(service);
@@ -15,5 +14,15 @@ int TippingFIS::inferTip(int food, int service) {
   average = good * 1.0;
   generous = (great or delicious) * 1.0;
   // Defuzzification
-  return int(defuzMeanOfMaximum<3>(fuzzyTip));
+  switch (defuzFunction) {
+     case DEFUZ::MoM:
+        return defuzMeanOfMaximum<3>(fuzzyTip);
+     case DEFUZ::FoM:
+        return defuzFirstOfMaxima<3>(fuzzyTip);
+     case DEFUZ::LoM:
+        return defuzLastOfMaxima<3>(fuzzyTip);
+     case DEFUZ::WA:
+        return defuzWeightedAverage<3>(fuzzyTip);
+  }
+  return 0;
 }

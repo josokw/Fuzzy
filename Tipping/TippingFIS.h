@@ -1,6 +1,7 @@
 #ifndef TIPPINGFIS_H
 #define TIPPINGFIS_H
 
+#include "Defuzzification.h"
 #include "InputFuzzySetTrapezoidal.h"
 #include "InputFuzzySetTriangular.h"
 #include "OutputFuzzySetTriangular.h"
@@ -10,8 +11,8 @@
 class TippingFIS {
 public:
   TippingFIS() = default;
-  int inferTip(int food, int service);
-
+  ~TippingFIS() = default;
+  int inferTip(int food, int service, DEFUZ defuzFunction);
 private:
   // Linguistic variable Service
   InputFuzzySetTriangular poor = {"Service = poor", 0, 2.5 ,5};
@@ -28,7 +29,6 @@ private:
   std::array<InputFuzzySet*, 3> fuzzyService = {{&poor, &good, &great}};
   std::array<InputFuzzySet*, 2> fuzzyFood = {{&rancid, &delicious}};
   std::array<OutputFuzzySet*, 3> fuzzyTip = {{&cheap, &average, &generous}};
-  //
 };
 
 #endif // TIPPINGFIS_H

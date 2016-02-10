@@ -14,11 +14,12 @@ int main()
 
    TippingFIS tipping;
 
+   cout << "-- Defuzzification: Mean of Maximum" << endl << endl;
    cout << " service " << endl << endl;
    for(int service = 0; service < 11; ++service) {
       cout << setw(8) << service;
       for(int food = 0; food < 11; ++food) {
-         cout << setw(5) << tipping.inferTip(food, service);
+         cout << setw(5) << tipping.inferTip(food, service, DEFUZ::MoM);
       }
       cout << endl;
    }
