@@ -1,5 +1,6 @@
 #include "TippingFIS.h"
 #include "Defuzzification.h"
+#include "FuzzyLogic.h"
 
 int TippingFIS::inferTip(int food, int service) {
   // Set inputs

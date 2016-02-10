@@ -18,9 +18,9 @@ bool equals(double d1, double d2) {
 template<int N>
 const OutputFuzzySet* findHighestMbsSet(
       const std::array<OutputFuzzySet*, N>& fs) {
-   for(auto& f : fs) {
-      std::cout << *f << std::endl;
-   }
+   //for(auto& f : fs) {
+      //std::cout << *f << std::endl;
+   //}
    double highestMBS = 0;
    int highestIndex = 0;
    int index = 0;
@@ -32,9 +32,9 @@ const OutputFuzzySet* findHighestMbsSet(
       ++index;
    }
 
-   std::cout << "index " << highestIndex
-             << "  MBS " << highestMBS
-             << std::endl;
+   //std::cout << "index " << highestIndex
+   //          << "  MBS " << highestMBS
+   //          << std::endl;
 
    return fs[highestIndex];
 }
@@ -42,7 +42,7 @@ const OutputFuzzySet* findHighestMbsSet(
 
 template<int N>
 double defuzMeanOfMaximum(const std::array<OutputFuzzySet*, N>& fs) {
-   std::cout << "\n-- Defuzzification by MoM method:\n";
+   //std::cout << "\n-- Defuzzification by MoM method:\n";
    return findHighestMbsSet<N>(fs)->meanOfMaximum();
 }
 
