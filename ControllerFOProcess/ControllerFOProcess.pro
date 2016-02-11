@@ -10,11 +10,13 @@ qtcAddDeployment()
 INCLUDEPATH += $$PWD/../FuzzyEngine
 DEPENDPATH += $$PWD/../FuzzyEngine
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    FuzzyController.cpp
 
 HEADERS += \
     RCcircuit.h \
-    AppInfo.h
+    AppInfo.h \
+    FuzzyController.h
 
 unix {
     CONFIG(debug, debug|release) {

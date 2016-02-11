@@ -1,6 +1,14 @@
 #ifndef RCCIRCUIT
 #define RCCIRCUIT
 
+class Step {
+public:
+   Step(double stepTime): _stepTime{stepTime} {}
+   double output(double t) const { return t > _stepTime ? 1 : 0; }
+private:
+   const double _stepTime;
+};
+
 class Integrator {
 public:
    Integrator(double Ts, double initValue):
