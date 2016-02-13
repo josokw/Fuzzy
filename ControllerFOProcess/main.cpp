@@ -20,7 +20,7 @@ int main()
     dss::Step STEP{0, 2000.0, stepTime};
     FuzzyController fuzzyC;
     dss::ZeroOrderHold zoh{5};
-    RCcircuit RC{Tsample, 0, RCtime};
+    RCcircuit RC{0, RCtime};
 
     double setpoint{0.0};
     double error{0.0};

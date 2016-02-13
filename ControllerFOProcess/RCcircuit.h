@@ -5,18 +5,15 @@
 
 class RCcircuit {
 public:
-   RCcircuit(double Tsample, double initValue, double RC):
-      _INT{initValue}, _doSample{false}, _RC{RC} {}
+   RCcircuit(double initValue, double RC): _RC{RC}, _INT{initValue} {}
    ~RCcircuit() = default;
    void input(double in) { _INT.input((in - _INT.output()) / _RC);
                            _out = _INT.output(); }
    double output() const { return _out; }
 private:
+   const double _RC;
    dysysim::Integrator _INT;
-   bool _doSample;
-   double _RC;
    double _out;
 };
 
 #endif // RCCIRCUIT
-
