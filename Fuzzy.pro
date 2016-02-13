@@ -3,8 +3,9 @@
 TEMPLATE = subdirs
 SUBDIRS = \
    FuzzyEngine \
+   DySySim \
    Tipping \
    ControllerFOProcess \
-   FuzzyEngineTests \
+   FuzzyEngineTests
 
 CONFIG += ordered
