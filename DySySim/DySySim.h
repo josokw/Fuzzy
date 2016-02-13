@@ -28,17 +28,17 @@ private:
    const double _stepTime;
 };
 
-//class FirstOrderHold: public TimedSimBlock {
-//public:
-//   FirstOrderHold(double Tsample): TimedSimBlock{}, _sampleTime{0} {}
-//   void input(double in) { _out = doSample() ? in : _out; }
-//   double output() const override { return _out; }
-//private:
-//   bool compareTimes() { return std::fabs(_sampleTime - Time::tc.t) < 0.01 * _sampleTime; }
-//   bool doSample() const { return compareTimes(); }
-//   double _sampleTime;
-//   double _out;
-//};
+class ZeroOrderHold: public TimedSimBlock {
+public:
+   ZeroOrderHold(int nSamples = 1):
+      TimedSimBlock{}, _nSamples{nSamples}, _sample{0} {}
+   void input(double in) { _out = (_sample++ % _nSamples == 0) ? in : _out; }
+   double output() const override { return _out; }
+private:
+   const int _nSamples;
+   int _sample;
+   double _out;
+};
 
 // Euler integration
 class Integrator: public TimedSimBlock {

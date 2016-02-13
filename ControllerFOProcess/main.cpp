@@ -19,6 +19,7 @@ int main()
     dss::Time time{Tsimulation};
     dss::Step STEP{0, 2000.0, stepTime};
     FuzzyController fuzzyC;
+    dss::ZeroOrderHold zoh{5};
     RCcircuit RC{Tsample, 0, RCtime};
 
     double setpoint{0.0};
@@ -29,7 +30,9 @@ int main()
         setpoint = STEP.output();
         error = setpoint - RC.output();
         output = fuzzyC.inferControl(error);
-        RC.input(output);
+        zoh.input(error);
+        cout << "ZOH = " << zoh.output() << endl;
+        RC.input(zoh.output());
 
         cout << "t = " << setw(5) << time.output()
              << "  input = " << setw(6) << setpoint
