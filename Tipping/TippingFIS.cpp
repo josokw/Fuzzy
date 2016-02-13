@@ -1,5 +1,11 @@
+#include "OutputFuzzySet.h"
 #include "TippingFIS.h"
 #include "FuzzyLogic.h"
+
+std::ostream& operator<<(std::ostream& os, const TippingFIS& lhs) {
+  //os << lhs.poor.write(os) << std::endl;
+  return os;
+}
 
 int TippingFIS::inferTip(int food, int service, DEFUZ defuzFunction) {
   // Set inputs

@@ -9,6 +9,7 @@
 
 /// Tipping Fuzzy Inference (Expert) System
 class TippingFIS {
+  friend std::ostream& operator<<(std::ostream& os, const TippingFIS& lhs);
 public:
   TippingFIS() = default;
   ~TippingFIS() = default;
