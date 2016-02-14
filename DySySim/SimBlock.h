@@ -14,16 +14,19 @@ public:
 
 class SimBlock {
 public:
-   SimBlock() = default;
+   SimBlock(): _out{0.0} {}
+   SimBlock(double initValue): _out{initValue} {}
    virtual ~SimBlock() = default;
-   virtual double output() const = 0;
+   double output() const { return _out; }
+protected:
+   double _out;
 };
 
 class TimedSimBlock: public SimBlock {
 public:
    TimedSimBlock(): SimBlock{} {}
+   TimedSimBlock(double initValue): SimBlock{initValue} {}
    virtual ~TimedSimBlock() = default;
-   virtual double output() const override = 0;
 protected:
    CommonTime tc;
 };

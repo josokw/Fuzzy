@@ -8,12 +8,39 @@
 
 namespace dysysim {
 
+class Gain: public SimBlock {
+public:
+   Gain(double gain): SimBlock{}, _gain(gain) {}
+   virtual ~Gain() = default;
+   void input(double in) { _out = in * _gain; }
+private:
+   double _gain;
+};
+
+class Attenuator: public SimBlock {
+public:
+   Attenuator(double att): SimBlock{}, _att{att} {}
+   virtual ~Attenuator() = default;
+   void input(double in) { _out = in / _att; }
+private:
+   double _att;
+};
+
+class Summator: public SimBlock {
+public:
+   Summator(): SimBlock{} {}
+   virtual ~Summator() = default;
+   void input(double in1, double in2) { _out = in1 + in2; }
+   void input(double in1, double in2, double in3) { _out = in1 + in2 + in3; }
+   void input(double in1, double in2, double in3, double in4)
+      { _out = in1 + in2 + in3 + in4; }
+};
+
 class Time: public TimedSimBlock {
 public:
    Time(double TsimStep): TimedSimBlock{} { CommonTime::TsimStep = TsimStep; }
    virtual ~Time() = default;
-   void next() { Time::tc.next(); }
-   double output() const override { return Time::tc.t; }
+   void next() { Time::tc.next(); _out = CommonTime::t; }
 };
 
 class Step: public TimedSimBlock {
@@ -22,8 +49,7 @@ public:
       TimedSimBlock{},
       _initialValue{initialValue}, _stepValue{stepValue},_stepTime{stepTime} {}
    virtual ~Step() = default;
-   double output() const override { return tc.t >= _stepTime
-                                    ? _stepValue : _initialValue; }
+   double output() const { return tc.t >= _stepTime ? _stepValue : _initialValue; }
 private:
    const double _initialValue;
    const double _stepValue;
@@ -36,25 +62,21 @@ public:
       TimedSimBlock{}, _nSamples{nSamples}, _sample{0} {}
    virtual ~ZeroOrderHold() = default;
    void input(double in) { _out = (_sample++ % _nSamples == 0) ? in : _out; }
-   double output() const override { return _out; }
 private:
    const int _nSamples;
    int _sample;
-   double _out;
 };
 
 // Euler integration
 class Integrator: public TimedSimBlock {
 public:
-   Integrator(double initValue):
-      TimedSimBlock{}, _initValue{initValue}, _out{initValue} {}
+   Integrator(double initValue = 0):
+      TimedSimBlock{initValue}, _initValue{initValue} {}
    virtual ~Integrator() = default;
    void input(double in) { _out += in * tc.TsimStep; }
-   double output() const { return _out; }
    void reset() { _out = _initValue; }
 private:
    double _initValue;
-   double _out;
 };
 
 }

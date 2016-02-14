@@ -15,14 +15,15 @@ int main()
          << "-- uses " + dss::libName + " " << dss::libVersion << endl << endl;
     const double Tsample{0.005};
     const double Tsimulation{Tsample};
-    const double stepTime = 10 * Tsimulation;
+//  const double stepTime = 10 * Tsimulation;
     const double RCtime{0.2};
     // Model
     dss::Time time{Tsimulation};
     dss::Step STEP{0, 2048, 0 /*stepTime*/};
+    dss::Summator sum;
     FuzzyController fuzzyC;
-    dss::ZeroOrderHold zoh{5};
-    RCcircuit RC{0, RCtime};
+    dss::ZeroOrderHold zoh{1};
+    RCcircuit RC{RCtime};
 
     double setpoint{0.0};
     double error{0.0};
@@ -30,7 +31,8 @@ int main()
 
     for(int tn = 0; tn < 600; ++tn) {
         setpoint = STEP.output();
-        error = setpoint - RC.output();
+        sum.input(setpoint, -RC.output());
+        error = sum.output();
         control = fuzzyC.inferControl(error);
         zoh.input(control);
         cout << "ZOH = " << int(zoh.output()) << endl;
