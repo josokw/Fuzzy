@@ -41,6 +41,7 @@ int main()
 
         cout << "t = " << setw(5) << time.output()
              << "  Setpoint = " << setw(6) << setpoint
+             << "  Control = " << setw(6) << control
              << "  Measured Value = " << setw(10)
              << RC.output() << endl;
 
