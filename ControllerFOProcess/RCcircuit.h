@@ -5,8 +5,8 @@
 
 class RCcircuit {
 public:
-   RCcircuit(double RC, double initValue = 0.0):
-      _RC{RC}, _INT{initValue}, _out{_INT.output()} {}
+   RCcircuit(int id, double RC, double initValue = 0.0):
+      _RC{RC}, _INT{id, initValue}, _out{_INT.output()} {}
    ~RCcircuit() = default;
    void input(double in) { _INT.input((in - _INT.output()) / _RC);
                            _out = _INT.output(); }

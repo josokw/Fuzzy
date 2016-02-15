@@ -1,6 +1,8 @@
 #ifndef SIMBLOCK_H
 #define SIMBLOCK_H
 
+#include <map>
+
 namespace dysysim {
 
 class CommonTime {
@@ -14,18 +16,22 @@ public:
 
 class SimBlock {
 public:
-   SimBlock(): _out{0.0} {}
-   SimBlock(double initValue): _out{initValue} {}
+   SimBlock(int id): _id{id}, _out{0.0} { _allSimBlocks[id] = this; }
+   SimBlock(int id, double initValue): _id{id}, _out{initValue} {}
    virtual ~SimBlock() = default;
    double output() const { return _out; }
+   static double getOutputSimBlock(int id) { return getSimBlock(id)->output(); }
 protected:
+   int _id;
    double _out;
+   static std::map<int, SimBlock*> _allSimBlocks;
+   static SimBlock* getSimBlock(int id) { return _allSimBlocks[id]; }
 };
 
 class TimedSimBlock: public SimBlock {
 public:
-   TimedSimBlock(): SimBlock{} {}
-   TimedSimBlock(double initValue): SimBlock{initValue} {}
+   TimedSimBlock(int id): SimBlock{id} {}
+   TimedSimBlock(int id, double initValue): SimBlock{id, initValue} {}
    virtual ~TimedSimBlock() = default;
 protected:
    CommonTime tc;

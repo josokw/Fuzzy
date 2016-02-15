@@ -18,12 +18,12 @@ int main()
 //  const double stepTime = 10 * Tsimulation;
     const double RCtime{0.2};
     // Model
-    dss::Time time{Tsimulation};
-    dss::Step STEP{0, 2048, 0 /*stepTime*/};
-    dss::Summator sum;
+    dss::Time time{1, Tsimulation};
+    dss::Step STEP{2, 0, 2048, 0 /*stepTime*/};
+    dss::Summator sum{3};
     FuzzyController fuzzyC;
-    dss::ZeroOrderHold zoh{1};
-    RCcircuit RC{RCtime};
+    dss::ZeroOrderHold zoh{4, 1};
+    RCcircuit RC{5, RCtime};
 
     double setpoint{0.0};
     double error{0.0};
@@ -32,6 +32,7 @@ int main()
     for(int tn = 0; tn < 600; ++tn) {
         setpoint = STEP.output();
         sum.input(setpoint, -RC.output());
+        //sum.input(dss::SimBlock::getOutputSimBlock(2), -RC.output());
         error = sum.output();
         control = fuzzyC.inferControl(error);
         zoh.input(control);
