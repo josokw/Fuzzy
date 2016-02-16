@@ -1,4 +1,5 @@
 #include "AppInfo.h"
+#include "Connecting.h"
 #include "RCcircuit.h"
 #include "FuzzyController.h"
 #include "LibInfoDySySim.h"
@@ -28,6 +29,8 @@ int main()
     double setpoint{0.0};
     double error{0.0};
     double control{0.0};
+
+    sum >> zoh;
 
     for(int tn = 0; tn < 600; ++tn) {
         setpoint = STEP.output();

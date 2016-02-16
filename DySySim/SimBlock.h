@@ -19,6 +19,7 @@ public:
    SimBlock(int id): _id{id}, _out{0.0} { _allSimBlocks[id] = this; }
    SimBlock(int id, double initValue): _id{id}, _out{initValue} {}
    virtual ~SimBlock() = default;
+   int getId() const { return _id; }
    double output() const { return _out; }
    static double getOutputSimBlock(int id) { return getSimBlock(id)->output(); }
 protected:

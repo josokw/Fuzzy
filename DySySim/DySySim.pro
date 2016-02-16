@@ -21,11 +21,13 @@ CONFIG(release, debug|release) {
 
 SOURCES += \
     DySySim.cpp \
-    SimBlock.cpp
+    SimBlock.cpp \
+    Connecting.cpp
 HEADERS += \
     DySySim.h \
     SimBlock.h \
-    LibInfoDySySim.h
+    LibInfoDySySim.h \
+    Connecting.h
 
 #unix {
 #    target.path = /usr/lib
