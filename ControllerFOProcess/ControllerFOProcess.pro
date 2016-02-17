@@ -17,7 +17,6 @@ main.cpp \
     FuzzyController.cpp
 
 HEADERS += \
-    RCcircuit.h \
     AppInfo.h \
     FuzzyController.h
 

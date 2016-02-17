@@ -1,6 +1,5 @@
 #include "AppInfo.h"
 #include "Connecting.h"
-#include "RCcircuit.h"
 #include "FuzzyController.h"
 #include "LibInfoDySySim.h"
 #include <iomanip>
@@ -23,9 +22,8 @@ int main()
     dss::Step STEP{2, 0, 2048, 0 /*stepTime*/};
     dss::Summator sum{3};
 
-    FuzzyController fuzzyC;
-    dss::Function fc(4, [&fuzzyC](double in){ return fuzzyC.inferControl(in); });
-
+    FuzzyController fuzzyController;
+    dss::Function fuzzyC(4, [&fuzzyController](double in){ return fuzzyController.inferControl(in); });
     //dss::ZeroOrderHold zoh{5, 1};
     dss::FirstOrder RCcircuit{10, RCtime};
 
@@ -33,16 +31,13 @@ int main()
     double error{0.0};
     double control{0.0};
 
-    //sum > zoh > (zoh + sum);
-
     for(int tn = 0; tn < 600; ++tn) {
         setpoint = STEP.output();
         sum.input(setpoint, -RCcircuit.output());
-        //sum.input(dss::SimBlock::getOutputSimBlock(2), -RC.output());
         error = sum.output();
         //control = fuzzyC.inferControl(error);
-        fc.input(error);
-        control = fc.output();
+        fuzzyC.input(error);
+        control = fuzzyC.output();
         //zoh.input(control);
         //cout << "ZOH = " << int(zoh.output()) << endl;
         //RCcircuit.input(zoh.output());
