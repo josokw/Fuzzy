@@ -24,6 +24,8 @@ int main()
    doTippingFIS(tippingFIS, DEFUZ::FoM);
    cout << "-- Defuzzification: Last of Maxima" << endl << endl;
    doTippingFIS(tippingFIS, DEFUZ::LoM);
+   cout << "-- Defuzzification: Weighted Average" << endl << endl;
+   doTippingFIS(tippingFIS, DEFUZ::WA);
 
    return 0;
 }
