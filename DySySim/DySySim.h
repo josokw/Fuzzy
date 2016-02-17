@@ -3,6 +3,7 @@
 
 #include "SimBlock.h"
 #include <cmath>
+#include <functional>
 #include <iostream>
 
 // Dynamical Systems Simulator
@@ -89,6 +90,16 @@ public:
    void input(double in) { _out += tc.TsimStep * (in - _out) / _timeConstant; }
 private:
    const double _timeConstant;
+};
+
+class Function: public SimBlock {
+public:
+   Function(int id, std::function<double(double)>callback):
+      SimBlock{id}, _callback{callback} {}
+   virtual ~Function() = default;
+   void input(double in) { _out = _callback(in); }
+private:
+   std::function<double(double)> _callback;
 };
 
 }
