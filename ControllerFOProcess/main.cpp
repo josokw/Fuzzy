@@ -23,7 +23,7 @@ int main()
     dss::Summator sum{3};
 
     FuzzyController fuzzyController;
-    dss::Function fuzzyC(4, [&fuzzyController](double in){ return fuzzyController.inferControl(in); });
+    dss::Function<double(double)> fuzzyC(4, [&fuzzyController](double in){ return fuzzyController.inferControl(in); });
     //dss::ZeroOrderHold zoh{5, 1};
     dss::FirstOrder RCcircuit{10, RCtime};
 

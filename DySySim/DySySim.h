@@ -5,6 +5,7 @@
 #include <cmath>
 #include <functional>
 #include <iostream>
+#include <queue>
 
 // Dynamical Systems Simulator
 
@@ -92,15 +93,30 @@ private:
    const double _timeConstant;
 };
 
+template<typename T>
 class Function: public SimBlock {
 public:
-   Function(int id, std::function<double(double)>callback):
+   Function(int id, std::function<T>callback):
       SimBlock{id}, _callback{callback} {}
    virtual ~Function() = default;
    void input(double in) { _out = _callback(in); }
 private:
-   std::function<double(double)> _callback;
+   std::function<T> _callback;
 };
+
+
+
+//class DeadTime: public TimedSimBlock {
+//public:
+//    DeadTime(int id, double deadtime, double initValue): TimedSimBlock{id, initValue},
+//        _deadtime{deadtime}, _buffer{} { for (int i = 0; i < int(deadtime / tc.TsimStep); i++) _buffer.push(initValue); }
+//    //virtual ~DeadTime() = default;
+//    void input(double in) { _buffer.push(in); _out = _buffer.pop(); }
+//private:
+//    double _deadtime;
+//    std::queue<double> _buffer;
+
+//};
 
 }
 
