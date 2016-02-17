@@ -3,6 +3,7 @@
 
 #include "SimBlock.h"
 #include <cmath>
+#include <iostream>
 
 // Dynamical Systems Simulator
 
@@ -78,6 +79,16 @@ public:
    void reset() { _out = _initValue; }
 private:
    double _initValue;
+};
+
+class FirstOrder: public TimedSimBlock {
+public:
+   FirstOrder(int id, double timeConstant, double initValue = 0.0):
+      TimedSimBlock{id, initValue}, _timeConstant{timeConstant} {}
+   ~FirstOrder() = default;
+   void input(double in) { _out += tc.TsimStep * (in - _out) / _timeConstant; }
+private:
+   const double _timeConstant;
 };
 
 }

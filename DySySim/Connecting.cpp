@@ -2,6 +2,13 @@
 #include "SimBlock.h"
 #include <iostream>
 
-void operator>>(dysysim::SimBlock& lhs, dysysim::SimBlock& rhs) {
+dysysim::SimBlock& operator>(dysysim::SimBlock& lhs, dysysim::SimBlock& rhs) {
    std::cout << lhs.getId() << " --> " << rhs.getId() << std::endl;
+   return rhs;
+}
+
+dysysim::SimBlock& operator+(dysysim::SimBlock& lhs, dysysim::SimBlock& rhs) {
+   dysysim::Summator* pSum = new dysysim::Summator{1000};
+   std::cout << "SUM "<< lhs.getId() << " + " << rhs.getId() << std::endl;
+   return *pSum;
 }
