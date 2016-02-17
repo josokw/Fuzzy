@@ -96,26 +96,23 @@ private:
 template<typename T>
 class Function: public SimBlock {
 public:
-   Function(int id, std::function<T>callback):
+   Function(int id, std::function<double(T)>callback):
       SimBlock{id}, _callback{callback} {}
    virtual ~Function() = default;
    void input(double in) { _out = _callback(in); }
 private:
-   std::function<T> _callback;
+   std::function<double(T)> _callback;
 };
-
-
 
 //class DeadTime: public TimedSimBlock {
 //public:
 //    DeadTime(int id, double deadtime, double initValue): TimedSimBlock{id, initValue},
 //        _deadtime{deadtime}, _buffer{} { for (int i = 0; i < int(deadtime / tc.TsimStep); i++) _buffer.push(initValue); }
-//    //virtual ~DeadTime() = default;
+//    virtual ~DeadTime() = default;
 //    void input(double in) { _buffer.push(in); _out = _buffer.pop(); }
 //private:
 //    double _deadtime;
 //    std::queue<double> _buffer;
-
 //};
 
 }
