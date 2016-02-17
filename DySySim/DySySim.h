@@ -109,7 +109,7 @@ public:
     DeadTime(int id, double deadtime, double initValue): TimedSimBlock{id, initValue},
         _deadtime{deadtime}, _buffer{} { for (int i = 0; i < int(deadtime / tc.TsimStep); i++) _buffer.push(initValue); }
     virtual ~DeadTime() = default;
-    void input(double in) { _buffer.push(in); _out = _buffer.front(); }
+    void input(double in) { _buffer.push(in); _out = _buffer.front(); _buffer.pop(); }
 private:
     double _deadtime;
     std::queue<double> _buffer;
