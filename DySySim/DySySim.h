@@ -63,6 +63,16 @@ public:
    void input(double in1, double in2) { _out = in1 < in2 ? in1 : in2; }
 };
 
+class Saturation: public SimBlock {
+public:
+   Saturation(int id, double min, double max): SimBlock{id}, _min(min), _max(max) {}
+   virtual ~Saturation() = default;
+   void input(double in) { _out = std::min(std::max(_min, in), _max); }
+private:
+   double _min;
+   double _max;
+};
+
 class Summator: public SimBlock {
 public:
    Summator(int id): SimBlock{id} {}
