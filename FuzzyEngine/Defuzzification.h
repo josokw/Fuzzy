@@ -8,7 +8,7 @@
 
 namespace {
 
-const double EPSILON = 1e-4;
+constexpr double EPSILON = 1e-4;
 
 inline constexpr
 bool equals(double d1, double d2) {
