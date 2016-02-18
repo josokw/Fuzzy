@@ -11,6 +11,12 @@
 
 namespace dysysim {
 
+class Constant: public SimBlock {
+public:
+   Constant(int id, double constant): SimBlock{id} { _out = constant; }
+   virtual ~Constant() = default;
+};
+
 class Gain: public SimBlock {
 public:
    Gain(int id, double gain): SimBlock{id}, _gain(gain) {}
@@ -29,6 +35,34 @@ private:
    double _att;
 };
 
+class Multiplier: public SimBlock {
+public:
+   Multiplier(int id): SimBlock{id} {}
+   virtual ~Multiplier() = default;
+   void input(double in1, double in2) { _out = in1 * in2; }
+};
+
+class Divider: public SimBlock {
+public:
+   Divider(int id): SimBlock{id} {}
+   virtual ~Divider() = default;
+   void input(double in1, double in2) { _out = in1 / in2; }
+};
+
+class Max: public SimBlock {
+public:
+   Max(int id): SimBlock{id} {}
+   virtual ~Max() = default;
+   void input(double in1, double in2) { _out = in1 > in2 ? in1 : in2; }
+};
+
+class Min: public SimBlock {
+public:
+   Min(int id): SimBlock{id} {}
+   virtual ~Min() = default;
+   void input(double in1, double in2) { _out = in1 < in2 ? in1 : in2; }
+};
+
 class Summator: public SimBlock {
 public:
    Summator(int id): SimBlock{id} {}
@@ -43,7 +77,6 @@ class Time: public TimedSimBlock {
 public:
    Time(int id, double TsimStep): TimedSimBlock{id} { CommonTime::TsimStep = TsimStep; }
    virtual ~Time() = default;
-   // void input(double in) {Time::tc.next(); _out = CommonTime::t;} dummy
    void next() { Time::tc.next(); _out = CommonTime::t; }
 };
 

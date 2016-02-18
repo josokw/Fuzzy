@@ -27,8 +27,6 @@ int main()
     //dss::ZeroOrderHold zoh{5, 1};
     dss::FirstOrder RCcircuit{10, RCtime};
 
-    dss::DeadTime deadtime{100, 0.05, 333};
-
     double setpoint{0.0};
     double error{0.0};
     double control{0.0};
@@ -45,14 +43,11 @@ int main()
         //RCcircuit.input(zoh.output());
         RCcircuit.input(control);
 
-        deadtime.input(control);
-
         cout << "t = " << setw(5) << time.output()
              << "  Setpoint = " << setw(6) << setpoint
              << "  Control = " << setw(6) << control
              << "  Measured Value = " << setw(10)
              << RCcircuit.output() << endl;
-        cout << deadtime.output() << endl;
 
         time.next();
         getchar();
