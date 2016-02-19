@@ -1,7 +1,11 @@
 #ifndef SIMBLOCK_H
 #define SIMBLOCK_H
 
+#include <initializer_list>
+#include <iostream>
 #include <map>
+#include <vector>
+#include <fstream>
 
 namespace dysysim {
 
@@ -16,8 +20,9 @@ public:
 
 class SimBlock {
 public:
-   SimBlock(int id): _id{id}, _out{0.0} { _allSimBlocks[id] = this; }
-   SimBlock(int id, double initValue): _id{id}, _out{initValue} {}
+   SimBlock(int id, double initValue): _id{id}, _out{initValue} {
+      _allSimBlocks[id] = this;}
+   SimBlock(int id): SimBlock(id, 0.0) {}
    SimBlock(const SimBlock& other) = delete;
    SimBlock& operator=(const SimBlock& other) = delete;
    virtual ~SimBlock() = default;
@@ -38,6 +43,18 @@ public:
    virtual ~TimedSimBlock() = default;
 protected:
    CommonTime tc;
+};
+
+class Log: public SimBlock {
+public:
+   Log(std::initializer_list<int> ids): SimBlock{-1}, _ids{ids} {}
+   void output() const {
+      for (auto i: _ids) std::cout << i << ": " << getOutputSimBlock(i) << "  ";
+      std::cout << std::endl;
+   }
+private:
+   //std::ofstream _ofs;
+   std::vector<int> _ids;
 };
 
 }

@@ -96,7 +96,7 @@ public:
       TimedSimBlock{id},
       _initialValue{initialValue}, _stepValue{stepValue},_stepTime{stepTime} {}
    virtual ~Step() = default;
-   double output() const { return tc.t >= _stepTime ? _stepValue : _initialValue; }
+   void input(double in) { _out = tc.t >= _stepTime ? _stepValue : _initialValue; }
 private:
    const double _initialValue;
    const double _stepValue;
@@ -112,6 +112,18 @@ public:
 private:
    const int _nSamples;
    int _sample;
+};
+
+class OnOff: public SimBlock {
+public:
+   OnOff(int id, double onoff, double on, double off):
+      SimBlock{id}, _onoff{onoff},_on(on), _off{off} {}
+   virtual ~OnOff() = default;
+   void input(double in) { _out = in < _onoff ? _off : _on; }
+private:
+   double _onoff;
+   double _on;
+   double _off;
 };
 
 // Euler integration
