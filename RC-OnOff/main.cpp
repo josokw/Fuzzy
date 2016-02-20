@@ -1,17 +1,19 @@
 #include "AppInfo.h"
 #include "DySySim.h"
 #include "LibInfoDySySim.h"
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 
 namespace dss = dysysim;
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
    cout << "-- " APPNAME_VERSION " " << string(50, '-') << endl
         << "-- uses " + dss::libName + " " << dss::libVersion << endl << endl;
 
+   // Initial conditions
    const double Tsimulation{0.005};
    const double RCtime{0.47};
    // Model
@@ -21,33 +23,43 @@ int main()
    dss::OnOff onoff{4, 0, 4000, 0};
    dss::FirstOrder RCcircuit{5, RCtime, 0};
 
-   dss::Log logger({1,2,3,4,5});
-
    double setpoint{0.0};
    double error{0.0};
    double control{0.0};
 
-   logger.next(); // tn = 0
-
-   for(int tn = 0; tn < 1000; ++tn) {
-       step.next();
-       setpoint = step.output();
-       sum.input(setpoint, -RCcircuit.output());
-       error = sum.output();
-       onoff.input(error);
-       control = onoff.output();
-       RCcircuit.input(control);
-
-       cout << setw(4) << tn << "  t = " << setw(5) << time.output()
-            << "  Setpoint = " << setw(6) << setpoint
-            << "  Control = " << setw(6) << control
-            << "  Measured Value = " << setw(10)
-            << RCcircuit.output() << endl;
-
-       logger.next();
-       time.next();
-       getchar();
+   std::ofstream simdata;
+   if (argc == 2) {
+      simdata.open(argv[1]);
    }
+
+   int tnMax{8 * RCtime / Tsimulation};
+   for(int tn = 0; tn < tnMax; ++tn) {
+      step.next();
+      setpoint = step.output();
+      sum.input(setpoint, -RCcircuit.output());
+      error = sum.output();
+      onoff.input(error);
+      control = onoff.output();
+      RCcircuit.input(control);
+
+      cout << setw(4) << tn << "  t = " << setw(5) << time.output()
+           << "  Setpoint = " << setw(5) << setpoint
+           << "  Control = " << setw(5) << control
+           << "  Measured Value = " << setw(8)
+           << RCcircuit.output() << endl;
+
+      if (argc == 2) {
+         simdata << setw(4) << time.output() << " "
+                 << setpoint << " "
+                 << control  << " "
+                 << RCcircuit.output() << endl;
+      }
+      time.next();
+      if (argc == 1) {
+         getchar();
+      }
+   }
+   simdata.close();
 
    return 0;
 }
