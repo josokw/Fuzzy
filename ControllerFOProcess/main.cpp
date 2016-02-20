@@ -2,6 +2,7 @@
 #include "Connecting.h"
 #include "FuzzyController.h"
 #include "LibInfoDySySim.h"
+#include "Model.h"
 #include <iomanip>
 #include <iostream>
 
@@ -23,20 +24,24 @@ int main()
    dss::Step step{2, 0, 2048, 0 /*stepTime*/};
    dss::Summator sum{3};
    FuzzyController fuzzyController;
-   dss::Function<double> fuzzyC(4, [&fuzzyController](double in){ return fuzzyController.inferControl(in); });
+   dss::Function<double> fuzzyC(4,
+                                [&fuzzyController](double in){ return fuzzyController.inferControl(in); });
    //dss::ZeroOrderHold zoh{5, 1};
    dss::FirstOrder RCcircuit{10, RCtime};
+
+//   dss::Model model("Fuzzy controller", 0.05, {});
+//   model.write(cout);
+//   model.simulate(600);
 
    double setpoint{0.0};
    double error{0.0};
    double control{0.0};
 
-   for(int tn = 0; tn < 600; ++tn) {
-      step.input(0);
+   for(int tn = 0; tn < 1000; ++tn) {
+      step.next();
       setpoint = step.output();
       sum.input(setpoint, -RCcircuit.output());
       error = sum.output();
-      //control = fuzzyC.inferControl(error);
       fuzzyC.input(error);
       control = fuzzyC.output();
       //zoh.input(control);

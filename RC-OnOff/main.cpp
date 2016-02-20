@@ -27,10 +27,10 @@ int main()
    double error{0.0};
    double control{0.0};
 
-   logger.output(); // tn = 0
+   logger.next(); // tn = 0
 
    for(int tn = 0; tn < 1000; ++tn) {
-       step.input(0);
+       step.next();
        setpoint = step.output();
        sum.input(setpoint, -RCcircuit.output());
        error = sum.output();
@@ -44,7 +44,7 @@ int main()
             << "  Measured Value = " << setw(10)
             << RCcircuit.output() << endl;
 
-       logger.output();
+       logger.next();
        time.next();
        getchar();
    }
