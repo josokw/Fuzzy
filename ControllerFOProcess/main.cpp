@@ -10,7 +10,7 @@ using namespace std;
 
 namespace dss = dysysim;
 
-int main()
+int main(int argc, char* argv[])
 {
    cout << "-- " APPNAME_VERSION " " << string(50, '-') << endl
         << "-- uses " + dss::libName + " " << dss::libVersion << endl << endl;
@@ -29,13 +29,18 @@ int main()
    //dss::ZeroOrderHold zoh{5, 1};
    dss::FirstOrder RCcircuit{10, RCtime};
 
-//   dss::Model model("Fuzzy controller", 0.05, {});
-//   model.write(cout);
-//   model.simulate(600);
+   //   dss::Model model("Fuzzy controller", 0.05, {});
+   //   model.write(cout);
+   //   model.simulate(600);
 
    double setpoint{0.0};
    double error{0.0};
    double control{0.0};
+
+   std::ofstream simdata;
+   if (argc == 2) {
+      simdata.open(argv[1]);
+   }
 
    for(int tn = 0; tn < 1000; ++tn) {
       step.next();
@@ -55,9 +60,19 @@ int main()
            << "  Measured Value = " << setw(10)
            << RCcircuit.output() << endl;
 
+      if (argc == 2) {
+         simdata << setw(4) << time.output() << " "
+                 << setpoint << " "
+                 << control  << " "
+                 << RCcircuit.output() << endl;
+      }
+
       time.next();
-      getchar();
+      if (argc == 1) {
+         getchar();
+      }
    }
+   simdata.close();
 
    return 0;
 }
