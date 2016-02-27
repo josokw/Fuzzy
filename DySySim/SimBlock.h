@@ -13,8 +13,13 @@ class SimTime {
 public:
    SimTime() = default;
    ~SimTime() = default;
-   static void next() { t += TsimStep; }
-   static double TsimStep;
+   static void reset() {
+      t = 0.0;
+   }
+   static void next() {
+      t += delta_t;
+   }
+   static double delta_t;
    static double t;
 };
 
@@ -26,11 +31,18 @@ public:
    SimBlock(const SimBlock& other) = delete;
    SimBlock& operator=(const SimBlock& other) = delete;
    virtual ~SimBlock() = default;
-
-   int getId() const { return _id; }
-   const std::string& getBlockType() const { return _blockType; }
-   static std::map<int, SimBlock*> getAllSimBlocks() { return _allSimBlocks; }
-   static SimBlock* getSimBlock(int id) { return _allSimBlocks.at(id); }
+   int getId() const {
+      return _id;
+   }
+   const std::string& getBlockType() const {
+      return _blockType;
+   }
+   static std::map<int, SimBlock*> getAllSimBlocks() {
+      return _allSimBlocks;
+   }
+   static SimBlock* getSimBlock(int id) {
+      return _allSimBlocks.at(id);
+   }
 protected:
    int _id;
    std::string _blockType;

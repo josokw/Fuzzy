@@ -32,11 +32,11 @@ public:
       _blockType += "-Log"; }
    virtual void next() const {
 //      std::cout << _blockType << " ";
-      for (auto i: _ids) {
+//      for (auto i: _ids) {
 //         std::cout << i << " ";
 //         auto sb {getSimBlock(i)};
 //         std::cout << i << ": " << sb->getBlockType() << "  ";
-      }
+//      }
 //      std::cout << std::endl;
    }
 private:

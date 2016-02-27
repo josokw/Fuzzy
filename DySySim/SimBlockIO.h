@@ -12,7 +12,10 @@ public:
       _blockType += "O";
    }
    SimBlockIO(int id): SimBlockI{id, {}} {}
-   double output() const { return _out; }
+   virtual ~SimBlockIO() = default;
+   double output() const {
+      return _out;
+   }
    virtual void next() const {}
 protected:
    double _out;
@@ -20,14 +23,15 @@ protected:
 
 class TimedSimBlockIO: public TimedSimBlockI {
 public:
-   TimedSimBlockIO(int id, double initValue):
-      TimedSimBlockI{id}, _out{initValue} {
+   TimedSimBlockIO(int id, double initOutput):
+      TimedSimBlockI{id}, _out{initOutput} {
       _blockType = "Timed" + _blockType;
    }
    TimedSimBlockIO(int id): TimedSimBlockIO{id, 0.0} {}
    virtual ~TimedSimBlockIO() = default;
-
-   double output() const { return _out; }
+   double output() const {
+      return _out;
+   }
 protected:
    double _out;
 };

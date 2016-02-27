@@ -10,9 +10,9 @@ namespace dysysim {
 class Model
 {
 public:
-   Model(const std::string& name, double Tsimulation,
+   Model(const std::string& name, double delta_t_simulation,
          std::initializer_list<int> ids):
-      _name{name}, _time{0, Tsimulation}, _logger{ids} {}
+      _name{name}, _time{0, delta_t_simulation}, _logger{ids} {}
    virtual ~Model() = default;
    std::ostream& write(std::ostream& os) const;
    void simulate(int steps);
