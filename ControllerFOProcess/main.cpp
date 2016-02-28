@@ -25,13 +25,10 @@ int main(int argc, char* argv[])
    dss::Summator sum{3};
    FuzzyController fuzzyController;
    dss::Function<double> fuzzyC(4,
-                                [&fuzzyController](double in){ return fuzzyController.inferControl(in); });
-   //dss::ZeroOrderHold zoh{5, 1};
-   dss::FirstOrder RCcircuit{10, RCtime};
-
-   //   dss::Model model("Fuzzy controller", 0.05, {});
-   //   model.write(cout);
-   //   model.simulate(600);
+                                [&fuzzyController](double in){
+      return fuzzyController.inferControl(in);
+   });
+   dss::FirstOrder RCcircuit{5, RCtime};
 
    double setpoint{0.0};
    double error{0.0};
@@ -43,16 +40,13 @@ int main(int argc, char* argv[])
    }
 
    for(int tn = 0; tn < 1000; ++tn) {
-      step.next();
       setpoint = step.output();
+
       sum.input(setpoint, -RCcircuit.output());
       error = sum.output();
+
       fuzzyC.input(error);
       control = fuzzyC.output();
-      //zoh.input(control);
-      //cout << "ZOH = " << int(zoh.output()) << endl;
-      //RCcircuit.input(zoh.output());
-      RCcircuit.input(control);
 
       cout << "t = " << setw(5) << time.output()
            << "  Setpoint = " << setw(6) << setpoint
@@ -67,7 +61,10 @@ int main(int argc, char* argv[])
                  << RCcircuit.output() << endl;
       }
 
+      RCcircuit.input(control);
       time.next();
+      step.next();
+
       if (argc == 1) {
          getchar();
       }
