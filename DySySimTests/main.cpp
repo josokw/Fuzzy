@@ -30,32 +30,30 @@ SUITE(DySySim)
 
    TEST(Time) {
       cout << "-- Time" << endl;
-      dss::Time time{1, 0.1};
+      const double delta_t{0.1};
+      dss::Time time{1, delta_t};
       CHECK_CLOSE(0.0, time.output(), EPS);
-      time.next();
-      CHECK_CLOSE(0.1, time.output(), EPS);
-      time.next();
-      CHECK_CLOSE(0.2, time.output(), EPS);
-      for(int  i = 0; i < 10; ++i) {
+      for(int  i = 1; i < 10; ++i) {
          time.next();
+         CHECK_CLOSE(i * delta_t, time.output(), EPS);
       }
-      CHECK_CLOSE(1.2, time.output(), EPS);
    }
 
    TEST(Step) {
-      dss::Time time{1, 0.1};
+      const double delta_t{0.1};
+      dss::Time time{1, delta_t};
       cout << "-- Step" << endl;
-      dss::Step step{2, 0.0, 1.0, 0.3};
+      dss::Step step{2, 0.0, 1.0, 4 * delta_t};
       CHECK_CLOSE(0.0, step.output(), EPS);
       time.next();
       step.next();
       CHECK_CLOSE(0.0, step.output(), EPS);
       time.next();
       step.next();
-      CHECK_CLOSE(1.0, step.output(), EPS);
+      CHECK_CLOSE(0.0, step.output(), EPS);
       time.next();
       step.next();
-      CHECK_CLOSE(1.0, step.output(), EPS);
+      CHECK_CLOSE(0.0, step.output(), EPS);
       time.next();
       step.next();
       CHECK_CLOSE(1.0, step.output(), EPS);
