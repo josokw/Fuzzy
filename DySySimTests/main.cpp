@@ -61,6 +61,21 @@ SUITE(DySySim)
       step.next();
       CHECK_CLOSE(1.0, step.output(), EPS);
    }
+
+   TEST(OnOff) {
+      cout << "-- OnOff" << endl;
+      dss::OnOff onoff{2, 10, 1.0, 0.0};
+      onoff.input(-1.0);
+      CHECK_CLOSE(0.0, onoff.output(), EPS);
+      onoff.input(0.0);
+      CHECK_CLOSE(0.0, onoff.output(), EPS);
+      onoff.input(5.0);
+      CHECK_CLOSE(0.0, onoff.output(), EPS);
+      onoff.input(10.0);
+      CHECK_CLOSE(1.0, onoff.output(), EPS);
+      onoff.input(20.0);
+      CHECK_CLOSE(1.0, onoff.output(), EPS);
+   }
 }
 
 int main() {
