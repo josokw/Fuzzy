@@ -7,6 +7,7 @@ SUBDIRS = \
    Tipping \
    ControllerFOProcess \
    FuzzyEngineTests \
-    RC-OnOff
+   RC-OnOff \
+   DySySimTests
 
 CONFIG += ordered
