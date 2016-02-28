@@ -205,21 +205,21 @@ public:
 
 class Delay: public TimedSimBlockIO {
 public:
-    Delay(int id, double delaytime, double initValue):
-       TimedSimBlockIO{id, initValue}, _delaytime{delaytime}, _buffer{} {
-       for (int i = 0; i < int(delaytime / tc.delta_t); i++) {
-          _buffer.push(initValue);
-       }
-    }
-    virtual ~Delay() = default;
-    void input(double in) {
-       _buffer.push(in);
-       _out = _buffer.front();
-       _buffer.pop();
-    }
+   Delay(int id, double delaytime, double initValue):
+      TimedSimBlockIO{id, initValue}, _delaytime{delaytime}, _buffer{} {
+      for (int i = 0; i < int(delaytime / tc.delta_t); i++) {
+         _buffer.push(initValue);
+      }
+   }
+   virtual ~Delay() = default;
+   void input(double in) {
+      _buffer.push(in);
+      _out = _buffer.front();
+      _buffer.pop();
+   }
 private:
-    const double _delaytime;
-    std::queue<double> _buffer;
+   const double _delaytime;
+   std::queue<double> _buffer;
 };
 
 class FirstOrder: public TimedSimBlockIO {
@@ -291,6 +291,25 @@ public:
    }
 private:
    const double _initValue;
+};
+
+// Trapezoidal integration
+class IntegratorTrapezoidal: public TimedSimBlockIO {
+public:
+   IntegratorTrapezoidal(int id, double initValue = 0):
+      TimedSimBlockIO{id, initValue}, _initValue{initValue}, _in_previous{0} {}
+   virtual ~IntegratorTrapezoidal() = default;
+   void input(double in) {
+      _out += 0.5 * (in + _in_previous) * tc.delta_t;
+      _in_previous = in;
+   }
+   void reset() {
+      _out = _initValue;
+      _in_previous = 0.0;
+   }
+private:
+   const double _initValue;
+   double _in_previous;
 };
 
 // @TBD not tested
