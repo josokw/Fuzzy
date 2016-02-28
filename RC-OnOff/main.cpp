@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
    const double RCtime{0.47};
    // Model
    dss::Time time{1, Tsimulation};
-   dss::Step step{2, 0, 3000, 0};
+   dss::Step step{2, 0, 3000, 0.0};
    dss::Summator sum{3};
    dss::OnOff onoff{4, 0, 4000, 0};
    dss::FirstOrder RCcircuit{5, RCtime, 0};
@@ -32,15 +32,16 @@ int main(int argc, char* argv[])
       simdata.open(argv[1]);
    }
 
-   int tnMax{8 * RCtime / Tsimulation};
+   int tnMax{8 * int(RCtime / Tsimulation)};
+
    for(int tn = 0; tn < tnMax; ++tn) {
-      step.next();
       setpoint = step.output();
+
       sum.input(setpoint, -RCcircuit.output());
       error = sum.output();
+
       onoff.input(error);
       control = onoff.output();
-      RCcircuit.input(control);
 
       cout << setw(4) << tn << "  t = " << setw(5) << time.output()
            << "  Setpoint = " << setw(5) << setpoint
@@ -54,7 +55,11 @@ int main(int argc, char* argv[])
                  << control  << " "
                  << RCcircuit.output() << endl;
       }
+
+      RCcircuit.input(control);
       time.next();
+      step.next();
+
       if (argc == 1) {
          getchar();
       }
@@ -63,4 +68,3 @@ int main(int argc, char* argv[])
 
    return 0;
 }
-
