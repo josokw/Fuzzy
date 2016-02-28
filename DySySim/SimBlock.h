@@ -25,7 +25,8 @@ public:
 
 class SimBlock {
 public:
-   SimBlock(int id): _id{id}, _blockType{"SimBlock"} {
+   SimBlock(int id):
+      _id{id}, _blockType{"SimBlock"} {
       _allSimBlocks[id] = this;
    }
    SimBlock(const SimBlock& other) = delete;
@@ -51,13 +52,14 @@ protected:
 
 class TimedSimBlock: public SimBlock {
 public:
-   TimedSimBlock(int id): SimBlock{id} {
+   TimedSimBlock(int id):
+      SimBlock{id} {
       _blockType = "Timed" + _blockType;
       _allSimBlocks[id] = this;
    }
    virtual ~TimedSimBlock() = default;
 protected:
-   SimTime tc;
+   SimTime sim_time;
 };
 
 }

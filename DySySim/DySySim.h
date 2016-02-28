@@ -166,7 +166,7 @@ public:
       TimedSimBlockO{id}, _frequency{frequency}, _phase{phase} {}
    virtual ~Frequency() = default;
    void next() {
-      _out = std::sin(2 * M_PI * _frequency * tc.t + _phase);
+      _out = std::sin(2 * M_PI * _frequency * SimTime::t + _phase);
    }
 private:
    const double _frequency;
@@ -175,28 +175,29 @@ private:
 
 class Step: public TimedSimBlockO {
 public:
-   Step(int id, double initialValue, double stepValue, double stepTime):
-      TimedSimBlockO{id},
-      _initialValue{initialValue}, _stepValue{stepValue},_stepTime{stepTime} {}
+   Step(int id, double initial_out, double step_out, double step_t):
+      TimedSimBlockO{id, initial_out},
+      _step_out{step_out}, _step_t{step_t} {}
    virtual ~Step() = default;
    void next() {
-      _out = (tc.t >= _stepTime) ? _stepValue : _initialValue;
+      _out = (SimTime::t >= _step_t) ? _step_out : _initial_out;
    }
 private:
-   const double _initialValue;
-   const double _stepValue;
-   const double _stepTime;
+   const double _step_out;
+   const double _step_t;
 };
 
+/// Every new instantiated Time object will reset the time to 0.
 class Time: public TimedSimBlockO {
 public:
    Time(int id, double delta_t):
       TimedSimBlockO{id} {
+      SimTime::reset();
       SimTime::delta_t = delta_t;
    }
    virtual ~Time() = default;
    void next() {
-      Time::tc.next();
+      SimTime::next();
       _out = SimTime::t;
    }
 };
@@ -205,10 +206,10 @@ public:
 
 class Delay: public TimedSimBlockIO {
 public:
-   Delay(int id, double delaytime, double initValue):
-      TimedSimBlockIO{id, initValue}, _delaytime{delaytime}, _buffer{} {
-      for (int i = 0; i < int(delaytime / tc.delta_t); i++) {
-         _buffer.push(initValue);
+   Delay(int id, double delaytime, double initial_out):
+      TimedSimBlockIO{id, initial_out}, _delaytime{delaytime}, _buffer{} {
+      for (int i = 0; i < int(delaytime / SimTime::delta_t); i++) {
+         _buffer.push(initial_out);
       }
    }
    virtual ~Delay() = default;
@@ -224,11 +225,11 @@ private:
 
 class FirstOrder: public TimedSimBlockIO {
 public:
-   FirstOrder(int id, double timeConstant, double initValue = 0.0):
-      TimedSimBlockIO{id, initValue}, _timeConstant{timeConstant} {}
+   FirstOrder(int id, double timeConstant, double initial_out = 0.0):
+      TimedSimBlockIO{id, initial_out}, _timeConstant{timeConstant} {}
    ~FirstOrder() = default;
    void input(double in) {
-      _out += tc.delta_t * (in - _out) / _timeConstant;
+      _out += SimTime::delta_t * (in - _out) / _timeConstant;
    }
 private:
    const double _timeConstant;
@@ -264,61 +265,62 @@ private:
 // Euler integration
 class Integrator: public TimedSimBlockIO {
 public:
-   Integrator(int id, double initValue = 0):
-      TimedSimBlockIO{id, initValue}, _initValue{initValue} {}
+   Integrator(int id, double initial_out = 0):
+      TimedSimBlockIO{id, initial_out} {}
    virtual ~Integrator() = default;
    void input(double in) {
-      _out += in * tc.delta_t;
+      _out += in * SimTime::delta_t;
    }
    void reset() {
-      _out = _initValue;
+      _out = _initial_out;
    }
 private:
-   const double _initValue;
+   //const double _initial_out;
 };
 
 // Euler integration
 class IntegratorEuler: public TimedSimBlockIO {
 public:
-   IntegratorEuler(int id, double initValue = 0):
-      TimedSimBlockIO{id, initValue}, _initValue{initValue} {}
+   IntegratorEuler(int id, double initial_out = 0):
+      TimedSimBlockIO{id, initial_out}, _initial_out{initial_out} {}
    virtual ~IntegratorEuler() = default;
    void input(double in) {
-      _out += in * tc.delta_t;
+      _out += in * SimTime::delta_t;
    }
    void reset() {
-      _out = _initValue;
+      _out = _initial_out;
    }
 private:
-   const double _initValue;
+   const double _initial_out;
 };
 
 // Trapezoidal integration
 class IntegratorTrapezoidal: public TimedSimBlockIO {
 public:
-   IntegratorTrapezoidal(int id, double initValue = 0):
-      TimedSimBlockIO{id, initValue}, _initValue{initValue}, _in_previous{0} {}
+   IntegratorTrapezoidal(int id, double initial_out = 0):
+      TimedSimBlockIO{id, initial_out}, _initial_out{initial_out},
+      _in_previous{0} {}
    virtual ~IntegratorTrapezoidal() = default;
    void input(double in) {
-      _out += 0.5 * (in + _in_previous) * tc.delta_t;
+      _out += 0.5 * (in + _in_previous) * SimTime::delta_t;
       _in_previous = in;
    }
    void reset() {
-      _out = _initValue;
+      _out = _initial_out;
       _in_previous = 0.0;
    }
 private:
-   const double _initValue;
+   const double _initial_out;
    double _in_previous;
 };
 
 // @TBD not tested
 class PI: public TimedSimBlockIO {
 public:
-   PI(int id, double Kp, double tau_I, double initValue = 0):
-      TimedSimBlockIO{id, initValue},
+   PI(int id, double Kp, double tau_I, double initial_out = 0):
+      TimedSimBlockIO{id, initial_out},
       _Kp{Kp}, _tau_I{tau_I},
-      _z{3, initValue} {}
+      _z{3, initial_out} {}
    virtual ~PI() = default;
    void input(double in) {
       _z.push_back(in);

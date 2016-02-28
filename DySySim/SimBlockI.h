@@ -9,10 +9,12 @@ namespace dysysim {
 
 class SimBlockI: public SimBlock {
 public:
-   SimBlockI(int id, std::initializer_list<int> ids): SimBlock{id}, _ids{ids} {
+   SimBlockI(int id, std::initializer_list<int> ids):
+      SimBlock{id}, _ids{ids} {
       _blockType += "I";
    }
-   SimBlockI(int id): SimBlockI{id, {}} {}
+   SimBlockI(int id):
+      SimBlockI{id, {}} {}
    virtual void next() const = 0;
 protected:
    std::vector<int> _ids;
@@ -20,7 +22,8 @@ protected:
 
 class TimedSimBlockI: public TimedSimBlock {
 public:
-   TimedSimBlockI(int id): TimedSimBlock{id} {
+   TimedSimBlockI(int id):
+      TimedSimBlock{id} {
       _blockType = "Timed" + _blockType;
    }
    virtual ~TimedSimBlockI() = default;
@@ -28,7 +31,8 @@ public:
 
 class Log: public SimBlockI {
 public:
-   Log(std::initializer_list<int> ids): SimBlockI{-1, ids} {
+   Log(std::initializer_list<int> ids):
+      SimBlockI{-1, ids} {
       _blockType += "-Log"; }
    virtual void next() const {
 //      std::cout << _blockType << " ";

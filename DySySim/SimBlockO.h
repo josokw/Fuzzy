@@ -7,10 +7,12 @@ namespace dysysim {
 
 class SimBlockO: public SimBlock {
 public:
-   SimBlockO(int id, double initOutput): SimBlock{id}, _out{initOutput} {
+   SimBlockO(int id, double initial_out):
+      SimBlock{id}, _out{initial_out} {
       _blockType += "O";
    }
-   SimBlockO(int id): SimBlockO(id, 0.0) {}
+   SimBlockO(int id):
+      SimBlockO(id, 0.0) {}
    SimBlockO(const SimBlockO& other) = delete;
    SimBlockO& operator=(const SimBlockO& other) = delete;
    virtual ~SimBlockO() = default;
@@ -24,8 +26,8 @@ protected:
 
 class TimedSimBlockO: public TimedSimBlock {
 public:
-   TimedSimBlockO(int id, double initOutput):
-      TimedSimBlock{id}, _out{initOutput} {
+   TimedSimBlockO(int id, double initial_out):
+      TimedSimBlock{id}, _initial_out{initial_out}, _out{initial_out} {
       _blockType += "O";
    }
    TimedSimBlockO(int id): TimedSimBlockO{id, 0.0} {}
@@ -34,6 +36,7 @@ public:
       return _out;
    }
 protected:
+   const double _initial_out;
    double _out;
 };
 
