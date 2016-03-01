@@ -19,6 +19,12 @@ SUITE(DySySim)
       CHECK_CLOSE(-0.1, att.output(), EPS);
    }
 
+   TEST(Constant) {
+      cout << "-- Constant" << endl;
+      dss::Constant con{1, 10.0};
+      CHECK_CLOSE(10.0, con.output(), EPS);
+   }
+
    TEST(Gain) {
       cout << "-- Gain" << endl;
       dss::Gain gain{1, 10.0};
@@ -26,6 +32,17 @@ SUITE(DySySim)
       CHECK_CLOSE(10.0, gain.output(), EPS);
       gain.input(-1.0);
       CHECK_CLOSE(-10.0, gain.output(), EPS);
+   }
+
+   TEST(Limit) {
+      cout << "-- Limit" << endl;
+      dss::Limit limit{1, -10.0, 20.0};
+      limit.input(0.0);
+      CHECK_CLOSE(0.0, limit.output(), EPS);
+      limit.input(-12.0);
+      CHECK_CLOSE(-10.0, limit.output(), EPS);
+      limit.input(22.0);
+      CHECK_CLOSE(20.0, limit.output(), EPS);
    }
 
    TEST(OnOff) {
@@ -48,7 +65,7 @@ SUITE(DySySim)
       const double delta_t{0.1};
       dss::Time time{1, delta_t};
       CHECK_CLOSE(0.0, time.output(), EPS);
-      for(int  i = 1; i < 10; ++i) {
+      for(int i = 1; i < 10; ++i) {
          time.next();
          CHECK_CLOSE(i * delta_t, time.output(), EPS);
       }
@@ -87,7 +104,6 @@ SUITE(DySySim)
       for(int i = 0; i < 10; ++i){
          auto input = step.output();
          delay.input(input);
-         cout << step.output() << "  " << delay.output() << endl;
          if (i < 5) {
             CHECK_CLOSE(0.0, delay.output(), EPS);
          }
