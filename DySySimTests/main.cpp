@@ -28,6 +28,21 @@ SUITE(DySySim)
       CHECK_CLOSE(-10.0, gain.output(), EPS);
    }
 
+   TEST(OnOff) {
+      cout << "-- OnOff" << endl;
+      dss::OnOff onoff{2, 10, 1.0, 0.0};
+      onoff.input(-1.0);
+      CHECK_CLOSE(0.0, onoff.output(), EPS);
+      onoff.input(0.0);
+      CHECK_CLOSE(0.0, onoff.output(), EPS);
+      onoff.input(5.0);
+      CHECK_CLOSE(0.0, onoff.output(), EPS);
+      onoff.input(10.0);
+      CHECK_CLOSE(1.0, onoff.output(), EPS);
+      onoff.input(20.0);
+      CHECK_CLOSE(1.0, onoff.output(), EPS);
+   }
+
    TEST(Time) {
       cout << "-- Time" << endl;
       const double delta_t{0.1};
@@ -62,19 +77,26 @@ SUITE(DySySim)
       CHECK_CLOSE(1.0, step.output(), EPS);
    }
 
-   TEST(OnOff) {
-      cout << "-- OnOff" << endl;
-      dss::OnOff onoff{2, 10, 1.0, 0.0};
-      onoff.input(-1.0);
-      CHECK_CLOSE(0.0, onoff.output(), EPS);
-      onoff.input(0.0);
-      CHECK_CLOSE(0.0, onoff.output(), EPS);
-      onoff.input(5.0);
-      CHECK_CLOSE(0.0, onoff.output(), EPS);
-      onoff.input(10.0);
-      CHECK_CLOSE(1.0, onoff.output(), EPS);
-      onoff.input(20.0);
-      CHECK_CLOSE(1.0, onoff.output(), EPS);
+   TEST(Delay) {
+      const double delta_t{0.1};
+      const double delayTime{3 * delta_t};
+      dss::Time time{1, delta_t};
+      cout << "-- Delay" << endl;
+      dss::Step step{2, 0.0, 1.0, 2 * delta_t};
+      dss::Delay delay{3, delayTime, 0.0};
+      for(int i = 0; i < 10; ++i){
+         auto input = step.output();
+         delay.input(input);
+         cout << step.output() << "  " << delay.output() << endl;
+         if (i < 5) {
+            CHECK_CLOSE(0.0, delay.output(), EPS);
+         }
+         else {
+            CHECK_CLOSE(1.0, delay.output(), EPS);
+         }
+         time.next();
+         step.next();
+      }
    }
 }
 
