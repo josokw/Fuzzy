@@ -114,6 +114,31 @@ SUITE(DySySim)
          step.next();
       }
    }
+
+   TEST(FirstOrder) {
+      const double delta_t{0.1};
+      const double tau{10 * delta_t};
+      const double stp{1.0};
+      dss::Time time{1, delta_t};
+      auto fio_response = [tau, stp](double in, double t) {
+         return stp * (1 - exp(-t / tau));
+      };
+      cout << "-- FirstOrder" << endl;
+      dss::Step step{2, 0.0, stp, 0.0}; //5 * delta_t};
+      dss::FirstOrder fio{3, tau, 0.0};
+      for(int i = 0; i < 30; ++i){
+         auto input = step.output();
+         fio.input(input);
+         if (i < 0) {
+            CHECK_CLOSE(0.0, fio.output(), EPS);
+         }
+         else {
+            CHECK_CLOSE(fio_response(input, time.output()), fio.output(), stp/50);
+         }
+         time.next();
+         step.next();
+      }
+   }
 }
 
 int main() {
