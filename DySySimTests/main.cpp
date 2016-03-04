@@ -119,21 +119,26 @@ SUITE(DySySim)
       const double delta_t{0.1};
       const double tau{10 * delta_t};
       const double stp{1.0};
+      const double stp_t{5 * delta_t};
+      const double simulation_accuracy = 0.10; // 10%
+
       dss::Time time{1, delta_t};
-      auto fio_response = [tau, stp](double in, double t) {
-         return stp * (1 - exp(-t / tau));
+      auto fio_response = [tau, stp_t, stp](double t) {
+         return (t < stp_t) ? 0.0 : (stp * (1 - exp(-(t - stp_t) / tau)));
       };
-      cout << "-- FirstOrder" << endl;
-      dss::Step step{2, 0.0, stp, 0.0}; //5 * delta_t};
+      cout << "-- FirstOrder (simulation accuracy "
+           << 100 * simulation_accuracy << "%)" << endl;
+      dss::Step step{2, 0.0, stp, stp_t};
       dss::FirstOrder fio{3, tau, 0.0};
-      for(int i = 0; i < 30; ++i){
+      while(time.output() < stp_t + 10 * tau) {
          auto input = step.output();
          fio.input(input);
-         if (i < 0) {
+         if (time.output() < stp_t) {
             CHECK_CLOSE(0.0, fio.output(), EPS);
          }
          else {
-            CHECK_CLOSE(fio_response(input, time.output()), fio.output(), stp/50);
+            CHECK_CLOSE(fio_response(time.output()), fio.output(),
+                        stp * simulation_accuracy);
          }
          time.next();
          step.next();
