@@ -8,10 +8,9 @@
 
 using namespace std;
 
-void doTippingFIS(TippingFIS& tfis, DEFUZ defuzzification);
+void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification);
 
-int main()
-{
+int main() {
    cout << "-- " APPNAME_VERSION << " " << string(50, '-') << endl << endl;
 
    TippingFIS tippingFIS;
@@ -19,29 +18,32 @@ int main()
    cout << tippingFIS << endl;
 
    cout << "-- Defuzzification: Mean of Maximum" << endl << endl;
-   doTippingFIS(tippingFIS, DEFUZ::MoM);
+   doTippingFIS(cout, tippingFIS, DEFUZ::MoM);
+
    cout << "-- Defuzzification: First of Maxima" << endl << endl;
-   doTippingFIS(tippingFIS, DEFUZ::FoM);
+   doTippingFIS(cout, tippingFIS, DEFUZ::FoM);
+
    cout << "-- Defuzzification: Last of Maxima" << endl << endl;
-   doTippingFIS(tippingFIS, DEFUZ::LoM);
+   doTippingFIS(cout, tippingFIS, DEFUZ::LoM);
+
    cout << "-- Defuzzification: Weighted Average" << endl << endl;
-   doTippingFIS(tippingFIS, DEFUZ::WA);
+   doTippingFIS(cout, tippingFIS, DEFUZ::WA);
 
    return 0;
 }
 
-void doTippingFIS(TippingFIS& tfis, DEFUZ defuzzification) {
-   cout << " service " << endl << endl;
+void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification) {
+   os << " service" << endl << endl;
    for(int service = 0; service < 11; ++service) {
-      cout << setw(8) << service;
+      os << setw(8) << service << "  ";
       for(int food = 0; food < 11; ++food) {
-         cout << setw(5) << tfis.inferTip(food, service, defuzzification);
+         os << setw(5) << tfis.inferTip(food, service, defuzzification);
       }
-      cout << endl;
+      os << endl;
    }
-   cout << endl << "    food";
+   os << endl << "    food  ";
    for(int food = 0; food < 11; ++food) {
-      cout << setw(5) << food;
+      os << setw(5) << food;
    }
-   cout << endl << endl;
+   os << endl << endl;
 }
