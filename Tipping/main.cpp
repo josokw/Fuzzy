@@ -6,44 +6,49 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification);
 
-int main() {
-   cout << "-- " APPNAME_VERSION << " " << string(50, '-') << endl << endl;
+int main()
+{
+   std::cout << "-- " APPNAME_VERSION << " " << std::string(50, '-')
+             << std::endl
+             << std::endl;
 
    TippingFIS tippingFIS;
 
-   cout << tippingFIS << endl;
+   std::cout << tippingFIS << std::endl;
 
-   cout << "-- Defuzzification: Mean of Maximum" << endl << endl;
-   doTippingFIS(cout, tippingFIS, DEFUZ::MoM);
+   std::cout << "-- Defuzzification: Mean of Maximum" << std::endl << std::endl;
+   doTippingFIS(std::cout, tippingFIS, DEFUZ::MoM);
 
-   cout << "-- Defuzzification: First of Maxima" << endl << endl;
-   doTippingFIS(cout, tippingFIS, DEFUZ::FoM);
+   std::cout << "-- Defuzzification: First of Maxima" << std::endl << std::endl;
+   doTippingFIS(std::cout, tippingFIS, DEFUZ::FoM);
 
-   cout << "-- Defuzzification: Last of Maxima" << endl << endl;
-   doTippingFIS(cout, tippingFIS, DEFUZ::LoM);
+   std::cout << "-- Defuzzification: Last of Maxima" << std::endl << std::endl;
+   doTippingFIS(std::cout, tippingFIS, DEFUZ::LoM);
 
-   cout << "-- Defuzzification: Weighted Average" << endl << endl;
-   doTippingFIS(cout, tippingFIS, DEFUZ::WA);
+   std::cout << "-- Defuzzification: Weighted Average" << std::endl
+             << std::endl;
+   doTippingFIS(std::cout, tippingFIS, DEFUZ::WA);
 
    return 0;
 }
 
-void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification) {
-   os << " service" << endl << endl;
-   for(int service = 0; service < 11; ++service) {
-      os << setw(8) << service << "  ";
-      for(int food = 0; food < 11; ++food) {
-         os << setw(5) << tfis.inferTip(food, service, defuzzification);
+void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification)
+{
+   const int FOOD_MAX = 11;
+
+   os << " service" << std::endl << std::endl;
+   for (int service = 0; service < 11; ++service) {
+      os << std::setw(8) << service << "  ";
+      for (int food = 0; food < FOOD_MAX; ++food) {
+         os << std::setw(5) << tfis.inferTip(food, service, defuzzification);
       }
-      os << endl;
+      os << std::endl;
    }
-   os << endl << "    food  ";
-   for(int food = 0; food < 11; ++food) {
-      os << setw(5) << food;
+   os << std::endl << "    food  ";
+   for (int food = 0; food < FOOD_MAX; ++food) {
+      os << std::setw(5) << food;
    }
-   os << endl << endl;
+   os << std::endl << std::endl;
 }
