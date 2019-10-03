@@ -10,19 +10,21 @@ namespace {
 
 constexpr double EPSILON = 1e-4;
 
-inline constexpr
-bool equals(double d1, double d2) {
+inline bool equals(double d1, double d2)
+{
    return std::fabs(d1 - d2) < EPSILON;
 }
 
-template<int N>
-const OutputFuzzySet* findHighestMbsSet(
-      const std::array<OutputFuzzySet*, N>& fs) {
-   double highestMBS = 0;
-   int highestIndex = 0;
-   int index = 0;
-   for(auto& f : fs) {
-      if(f->getMbs() > highestMBS) {
+template <int N>
+const OutputFuzzySet *
+findHighestMbsSet(const std::array<OutputFuzzySet *, N> &fs)
+{
+   double highestMBS{0};
+   int highestIndex{0};
+   int index{0};
+
+   for (auto &f : fs) {
+      if (f->getMbs() > highestMBS) {
          highestMBS = f->getMbs();
          highestIndex = index;
       }
@@ -30,30 +32,35 @@ const OutputFuzzySet* findHighestMbsSet(
    }
    return fs[highestIndex];
 }
-}
+} // namespace
 
-enum class DEFUZ {MoM, FoM, LoM, WA};
+enum class DEFUZ { MoM, FoM, LoM, WA };
 
-template<int N>
-double defuzMeanOfMaximum(const std::array<OutputFuzzySet*, N>& fs) {
+template <int N>
+double defuzMeanOfMaximum(const std::array<OutputFuzzySet *, N> &fs)
+{
    return findHighestMbsSet<N>(fs)->meanOfMaximum();
 }
 
-template<int N>
-double defuzFirstOfMaxima(const std::array<OutputFuzzySet*, N>& fs) {
+template <int N>
+double defuzFirstOfMaxima(const std::array<OutputFuzzySet *, N> &fs)
+{
    return findHighestMbsSet<N>(fs)->firstOfMaxima();
 }
 
-template<int N>
-double defuzLastOfMaxima(const std::array<OutputFuzzySet*, N>& fs) {
+template <int N>
+double defuzLastOfMaxima(const std::array<OutputFuzzySet *, N> &fs)
+{
    return findHighestMbsSet<N>(fs)->lastOfMaxima();
 }
 
-template<int N>
-double defuzWeightedAverage(const std::array<OutputFuzzySet*, N>& fs) {
+template <int N>
+double defuzWeightedAverage(const std::array<OutputFuzzySet *, N> &fs)
+{
    double numerator = 0;
    double denomenator = 0;
-   for(auto& f : fs) {
+
+   for (auto &f : fs) {
       numerator += f->getMbs() * f->meanOfMaximum();
       denomenator += f->getMbs();
    }

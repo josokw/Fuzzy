@@ -7,12 +7,14 @@
 class InputFuzzySetTrapezoidal : public InputFuzzySet
 {
 public:
-  InputFuzzySetTrapezoidal(const std::string& name,
-                           double t0, double t1, double t2, double t3);
-  virtual ~InputFuzzySetTrapezoidal() = default;
+   InputFuzzySetTrapezoidal(const std::string &name, double t0, double t1,
+                            double t2, double t3);
+   ~InputFuzzySetTrapezoidal() override = default;
+
 protected:
-  std::array<double, 4> _t;
-  virtual double membership() const override;
+   std::array<double, 4> _t;
+   
+   double membership() const override;
 };
 
 #endif // INPUTFUZZYSETTRAPEZOIDAL_H

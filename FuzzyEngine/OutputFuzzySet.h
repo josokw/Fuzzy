@@ -8,17 +8,26 @@ class OutputFuzzySet;
 
 class OutputFuzzySet : public FuzzySet
 {
-  friend OutputFuzzySet operator*(const OutputFuzzySet& lhs, double rhs);
+   friend OutputFuzzySet operator*(const OutputFuzzySet &lhs, double rhs);
+
 public:
-  OutputFuzzySet(): FuzzySet{} {}
-  OutputFuzzySet(const std::string& name): FuzzySet{name} {}
-  OutputFuzzySet(const FuzzySet& fs) { _mbs = fs.getMbs(); }
-  void setMbs(double mbs) { _mbs = mbs; }
-  virtual double meanOfMaximum() const { return 0; }
-  virtual double firstOfMaxima() const { return 0; }
-  virtual double lastOfMaxima() const { return 0; }
+   OutputFuzzySet()
+      : FuzzySet{}
+   {
+   }
+   OutputFuzzySet(const std::string &name)
+      : FuzzySet{name}
+   {
+   }
+   OutputFuzzySet(const FuzzySet &fs) { _mbs = fs.getMbs(); }
+
+   void setMbs(double mbs) { _mbs = mbs; }
+   virtual double meanOfMaximum() const { return 0; }
+   virtual double firstOfMaxima() const { return 0; }
+   virtual double lastOfMaxima() const { return 0; }
+
 protected:
-  virtual std::ostream& write(std::ostream& os) const override;
+   virtual std::ostream &write(std::ostream &os) const override;
 };
 
 #endif // OUTPUTFUZZYSET_H
