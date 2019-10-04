@@ -3,29 +3,29 @@
 #include "FuzzyController.h"
 #include "LibInfoDySySim.h"
 #include "Model.h"
+
 #include <iomanip>
 #include <iostream>
 
-using namespace std;
-
 namespace dss = dysysim;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-   cout << "-- " APPNAME_VERSION " " << string(50, '-') << endl
-        << "-- uses " + dss::libName + " " << dss::libVersion << endl << endl;
+   std::cout << "-- " APPNAME_VERSION " " << std::string(50, '-') << std::endl
+             << "-- uses " + dss::libName + " " << dss::libVersion << std::endl
+             << std::endl;
 
-   const double Tsample{0.005};  // 5 msec
+   const double Tsample{0.005}; // 5 msec
    const double Tsimulation{Tsample};
    //  const double stepTime = 10 * Tsimulation;
    const double RCtime{0.47}; // tau 0.47 sec
+
    // Model
    dss::Time time{1, Tsimulation};
    dss::Step step{2, 0, 2048, 0 /*stepTime*/};
    dss::Summator sum{3};
    FuzzyController fuzzyController;
-   dss::Function<double> fuzzyC(4,
-                                [&fuzzyController](double in){
+   dss::Function<double> fuzzyC(4, [&fuzzyController](double in) {
       return fuzzyController.inferControl(in);
    });
    dss::FirstOrder RCcircuit{5, RCtime};
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
       simdata.open(argv[1]);
    }
 
-   for(int tn = 0; tn < 1000; ++tn) {
+   for (int tn = 0; tn < 1000; ++tn) {
       setpoint = step.output();
 
       sum.input(setpoint, -RCcircuit.output());
@@ -48,17 +48,15 @@ int main(int argc, char* argv[])
       fuzzyC.input(error);
       control = fuzzyC.output();
 
-      cout << "t = " << setw(5) << time.output()
-           << "  Setpoint = " << setw(6) << setpoint
-           << "  Control = " << setw(6) << control
-           << "  Measured Value = " << setw(10)
-           << RCcircuit.output() << endl;
+      std::cout << "t = " << std::setw(5) << time.output()
+                << "  Setpoint = " << std::setw(6) << setpoint
+                << "  Control = " << std::setw(6) << control
+                << "  Measured Value = " << std::setw(10) << RCcircuit.output()
+                << std::endl;
 
       if (argc == 2) {
-         simdata << setw(4) << time.output() << " "
-                 << setpoint << " "
-                 << control  << " "
-                 << RCcircuit.output() << endl;
+         simdata << std::setw(4) << time.output() << " " << setpoint << " "
+                 << control << " " << RCcircuit.output() << std::endl;
       }
 
       RCcircuit.input(control);

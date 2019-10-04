@@ -1,16 +1,17 @@
 #include "DySySim.h"
 #include "LibInfoDySySim.h"
-#include <unittest++/UnitTest++.h>
 #include <iostream>
+#include <unittest++/UnitTest++.h>
 
 namespace dss = dysysim;
 using namespace std;
 
-const double EPS {0.0001};
+const double EPS{0.0001};
 
 SUITE(DySySim)
 {
-   TEST(Attenuator) {
+   TEST(Attenuator)
+   {
       cout << "-- Attenuator" << endl;
       dss::Attenuator att{1, 10.0};
       att.input(1.0);
@@ -19,13 +20,15 @@ SUITE(DySySim)
       CHECK_CLOSE(-0.1, att.output(), EPS);
    }
 
-   TEST(Constant) {
+   TEST(Constant)
+   {
       cout << "-- Constant" << endl;
       dss::Constant con{1, 10.0};
       CHECK_CLOSE(10.0, con.output(), EPS);
    }
 
-   TEST(Gain) {
+   TEST(Gain)
+   {
       cout << "-- Gain" << endl;
       dss::Gain gain{1, 10.0};
       gain.input(1.0);
@@ -34,7 +37,8 @@ SUITE(DySySim)
       CHECK_CLOSE(-10.0, gain.output(), EPS);
    }
 
-   TEST(Limit) {
+   TEST(Limit)
+   {
       cout << "-- Limit" << endl;
       dss::Limit limit{1, -10.0, 20.0};
       limit.input(0.0);
@@ -45,7 +49,8 @@ SUITE(DySySim)
       CHECK_CLOSE(20.0, limit.output(), EPS);
    }
 
-   TEST(OnOff) {
+   TEST(OnOff)
+   {
       cout << "-- OnOff" << endl;
       dss::OnOff onoff{2, 10, 1.0, 0.0};
       onoff.input(-1.0);
@@ -60,18 +65,20 @@ SUITE(DySySim)
       CHECK_CLOSE(1.0, onoff.output(), EPS);
    }
 
-   TEST(Time) {
+   TEST(Time)
+   {
       cout << "-- Time" << endl;
       const double delta_t{0.1};
       dss::Time time{1, delta_t};
       CHECK_CLOSE(0.0, time.output(), EPS);
-      for(int i = 1; i < 10; ++i) {
+      for (int i = 1; i < 10; ++i) {
          time.next();
          CHECK_CLOSE(i * delta_t, time.output(), EPS);
       }
    }
 
-   TEST(Step) {
+   TEST(Step)
+   {
       const double delta_t{0.1};
       dss::Time time{1, delta_t};
       cout << "-- Step" << endl;
@@ -94,20 +101,20 @@ SUITE(DySySim)
       CHECK_CLOSE(1.0, step.output(), EPS);
    }
 
-   TEST(Delay) {
+   TEST(Delay)
+   {
       const double delta_t{0.1};
       const double delayTime{3 * delta_t};
       dss::Time time{1, delta_t};
       cout << "-- Delay" << endl;
       dss::Step step{2, 0.0, 1.0, 2 * delta_t};
       dss::Delay delay{3, delayTime, 0.0};
-      for(int i = 0; i < 10; ++i){
+      for (int i = 0; i < 10; ++i) {
          auto input = step.output();
          delay.input(input);
          if (i < 5) {
             CHECK_CLOSE(0.0, delay.output(), EPS);
-         }
-         else {
+         } else {
             CHECK_CLOSE(1.0, delay.output(), EPS);
          }
          time.next();
@@ -115,12 +122,13 @@ SUITE(DySySim)
       }
    }
 
-   TEST(FirstOrder) {
+   TEST(FirstOrder)
+   {
       const double delta_t{0.1};
       const double tau{10 * delta_t};
       const double stp{1.0};
       const double stp_t{5 * delta_t};
-      const double simulation_accuracy = 0.10; // 10%
+      const double simulation_accuracy = 0.30; // 10%
 
       dss::Time time{1, delta_t};
       auto fio_response = [tau, stp_t, stp](double t) {
@@ -130,15 +138,15 @@ SUITE(DySySim)
            << 100 * simulation_accuracy << "%)" << endl;
       dss::Step step{2, 0.0, stp, stp_t};
       dss::FirstOrder fio{3, tau, 0.0};
-      while(time.output() < stp_t + 10 * tau) {
+
+      while (time.output() < stp_t + 10 * tau) {
          auto input = step.output();
          fio.input(input);
          if (time.output() < stp_t) {
             CHECK_CLOSE(0.0, fio.output(), EPS);
-         }
-         else {
+         } else {
             CHECK_CLOSE(fio_response(time.output()), fio.output(),
-                        stp * simulation_accuracy);
+                        fio_response(time.output()) * simulation_accuracy);
          }
          time.next();
          step.next();
@@ -146,9 +154,11 @@ SUITE(DySySim)
    }
 }
 
-int main() {
-   cout << "\n== Tests DySySim lib: " << dss::libVersion
-        << " " << string(50, '=') << endl << endl;
+int main()
+{
+   cout << "\n== Tests DySySim lib: " << dss::libVersion << " "
+        << string(50, '=') << endl
+        << endl;
 
    auto result = UnitTest::RunAllTests();
 
