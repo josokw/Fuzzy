@@ -16,6 +16,8 @@ add_subdirectory(DySySim)
 add_subdirectory(Tipping)
 add_subdirectory(ControllerFOProcess)
 add_subdirectory(RC-OnOff)
+add_subdirectory(DySySimTests)
+add_subdirectory(FuzzyEngineTests)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
