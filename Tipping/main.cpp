@@ -39,7 +39,7 @@ void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification)
    const int FOOD_MAX = 11;
 
    os << " service" << std::endl << std::endl;
-   for (int service = 0; service < 11; ++service) {
+   for (int service = 10; service >= 0; --service) {
       os << std::setw(8) << service << "  ";
       for (int food = 0; food < FOOD_MAX; ++food) {
          os << std::setw(5) << tfis.inferTip(food, service, defuzzification);
