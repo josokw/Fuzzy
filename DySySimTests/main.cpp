@@ -1,7 +1,9 @@
 #include "DySySim.h"
 #include "LibInfoDySySim.h"
+
+#include <UnitTest++/UnitTest++.h>
+
 #include <iostream>
-#include <unittest++/UnitTest++.h>
 
 namespace dss = dysysim;
 using namespace std;

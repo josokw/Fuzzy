@@ -4,7 +4,9 @@
 #include "InputFuzzySetTrapezoidal.h"
 #include "OutputFuzzySetTriangular.h"
 #include "OutputFuzzySetTrapezoidal.h"
-#include <unittest++/UnitTest++.h>
+
+#include <UnitTest++/UnitTest++.h>
+
 #include <iostream>
 
 using namespace std;
