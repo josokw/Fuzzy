@@ -20,5 +20,5 @@ message("==== FuzzyEngineTests sources : ${FUZZYENGINETESTS_SOURCES}")
 add_executable(testFuzzyEngine ${FUZZYENGINETESTS_SOURCES} ${FUZZYENGINETESTS_INCLUDES})
 
 target_include_directories(testFuzzyEngine PUBLIC ../libFuzzyEngine)
-target_link_libraries(testFuzzyEngine libFuzzyEngine)
+target_link_libraries(testFuzzyEngine FuzzyEngine)
 target_link_libraries(testFuzzyEngine UnitTest++)
