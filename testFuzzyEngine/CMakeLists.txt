@@ -17,8 +17,8 @@ file(
 message("==== FuzzyEngineTests includes: ${FUZZYENGINETESTS_INCLUDES}")
 message("==== FuzzyEngineTests sources : ${FUZZYENGINETESTS_SOURCES}")
 
-add_executable(FuzzyEngineTests ${FUZZYENGINETESTS_SOURCES} ${FUZZYENGINETESTS_INCLUDES})
+add_executable(testFuzzyEngine ${FUZZYENGINETESTS_SOURCES} ${FUZZYENGINETESTS_INCLUDES})
 
-target_include_directories(FuzzyEngineTests PUBLIC ../FuzzyEngine)
-target_link_libraries(FuzzyEngineTests FuzzyEngine)
-target_link_libraries(FuzzyEngineTests UnitTest++)
+target_include_directories(testFuzzyEngine PUBLIC ../libFuzzyEngine)
+target_link_libraries(testFuzzyEngine libFuzzyEngine)
+target_link_libraries(testFuzzyEngine UnitTest++)

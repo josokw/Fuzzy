@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/_bin)
 
 file(
         GLOB_RECURSE TIPPING_SOURCES
@@ -12,7 +12,7 @@ file(
 message("==== Tipping sources: ${TIPPING_SOURCES}")
 
 add_executable(Tipping ${TIPPING_SOURCES})
-target_include_directories(Tipping PUBLIC ../FuzzyEngine)
+target_include_directories(Tipping PUBLIC ../libFuzzyEngine)
 target_link_libraries(Tipping FuzzyEngine)
 
 

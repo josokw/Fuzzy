@@ -21,6 +21,6 @@ message("==== DySySImTests sources : ${DYSYSIMTESTS_SOURCES}")
 
 add_executable(DySySimTests ${DYSYSIMTESTS_SOURCES} ${DYSYSIMTESTS_INCLUDES})
 
-target_include_directories(DySySimTests PUBLIC ../DySySim)
+target_include_directories(DySySimTests PUBLIC ../libDySySim)
 target_link_libraries(DySySimTests DySySim)
 target_link_libraries(DySySimTests UnitTest++)

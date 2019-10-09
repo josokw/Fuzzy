@@ -13,8 +13,8 @@ message("==== ControllerFOProcess sources: ${CONTROLLERFOPROCESS_SOURCES}")
 
 add_executable(ControllerFOProcess ${CONTROLLERFOPROCESS_SOURCES})
 
-target_include_directories(ControllerFOProcess PUBLIC ../FuzzyEngine)
+target_include_directories(ControllerFOProcess PUBLIC ../libFuzzyEngine)
 target_link_libraries(ControllerFOProcess FuzzyEngine)
 
-target_include_directories(ControllerFOProcess PUBLIC ../DySySim)
+target_include_directories(ControllerFOProcess PUBLIC ../libDySySim)
 target_link_libraries(ControllerFOProcess DySySim)
