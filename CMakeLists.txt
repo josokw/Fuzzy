@@ -13,9 +13,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 
 add_subdirectory(libFuzzyEngine)
 add_subdirectory(libDySySim)
-add_subdirectory(Tipping)
-add_subdirectory(ControllerFOProcess)
-add_subdirectory(RC-OnOff)
+add_subdirectory(appTipping)
+add_subdirectory(appControllerFOProcess)
+add_subdirectory(appRC-OnOff)
 add_subdirectory(testDySySim)
 add_subdirectory(testFuzzyEngine)
 
