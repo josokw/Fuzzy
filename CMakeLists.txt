@@ -7,7 +7,7 @@ message("==== Project dir: ${PROJECT_SOURCE_DIR}")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -g")
 
 # set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -18,6 +18,3 @@ add_subdirectory(appControllerFOProcess)
 add_subdirectory(appRC-OnOff)
 add_subdirectory(testDySySim)
 add_subdirectory(testFuzzyEngine)
-
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/_bin)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/_lib)
