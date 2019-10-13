@@ -22,7 +22,7 @@ double OutputFuzzySetTriangular::firstOfMaxima() const
 
 double OutputFuzzySetTriangular::lastOfMaxima() const
 {
-   return _t[1] + _mbs * (_t[2] - _t[1]);
+   return _t[2] - _mbs * (_t[2] - _t[1]);
 }
 
 double OutputFuzzySetTriangular::meanOfMaximum() const

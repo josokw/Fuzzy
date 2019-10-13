@@ -119,25 +119,25 @@ SUITE(FuzzyEngine)
 
       ofz.setMbs(0.1);
       CHECK_CLOSE(5.5, ofz.firstOfMaxima(), EPS);
-      CHECK_CLOSE(11.0, ofz.lastOfMaxima(), EPS);
-      CHECK_CLOSE((5.5 + 11.0) / 2.0, ofz.meanOfMaximum(), EPS);
+      CHECK_CLOSE(19.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE((5.5 + 19.0) / 2.0, ofz.meanOfMaximum(), EPS);
       std::cout << std::endl;
    }
 
    TEST(defuz_OutputFuzzySetTrapezoidal)
    {
-      std::cout << "-- defuz_OutputFuzzySetTrapezoidal" << std::endl;
+      std::cout << "--- defuz_OutputFuzzySetTrapezoidal" << std::endl;
       OutputFuzzySetTrapezoidal ofz("Test", 0, 5, 10, 20);
 
       ofz.setMbs(0.5);
-      CHECK_CLOSE(5.0, ofz.firstOfMaxima(), EPS);
-      CHECK_CLOSE(10.0, ofz.lastOfMaxima(), EPS);
-      CHECK_CLOSE(7.5, ofz.meanOfMaximum(), EPS);
+      CHECK_CLOSE(2.5, ofz.firstOfMaxima(), EPS);
+      CHECK_CLOSE(15.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE((2.5 + 15.0) / 2.0, ofz.meanOfMaximum(), EPS);
 
       ofz.setMbs(0.1);
-      CHECK_CLOSE(5.0, ofz.firstOfMaxima(), EPS);
-      CHECK_CLOSE(10.0, ofz.lastOfMaxima(), EPS);
-      CHECK_CLOSE(7.5, ofz.meanOfMaximum(), EPS);
+      CHECK_CLOSE(0.5, ofz.firstOfMaxima(), EPS);
+      CHECK_CLOSE(19.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE((0.5 + 19.0) / 2.0, ofz.meanOfMaximum(), EPS);
       std::cout << std::endl;
    }
 
