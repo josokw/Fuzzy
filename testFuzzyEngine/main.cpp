@@ -107,63 +107,37 @@ SUITE(FuzzyEngine)
       std::cout << std::endl;
    }
 
-   TEST(defuz_sym_OutputFuzzySetTriangular)
+   TEST(defuz_OutputFuzzySetTriangular)
    {
-      std::cout << "-- defuz_sym_OutputFuzzySetTriangular symmetrical"
-                << std::endl;
-      OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+      std::cout << "--- defuz_OutputFuzzySetTriangular" << std::endl;
+      OutputFuzzySetTriangular ofz("Test", 5, 10, 20);
 
       ofz.setMbs(0.5);
-      CHECK_CLOSE(5.0, ofz.meanOfMaximum(), EPS);
-      CHECK_CLOSE(0.0, ofz.firstOfMaxima(), EPS);
-      CHECK_CLOSE(10.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE(7.5, ofz.firstOfMaxima(), EPS);
+      CHECK_CLOSE(15.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE((7.5 + 15.0) / 2.0, ofz.meanOfMaximum(), EPS);
 
       ofz.setMbs(0.1);
-      CHECK_CLOSE(5.0, ofz.meanOfMaximum(), EPS);
-      CHECK_CLOSE(0.0, ofz.firstOfMaxima(), EPS);
-      CHECK_CLOSE(10.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE(5.5, ofz.firstOfMaxima(), EPS);
+      CHECK_CLOSE(11.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE((5.5 + 11.0) / 2.0, ofz.meanOfMaximum(), EPS);
       std::cout << std::endl;
    }
 
-   TEST(defuz_nosym_OutputFuzzySetTriangular)
+   TEST(defuz_OutputFuzzySetTrapezoidal)
    {
-      std::cout << "-- defuz_nosym_OutputFuzzySetTriangular" << std::endl;
-      OutputFuzzySetTriangular ofz("Test", 0, 10, 30);
+      std::cout << "-- defuz_OutputFuzzySetTrapezoidal" << std::endl;
+      OutputFuzzySetTrapezoidal ofz("Test", 0, 5, 10, 20);
 
       ofz.setMbs(0.5);
-      auto mom = ofz.meanOfMaximum();
-      CHECK_CLOSE(25.0 / 2, mom, EPS);
-      CHECK_CLOSE(0.0, ofz.firstOfMaxima(), EPS);
-      CHECK_CLOSE(30.0, ofz.lastOfMaxima(), EPS);
-      std::cout << std::endl;
-   }
-
-   TEST(defuz_sym_OutputFuzzySetTrapezoidal)
-   {
-      std::cout << "-- defuz_sym_OutputFuzzySetTrapezoidal" << std::endl;
-      OutputFuzzySetTrapezoidal ofz("Test", 0, 5, 10, 15);
-
-      ofz.setMbs(0.5);
-      CHECK_CLOSE(7.5, ofz.meanOfMaximum(), EPS);
       CHECK_CLOSE(5.0, ofz.firstOfMaxima(), EPS);
       CHECK_CLOSE(10.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE(7.5, ofz.meanOfMaximum(), EPS);
 
       ofz.setMbs(0.1);
-      CHECK_CLOSE(7.5, ofz.meanOfMaximum(), EPS);
       CHECK_CLOSE(5.0, ofz.firstOfMaxima(), EPS);
       CHECK_CLOSE(10.0, ofz.lastOfMaxima(), EPS);
-      std::cout << std::endl;
-   }
-
-   TEST(defuz_notsym_OutputFuzzySetTrapezoidal)
-   {
-      std::cout << "-- defuz_notsym_OutputFuzzySetTrapezoidal" << std::endl;
-      OutputFuzzySetTrapezoidal ofz("Test", 0, 10, 20, 40);
-
-      ofz.setMbs(0.5);
-      CHECK_CLOSE(35.0 / 2, ofz.meanOfMaximum(), EPS);
-      // CHECK_CLOSE(0.0 / 2, ofz.firstOfMaxima(), EPS);
-      // CHECK_CLOSE(40.0 / 2, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE(7.5, ofz.meanOfMaximum(), EPS);
       std::cout << std::endl;
    }
 

@@ -14,3 +14,18 @@ operator=(const OutputFuzzySet &other)
    _mbs = other.getMbs();
    return *this;
 }
+
+double OutputFuzzySetTriangular::firstOfMaxima() const
+{
+   return _t[0] + _mbs * (_t[1] - _t[0]);
+}
+
+double OutputFuzzySetTriangular::lastOfMaxima() const
+{
+   return _t[1] + _mbs * (_t[2] - _t[1]);
+}
+
+double OutputFuzzySetTriangular::meanOfMaximum() const
+{
+   return (firstOfMaxima() + lastOfMaxima()) / 2.0;
+}

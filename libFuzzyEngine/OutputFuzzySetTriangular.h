@@ -13,9 +13,9 @@ public:
    ~OutputFuzzySetTriangular() override = default;
 
    OutputFuzzySetTriangular &operator=(const OutputFuzzySet &other);
-   double meanOfMaximum() const override { return _t[1]; }
-   double firstOfMaxima() const override { return _t[0]; }
-   double lastOfMaxima() const override { return _t[2]; }
+   double firstOfMaxima() const override;
+   double lastOfMaxima() const override;
+   double meanOfMaximum() const override;
 
 protected:
    std::array<double, 3> _t;
