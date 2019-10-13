@@ -2,8 +2,11 @@
 #define INPUTFUZZYSETTRIANGULAR_H
 
 #include "InputFuzzySet.h"
+
 #include <array>
 
+/// Triangular fuzzy set.
+/// \pre t0 < t1 < t2
 class InputFuzzySetTriangular : public InputFuzzySet
 {
 public:
@@ -13,7 +16,7 @@ public:
 
 protected:
    std::array<double, 3> _t;
-   
+
    double membership() const override;
 };
 

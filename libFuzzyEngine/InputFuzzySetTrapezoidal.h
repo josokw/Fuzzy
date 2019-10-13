@@ -2,8 +2,11 @@
 #define INPUTFUZZYSETTRAPEZOIDAL_H
 
 #include "InputFuzzySet.h"
+
 #include <array>
 
+/// Trapezoidal fuzzy set.
+/// \pre t0 < t1 <= t2 < t3
 class InputFuzzySetTrapezoidal : public InputFuzzySet
 {
 public:

@@ -1,4 +1,6 @@
 #include "InputFuzzySetTriangular.h"
+
+#include <algorithm>
 #include <iostream>
 
 InputFuzzySetTriangular::InputFuzzySetTriangular(const std::string &name,
@@ -11,23 +13,11 @@ InputFuzzySetTriangular::InputFuzzySetTriangular(const std::string &name,
 
 double InputFuzzySetTriangular::membership() const
 {
-   if (_input < _t[0]) {
-      _mbs = 0;
-   } else if (_input <= _t[1]) {
-      if (_t[0] == _t[1]) {
-         _mbs = 1;
-      } else {
-         _mbs = (_input - _t[0]) / (_t[1] - _t[0]);
-      }
-   } else if (_input <= _t[2]) {
-      if (_t[1] == _t[2]) {
-         _mbs = 1;
-      } else {
-         _mbs = 1 - ((_input - _t[1]) / (_t[2] - _t[1]));
-      }
-   } else {
-      _mbs = 0;
-   }
+   double min1 = std::min((_input - _t[0]) / (_t[1] - _t[0]), 1.0);
+   double min2 = std::min((_t[2] - _input) / (_t[2] - _t[1]), 1.0);
+   double min3 = std::min(min1, min2);
+
+   _mbs = std::max(min3, 0.0);
 
    return _mbs;
 }

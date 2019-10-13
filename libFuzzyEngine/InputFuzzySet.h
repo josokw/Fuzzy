@@ -18,11 +18,11 @@ public:
    void setInput(double input)
    {
       _input = input;
-      membership();
+      _mbs = membership();
    }
 
 protected:
-   double _input = 0;
+   double _input = 0.0;
 
    std::ostream &write(std::ostream &os) const override;
    virtual double membership() const = 0;
