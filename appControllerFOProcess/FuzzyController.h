@@ -4,7 +4,7 @@
 #include "InputFuzzySetTrapezoidal.h"
 #include "OutputFuzzySetTriangular.h"
 
-#include <array>
+#include <vector>
 
 class FuzzyController
 {
@@ -29,9 +29,9 @@ private:
    OutputFuzzySetTriangular control_posL{"control_posL", 2734, 3419, 4095};
 
    // Polymorfic arrays
-   std::array<InputFuzzySet *, 5> errors = {
+   std::vector<InputFuzzySet *> errors{
       {&error_negl, &error_neg, &error_no, &error_pos, &error_posL}};
-   std::array<OutputFuzzySet *, 5> controls = {
+   std::vector<OutputFuzzySet *> controls{
       {&control_negL, &control_neg, &control_no, &control_pos, &control_posL}};
 };
 

@@ -26,5 +26,5 @@ double FuzzyController::inferControl(double error)
    control_posL = error_posL;
    
    // Defuzzification
-   return defuzMeanOfMaximum<5>(controls);
+   return defuzMeanOfMaximum(controls);
 }

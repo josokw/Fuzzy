@@ -2,9 +2,10 @@
 #define DEFUZZIFICATION
 
 #include "OutputFuzzySet.h"
-#include <array>
+
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 namespace {
 
@@ -15,9 +16,7 @@ inline bool equals(double d1, double d2)
    return std::fabs(d1 - d2) < EPSILON;
 }
 
-template <int N>
-const OutputFuzzySet *
-findHighestMbsSet(const std::array<OutputFuzzySet *, N> &fs)
+const OutputFuzzySet *findHighestMbsSet(const std::vector<OutputFuzzySet *> &fs)
 {
    double highestMBS{0};
    int highestIndex{0};
@@ -36,26 +35,22 @@ findHighestMbsSet(const std::array<OutputFuzzySet *, N> &fs)
 
 enum class DEFUZ { MoM, FoM, LoM, WA };
 
-template <int N>
-double defuzMeanOfMaximum(const std::array<OutputFuzzySet *, N> &fs)
+inline double defuzMeanOfMaximum(const std::vector<OutputFuzzySet *> &fs)
 {
-   return findHighestMbsSet<N>(fs)->meanOfMaximum();
+   return findHighestMbsSet(fs)->meanOfMaximum();
 }
 
-template <int N>
-double defuzFirstOfMaxima(const std::array<OutputFuzzySet *, N> &fs)
+inline double defuzFirstOfMaxima(const std::vector<OutputFuzzySet *> &fs)
 {
-   return findHighestMbsSet<N>(fs)->firstOfMaxima();
+   return findHighestMbsSet(fs)->firstOfMaxima();
 }
 
-template <int N>
-double defuzLastOfMaxima(const std::array<OutputFuzzySet *, N> &fs)
+inline double defuzLastOfMaxima(const std::vector<OutputFuzzySet *> &fs)
 {
-   return findHighestMbsSet<N>(fs)->lastOfMaxima();
+   return findHighestMbsSet(fs)->lastOfMaxima();
 }
 
-template <int N>
-double defuzWeightedAverage(const std::array<OutputFuzzySet *, N> &fs)
+inline double defuzWeightedAverage(const std::vector<OutputFuzzySet *> &fs)
 {
    double numerator = 0;
    double denomenator = 0;

@@ -6,10 +6,10 @@
 #include "InputFuzzySetTriangular.h"
 #include "OutputFuzzySetTriangular.h"
 
-#include <array>
+#include <vector>
 
 /// Tipping Fuzzy Inference (Expert) System
-class TippingFIS
+class TippingFIS final
 {
    friend std::ostream &operator<<(std::ostream &os, const TippingFIS &lhs);
 
@@ -21,9 +21,9 @@ public:
 
 private:
    // Linguistic variable: Service
-   InputFuzzySetTriangular poor{"Service = poor", 0, 2.5, 5};
+   InputFuzzySetTrapezoidal poor{"Service = poor", 0.0, 0.0, 2.5, 5};
    InputFuzzySetTriangular good{"Service = good", 2.5, 5, 7.5};
-   InputFuzzySetTriangular great{"Service = great", 5, 7.5, 10};
+   InputFuzzySetTrapezoidal great{"Service = great", 5, 7.5, 10.0, 10.0};
 
    // Liguistic variable: Food
    InputFuzzySetTrapezoidal rancid{"Food = rancid", 0, 0, 1.5, 4};
@@ -35,9 +35,9 @@ private:
    OutputFuzzySetTriangular generous{"Tip = generous", 20, 25, 30};
 
    // Polymorfic arrays containing pointers (base class) to fuzzy sets
-   std::array<InputFuzzySet *, 3> fuzzyService = {{&poor, &good, &great}};
-   std::array<InputFuzzySet *, 2> fuzzyFood = {{&rancid, &delicious}};
-   std::array<OutputFuzzySet *, 3> fuzzyTip = {{&cheap, &average, &generous}};
+   std::vector<InputFuzzySet *> fuzzyService = {{&poor, &good, &great}};
+   std::vector<InputFuzzySet *> fuzzyFood = {{&rancid, &delicious}};
+   std::vector<OutputFuzzySet *> fuzzyTip = {{&cheap, &average, &generous}};
 };
 
 #endif // TIPPINGFIS_H

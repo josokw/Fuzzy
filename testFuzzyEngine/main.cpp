@@ -284,15 +284,15 @@ SUITE(FuzzyEngine)
       OutputFuzzySetTrapezoidal ofz1("Test", 0, 1, 4, 5);
       OutputFuzzySetTrapezoidal ofz2("Test", 3, 4, 6, 7);
       OutputFuzzySetTrapezoidal ofz3("Test", 5, 6, 7, 8);
-      std::array<OutputFuzzySet *, 3> all{&ofz1, &ofz2, &ofz3};
+      std::vector<OutputFuzzySet *> all{&ofz1, &ofz2, &ofz3};
 
       ofz1.setMbs(0.3);
       ofz2.setMbs(0.5);
       ofz3.setMbs(1.0);
-      CHECK_CLOSE(6.0, defuzFirstOfMaxima<3>(all), EPS);
-      CHECK_CLOSE(6.5, defuzMeanOfMaximum<3>(all), EPS);
-      CHECK_CLOSE(7.0, defuzLastOfMaxima<3>(all), EPS);
-      CHECK_CLOSE(5.416, defuzWeightedAverage<3>(all), EPS);
+      CHECK_CLOSE(6.0, defuzFirstOfMaxima(all), EPS);
+      CHECK_CLOSE(6.5, defuzMeanOfMaximum(all), EPS);
+      CHECK_CLOSE(7.0, defuzLastOfMaxima(all), EPS);
+      CHECK_CLOSE(5.416, defuzWeightedAverage(all), EPS);
       std::cout << std::endl;
    }
 
