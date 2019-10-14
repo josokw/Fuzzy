@@ -56,6 +56,52 @@ SUITE(FuzzyEngine)
       std::cout << std::endl;
    }
 
+   TEST(mbs_InputFuzzySetLeftTriangular)
+   {
+      std::cout << "--- mbs_InputFuzzySetLeftTriangular" << std::endl;
+      InputFuzzySetTriangular ifz("Test", 5, 5, 15);
+
+      ifz.setInput(5.0);
+      auto mbs = ifz.getMbs();
+      CHECK_CLOSE(1.0, mbs, EPS);
+
+      ifz.setInput(10.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.5, mbs, EPS);
+
+      ifz.setInput(15.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+
+      ifz.setInput(20.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+      std::cout << std::endl;
+   }
+
+   TEST(mbs_InputFuzzySetRightTriangular)
+   {
+      std::cout << "--- mbs_InputFuzzySetRightTriangular" << std::endl;
+      InputFuzzySetTriangular ifz("Test", 5, 15, 15);
+
+      ifz.setInput(0.0);
+      auto mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+
+      ifz.setInput(5.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+
+      ifz.setInput(10.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.5, mbs, EPS);
+
+      ifz.setInput(15.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(1.0, mbs, EPS);
+      std::cout << std::endl;
+   }
+
    TEST(mbs_InputFuzzySetTrapezoidal)
    {
       std::cout << "--- mbs_InputFuzzySetTrapezoidal" << std::endl;
@@ -138,7 +184,7 @@ SUITE(FuzzyEngine)
       std::cout << std::endl;
    }
 
-    TEST(mbs_InputFuzzySetRightTrapezoidal)
+   TEST(mbs_InputFuzzySetRightTrapezoidal)
    {
       std::cout << "--- mbs_InputFuzzySetRightTrapezoidal" << std::endl;
       InputFuzzySetTrapezoidal ifz("Test", 5, 10, 20, 20);
