@@ -17,11 +17,19 @@ operator=(const OutputFuzzySet &other)
 
 double OutputFuzzySetTrapezoidal::firstOfMaxima() const
 {
+   if (isLeft())
+   {
+      return _t[0];
+   }
    return _t[0] + _mbs * (_t[1] - _t[0]);
 }
 
 double OutputFuzzySetTrapezoidal::lastOfMaxima() const
 {
+   if (isRight())
+   {
+      return _t[3];
+   }
    return _t[3] - _mbs * (_t[3] - _t[2]);
 }
 

@@ -107,6 +107,80 @@ SUITE(FuzzyEngine)
       std::cout << std::endl;
    }
 
+   TEST(mbs_InputFuzzySetLeftTrapezoidal)
+   {
+      std::cout << "--- mbs_InputFuzzySetLeftTrapezoidal" << std::endl;
+      InputFuzzySetTrapezoidal ifz("Test", 0, 0, 20, 40);
+
+      ifz.setInput(0.0);
+      auto mbs = ifz.getMbs();
+      CHECK_CLOSE(1.0, mbs, EPS);
+
+      ifz.setInput(10.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(1.0, mbs, EPS);
+
+      ifz.setInput(20.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(1.0, mbs, EPS);
+
+      ifz.setInput(30.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.5, mbs, EPS);
+
+      ifz.setInput(40.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+
+      ifz.setInput(50.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+      std::cout << std::endl;
+   }
+
+    TEST(mbs_InputFuzzySetRightTrapezoidal)
+   {
+      std::cout << "--- mbs_InputFuzzySetRightTrapezoidal" << std::endl;
+      InputFuzzySetTrapezoidal ifz("Test", 5, 10, 20, 20);
+
+      ifz.setInput(-10.0);
+      auto mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+
+      ifz.setInput(0.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+
+      ifz.setInput(2.5);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+
+      ifz.setInput(5.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.0, mbs, EPS);
+
+      ifz.setInput(7.5);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(0.5, mbs, EPS);
+
+      ifz.setInput(10.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(1.0, mbs, EPS);
+
+      ifz.setInput(15.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(1.0, mbs, EPS);
+
+      ifz.setInput(20.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(1.0, mbs, EPS);
+
+      ifz.setInput(30.0);
+      mbs = ifz.getMbs();
+      CHECK_CLOSE(1.0, mbs, EPS);
+      std::cout << std::endl;
+   }
+
    TEST(defuz_OutputFuzzySetTriangular)
    {
       std::cout << "--- defuz_OutputFuzzySetTriangular" << std::endl;
@@ -141,6 +215,23 @@ SUITE(FuzzyEngine)
       std::cout << std::endl;
    }
 
+   TEST(defuz_OutputFuzzySetLeftTrapezoidal)
+   {
+      std::cout << "--- defuz_OutputFuzzySetLeftTrapezoidal" << std::endl;
+      OutputFuzzySetTrapezoidal ofz("Test", 0, 0, 10, 20);
+
+      ofz.setMbs(0.5);
+      CHECK_CLOSE(0.0, ofz.firstOfMaxima(), EPS);
+      CHECK_CLOSE(15.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE((0.0 + 15.0) / 2.0, ofz.meanOfMaximum(), EPS);
+
+      ofz.setMbs(0.1);
+      CHECK_CLOSE(0.0, ofz.firstOfMaxima(), EPS);
+      CHECK_CLOSE(19.0, ofz.lastOfMaxima(), EPS);
+      CHECK_CLOSE((0.0 + 19.0) / 2.0, ofz.meanOfMaximum(), EPS);
+      std::cout << std::endl;
+   }
+
    TEST(defuz_outputsFuzzySets)
    {
       std::cout << "-- defuz output Fuzzy Sets" << std::endl;
@@ -170,6 +261,7 @@ SUITE(FuzzyEngine)
       ifz2.setInput(12.5);
       ofz = ifz1 or ifz2;
       CHECK_CLOSE(0.5, ofz.getMbs(), EPS);
+      auto mom = ofz.meanOfMaximum();
       std::cout << std::endl;
    }
 

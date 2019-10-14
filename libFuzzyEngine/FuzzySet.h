@@ -3,6 +3,12 @@
 
 #include <iosfwd>
 #include <string>
+#include <cmath>
+
+inline bool compare(double d1, double d2, double eps = 0.01) 
+{
+   return std::fabs(d1 - d2) < eps;
+}
 
 class OutputFuzzySet;
 
