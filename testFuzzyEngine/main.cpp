@@ -236,6 +236,7 @@ SUITE(FuzzyEngine)
       CHECK_CLOSE(7.5, ofz.firstOfMaxima(), EPS);
       CHECK_CLOSE(15.0, ofz.lastOfMaxima(), EPS);
       CHECK_CLOSE((7.5 + 15.0) / 2.0, ofz.meanOfMaximum(), EPS);
+      ofz.clearMbs();
 
       ofz.setMbs(0.1);
       CHECK_CLOSE(5.5, ofz.firstOfMaxima(), EPS);
@@ -253,6 +254,7 @@ SUITE(FuzzyEngine)
       CHECK_CLOSE(2.5, ofz.firstOfMaxima(), EPS);
       CHECK_CLOSE(15.0, ofz.lastOfMaxima(), EPS);
       CHECK_CLOSE((2.5 + 15.0) / 2.0, ofz.meanOfMaximum(), EPS);
+      ofz.clearMbs();
 
       ofz.setMbs(0.1);
       CHECK_CLOSE(0.5, ofz.firstOfMaxima(), EPS);
@@ -270,6 +272,7 @@ SUITE(FuzzyEngine)
       CHECK_CLOSE(0.0, ofz.firstOfMaxima(), EPS);
       CHECK_CLOSE(15.0, ofz.lastOfMaxima(), EPS);
       CHECK_CLOSE((0.0 + 15.0) / 2.0, ofz.meanOfMaximum(), EPS);
+      ofz.clearMbs();
 
       ofz.setMbs(0.1);
       CHECK_CLOSE(0.0, ofz.firstOfMaxima(), EPS);

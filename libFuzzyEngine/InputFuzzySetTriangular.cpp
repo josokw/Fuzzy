@@ -18,21 +18,21 @@ double InputFuzzySetTriangular::membership() const
    // Left triangular fuzzy set
    if (isLeft()) {
       min1 = 1.0;
-      min2 = std::min((_t[2] - _input) / (_t[2] - _t[1]), 1.0);
+      min2 = std::min((_t[2] - input_) / (_t[2] - _t[1]), 1.0);
       min3 = std::min(min1, min2);
    } else {
       // Right triangular fuzzy set
       if (isRight()) {
-         min1 = std::min((_input - _t[0]) / (_t[1] - _t[0]), 1.0);
+         min1 = std::min((input_ - _t[0]) / (_t[1] - _t[0]), 1.0);
          min2 = 1.0;
          min3 = std::min(min1, min2);
       } else {
-         min1 = std::min((_input - _t[0]) / (_t[1] - _t[0]), 1.0);
-         min2 = std::min((_t[2] - _input) / (_t[2] - _t[1]), 1.0);
+         min1 = std::min((input_ - _t[0]) / (_t[1] - _t[0]), 1.0);
+         min2 = std::min((_t[2] - input_) / (_t[2] - _t[1]), 1.0);
          min3 = std::min(min1, min2);
       }
    }
-   _mbs = std::max(min3, 0.0);
+   mbs_ = std::max(min3, 0.0);
 
-   return _mbs;
+   return mbs_;
 }

@@ -7,21 +7,21 @@
 inline OutputFuzzySet operator||(const FuzzySet &lhs, const FuzzySet &rhs)
 {
    OutputFuzzySet result;
-   result._mbs = std::max(lhs._mbs, rhs._mbs);
+   result.mbs_ = std::max(lhs.mbs_, rhs.mbs_);
    return result;
 }
 
 inline OutputFuzzySet operator&&(const FuzzySet &lhs, const FuzzySet &rhs)
 {
    OutputFuzzySet result;
-   result._mbs = std::min(lhs._mbs, rhs._mbs);
+   result.mbs_ = std::min(lhs.mbs_, rhs.mbs_);
    return result;
 }
 
 inline OutputFuzzySet operator!(const FuzzySet &fs)
 {
    OutputFuzzySet result;
-   result._mbs = 1 - fs._mbs;
+   result.mbs_ = 1 - fs.mbs_;
    return result;
 }
 

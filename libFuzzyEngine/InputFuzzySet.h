@@ -17,12 +17,12 @@ public:
 
    void setInput(double input)
    {
-      _input = input;
-      _mbs = membership();
+      input_ = input;
+      mbs_ = membership();
    }
 
 protected:
-   double _input = 0.0;
+   double input_{0.0};
 
    std::ostream &write(std::ostream &os) const override;
    virtual double membership() const = 0;

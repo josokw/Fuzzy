@@ -11,17 +11,14 @@ class OutputFuzzySet : public FuzzySet
    friend OutputFuzzySet operator*(const OutputFuzzySet &lhs, double rhs);
 
 public:
-   OutputFuzzySet()
-      : FuzzySet{}
-   {
-   }
+   OutputFuzzySet() = default;
    OutputFuzzySet(const std::string &name)
       : FuzzySet{name}
    {
    }
-   OutputFuzzySet(const FuzzySet &fs) { _mbs = fs.getMbs(); }
+   OutputFuzzySet(const FuzzySet &fs) { mbs_ = fs.getMbs(); }
 
-   void setMbs(double mbs) { _mbs = mbs; }
+   void setMbs(double mbs) { mbs_ = (mbs > mbs_) ? mbs : mbs_; }
    virtual double meanOfMaximum() const { return 0; }
    virtual double firstOfMaxima() const { return 0; }
    virtual double lastOfMaxima() const { return 0; }

@@ -4,11 +4,11 @@
 OutputFuzzySet operator*(const OutputFuzzySet &lhs, double rhs)
 {
    OutputFuzzySet result;
-   result.setMbs(lhs._mbs * rhs);
+   result.setMbs(lhs.mbs_ * rhs);
    return result;
 }
 
 std::ostream &OutputFuzzySet::write(std::ostream &os) const
 {
-   return os << _name << " mbs = " << _mbs;
+   return os << name_ << " mbs = " << mbs_;
 }

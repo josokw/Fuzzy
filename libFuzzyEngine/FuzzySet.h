@@ -5,13 +5,14 @@
 #include <string>
 #include <cmath>
 
-inline bool compare(double d1, double d2, double eps = 0.01) 
+inline bool compare(double d1, double d2, const double EPS = 0.01) 
 {
-   return std::fabs(d1 - d2) < eps;
+   return std::fabs(d1 - d2) < EPS;
 }
 
 class OutputFuzzySet;
 
+/// Base class for all fuzzy set classes.
 class FuzzySet
 {
    friend std::ostream &operator<<(std::ostream &os, const FuzzySet &fs);
@@ -20,23 +21,20 @@ class FuzzySet
    friend OutputFuzzySet operator!(const FuzzySet &fs);
 
 public:
-   FuzzySet()
-      : _name{}
-      , _mbs{0}
-   {
-   }
+   FuzzySet() = default;
    FuzzySet(const std::string &name)
-      : _name{name}
-      , _mbs{0}
+      : name_{name}
+      , mbs_{0.0}
    {
    }
    virtual ~FuzzySet() = default;
 
-   double getMbs() const { return _mbs; }
+   double getMbs() const { return mbs_; }
+   void clearMbs() const { mbs_ = 0.0; }
 
 protected:
-   std::string _name = "";
-   mutable double _mbs;
+   std::string name_{"NOT_DEFINED"};
+   mutable double mbs_{0.0};
    virtual std::ostream &write(std::ostream &os) const = 0;
 };
 

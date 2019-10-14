@@ -11,18 +11,18 @@ OutputFuzzySetTriangular::OutputFuzzySetTriangular(const std::string &name,
 OutputFuzzySetTriangular &OutputFuzzySetTriangular::
 operator=(const OutputFuzzySet &other)
 {
-   _mbs = other.getMbs();
+   mbs_ = other.getMbs();
    return *this;
 }
 
 double OutputFuzzySetTriangular::firstOfMaxima() const
 {
-   return _t[0] + _mbs * (_t[1] - _t[0]);
+   return _t[0] + mbs_ * (_t[1] - _t[0]);
 }
 
 double OutputFuzzySetTriangular::lastOfMaxima() const
 {
-   return _t[2] - _mbs * (_t[2] - _t[1]);
+   return _t[2] - mbs_ * (_t[2] - _t[1]);
 }
 
 double OutputFuzzySetTriangular::meanOfMaximum() const
