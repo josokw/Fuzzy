@@ -5,7 +5,7 @@ simresult="simdata.txt"
 echo
 echo ".. Start ControllerFOProcess"
 echo "..   to $simresult"
-../../bin/ControllerFOProcess ./simdata.txt
+../../bin/ControllerFOProcess $simresult
 
 gnuplot -persist < plot.plt
 
