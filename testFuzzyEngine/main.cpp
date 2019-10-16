@@ -2,6 +2,7 @@
 #include "FuzzyLogic.h"
 #include "InputFuzzySetTrapezoidal.h"
 #include "InputFuzzySetTriangular.h"
+#include "LibInfoFuzzyEngine.h"
 #include "OutputFuzzySetTrapezoidal.h"
 #include "OutputFuzzySetTriangular.h"
 
@@ -347,6 +348,10 @@ SUITE(FuzzyEngine)
 
 int main()
 {
+   std::cout << "Tests: " << fuzzy::libName << " v" << fuzzy::libVersion
+             << std::endl
+             << std::endl;
+
    auto result = UnitTest::RunAllTests();
    std::cout << std::endl;
    return result;
