@@ -311,7 +311,6 @@ SUITE(FuzzyEngine)
       ifz2.setInput(12.5);
       ofz = ifz1 or ifz2;
       CHECK_CLOSE(0.5, ofz.getMbs(), EPS);
-      auto mom = ofz.meanOfMaximum();
       std::cout << std::endl;
    }
 
