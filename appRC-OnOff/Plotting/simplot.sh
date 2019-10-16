@@ -5,7 +5,7 @@ simresult="simdata.txt"
 echo
 echo ".. Start RC-OnOff"
 echo "..   to $simresult"
-../../FuzzyDebug/RC-OnOff/RC-OnOff ./simdata.txt
+../../bin/RC-OnOff ./simdata.txt
 
 gnuplot -persist < plot.plt
 
