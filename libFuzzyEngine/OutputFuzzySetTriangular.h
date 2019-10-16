@@ -19,6 +19,8 @@ public:
 
 protected:
    std::array<double, 3> _t;
+   
+   std::ostream &write(std::ostream &os) const override;
 };
 
 #endif // OUTPUTFUZZYSETTRIANGULAR_H

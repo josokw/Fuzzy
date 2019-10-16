@@ -11,7 +11,7 @@ OutputFuzzySetTriangular::OutputFuzzySetTriangular(const std::string &name,
 OutputFuzzySetTriangular &OutputFuzzySetTriangular::
 operator=(const OutputFuzzySet &other)
 {
-   mbs_ = other.getMbs();
+   setMbs(other.getMbs());
    return *this;
 }
 
@@ -28,4 +28,10 @@ double OutputFuzzySetTriangular::lastOfMaxima() const
 double OutputFuzzySetTriangular::meanOfMaximum() const
 {
    return (firstOfMaxima() + lastOfMaxima()) / 2.0;
+}
+
+std::ostream &OutputFuzzySetTriangular::write(std::ostream &os) const
+{
+   return OutputFuzzySet::write(os) << " (" << _t[0] << "," << _t[1] << ","
+                                    << _t[2] << ") mbs = " << mbs_;
 }

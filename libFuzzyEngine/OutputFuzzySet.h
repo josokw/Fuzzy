@@ -2,6 +2,8 @@
 #define OUTPUTFUZZYSET_H
 
 #include "FuzzySet.h"
+
+#include <iostream>
 #include <string>
 
 class OutputFuzzySet;
@@ -16,7 +18,7 @@ public:
       : FuzzySet{name}
    {
    }
-   OutputFuzzySet(const FuzzySet &fs) { mbs_ = fs.getMbs(); }
+   OutputFuzzySet(const FuzzySet &fs) { setMbs(fs.getMbs()); }
 
    void setMbs(double mbs) { mbs_ = (mbs > mbs_) ? mbs : mbs_; }
    virtual double meanOfMaximum() const { return 0; }
@@ -24,7 +26,7 @@ public:
    virtual double lastOfMaxima() const { return 0; }
 
 protected:
-   virtual std::ostream &write(std::ostream &os) const override;
+   std::ostream &write(std::ostream &os) const override;
 };
 
 #endif // OUTPUTFUZZYSET_H

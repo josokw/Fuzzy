@@ -11,14 +11,13 @@ OutputFuzzySetTrapezoidal::OutputFuzzySetTrapezoidal(const std::string &name,
 OutputFuzzySetTrapezoidal &OutputFuzzySetTrapezoidal::
 operator=(const OutputFuzzySet &other)
 {
-   mbs_ = other.getMbs();
+   setMbs(other.getMbs());
    return *this;
 }
 
 double OutputFuzzySetTrapezoidal::firstOfMaxima() const
 {
-   if (isLeft())
-   {
+   if (isLeft()) {
       return _t[0];
    }
    return _t[0] + mbs_ * (_t[1] - _t[0]);
@@ -26,8 +25,7 @@ double OutputFuzzySetTrapezoidal::firstOfMaxima() const
 
 double OutputFuzzySetTrapezoidal::lastOfMaxima() const
 {
-   if (isRight())
-   {
+   if (isRight()) {
       return _t[3];
    }
    return _t[3] - mbs_ * (_t[3] - _t[2]);
@@ -36,4 +34,11 @@ double OutputFuzzySetTrapezoidal::lastOfMaxima() const
 double OutputFuzzySetTrapezoidal::meanOfMaximum() const
 {
    return (firstOfMaxima() + lastOfMaxima()) / 2.0;
+}
+
+std::ostream &OutputFuzzySetTrapezoidal::write(std::ostream &os) const
+{
+   return OutputFuzzySet::write(os)
+          << " (" << _t[0] << "," << _t[1] << "," << _t[2] << "," << _t[3]
+          << ") mbs = " << mbs_;
 }
