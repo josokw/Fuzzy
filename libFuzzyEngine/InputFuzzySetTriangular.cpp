@@ -40,6 +40,6 @@ double InputFuzzySetTriangular::membership() const
 std::ostream &InputFuzzySetTriangular::write(std::ostream &os) const
 {
    return InputFuzzySet::write(os)
-          << " (" << _t[0] << "," << _t[1] << "," << _t[2]
+          << " (" << _t[0] << ", " << _t[1] << ", " << _t[2]
           << ")  input = " << input_ << "  mbs = " << mbs_;
 }

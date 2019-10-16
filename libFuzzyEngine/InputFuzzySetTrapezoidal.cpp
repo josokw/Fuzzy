@@ -38,6 +38,6 @@ double InputFuzzySetTrapezoidal::membership() const
 std::ostream &InputFuzzySetTrapezoidal::write(std::ostream &os) const
 {
    return InputFuzzySet::write(os)
-          << " (" << _t[0] << "," << _t[1] << "," << _t[2] << "," << _t[3]
+          << " (" << _t[0] << ", " << _t[1] << ", " << _t[2] << ", " << _t[3]
           << ")  input = " << input_ << "  mbs = " << mbs_;
 }

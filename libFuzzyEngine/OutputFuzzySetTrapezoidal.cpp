@@ -39,6 +39,6 @@ double OutputFuzzySetTrapezoidal::meanOfMaximum() const
 std::ostream &OutputFuzzySetTrapezoidal::write(std::ostream &os) const
 {
    return OutputFuzzySet::write(os)
-          << " (" << _t[0] << "," << _t[1] << "," << _t[2] << "," << _t[3]
+          << " (" << _t[0] << ", " << _t[1] << ", " << _t[2] << ", " << _t[3]
           << ") mbs = " << mbs_;
 }

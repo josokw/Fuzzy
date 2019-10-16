@@ -32,6 +32,6 @@ double OutputFuzzySetTriangular::meanOfMaximum() const
 
 std::ostream &OutputFuzzySetTriangular::write(std::ostream &os) const
 {
-   return OutputFuzzySet::write(os) << " (" << _t[0] << "," << _t[1] << ","
+   return OutputFuzzySet::write(os) << " (" << _t[0] << ", " << _t[1] << ", "
                                     << _t[2] << ") mbs = " << mbs_;
 }
