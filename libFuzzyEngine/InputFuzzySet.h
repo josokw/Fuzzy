@@ -3,6 +3,7 @@
 
 #include "FuzzySet.h"
 
+/// Abstract base class for input fuzzy sets.
 class InputFuzzySet : public FuzzySet
 {
    friend OutputFuzzySet operator*(const InputFuzzySet &lhs, double rhs);

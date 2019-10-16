@@ -4,6 +4,8 @@
 
 std::ostream &operator<<(std::ostream &os, const TippingFIS &lhs)
 {
+   os << lhs.poor << "\n" << lhs.good << "\n" << lhs.great << "\n";
+   os << lhs.rancid << "\n" << lhs.delicious << "\n";
    os << lhs.cheap << "\n" << lhs.average << "\n" << lhs.generous << "\n";
 
    return os;

@@ -20,6 +20,7 @@ public:
 protected:
    std::array<double, 4> _t;
 
+   std::ostream &write(std::ostream &os) const override;
    double membership() const override;
 };
 
