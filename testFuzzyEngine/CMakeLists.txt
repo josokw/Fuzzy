@@ -5,19 +5,20 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 find_library(UnitTest++ REQUIRED)
 
 file(
-    GLOB_RECURSE FUZZYENGINETESTS_SOURCES
+    GLOB_RECURSE TESTFUZZYENGINE_SOURCES
     *.cpp 
 )
 
 file(
-    GLOB_RECURSE FUZZYENGINETESTS_INCLUDES
+    GLOB_RECURSE TESTFUZZYENGINE_INCLUDES
     *.h
 )
 
-message("==== FuzzyEngineTests includes: ${FUZZYENGINETESTS_INCLUDES}")
-message("==== FuzzyEngineTests sources : ${FUZZYENGINETESTS_SOURCES}")
+message("==== testFuzzyEngine includes: ${TESTFUZZYENGINE_INCLUDES}")
+message("==== testFuzzyEngine sources : ${TESTFUZZYENGINE_SOURCES}")
 
-add_executable(testFuzzyEngine ${FUZZYENGINETESTS_SOURCES} ${FUZZYENGINETESTS_INCLUDES})
+add_executable(testFuzzyEngine ${TESTFUZZYENGINE_SOURCES}
+                               ${TESTFUZZYENGINE_INCLUDES})
 
 target_include_directories(testFuzzyEngine PUBLIC ../libFuzzyEngine)
 target_link_libraries(testFuzzyEngine FuzzyEngine)
