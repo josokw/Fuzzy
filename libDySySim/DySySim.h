@@ -4,6 +4,7 @@
 #include "SimBlock.h"
 #include "SimBlockIO.h"
 #include "SimBlockO.h"
+
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <functional>
@@ -326,7 +327,7 @@ private:
    const double _off;
 };
 
-// Euler integration
+// Trapezoidal integration
 class Integrator : public TimedSimBlockIO
 {
 public:
@@ -335,14 +336,18 @@ public:
    {
    }
    virtual ~Integrator() = default;
-   void input(double in) { _out += in * SimTime::delta_t; }
+   void input(double in)
+   {
+      _out += 0.5 * (in + in_previous) * SimTime::delta_t;
+      in_previous = in;
+   }
    void reset() { _out = _initial_out; }
 
 private:
-   // const double _initial_out;
+   double in_previous = _initial_out;
 };
 
-// Euler integration
+// Forward Euler integration
 class IntegratorEuler : public TimedSimBlockIO
 {
 public:

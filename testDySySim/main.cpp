@@ -8,7 +8,7 @@
 namespace dss = dysysim;
 using namespace std;
 
-const double EPS{0.0001};
+const double EPS{0.01};
 
 SUITE(DySySim)
 {
@@ -126,29 +126,31 @@ SUITE(DySySim)
 
    TEST(FirstOrder)
    {
-      const double delta_t{0.1};
-      const double tau{10 * delta_t};
+      const double delta_t{0.005};
+      const double tau{100 * delta_t};
       const double stp{1.0};
       const double stp_t{5 * delta_t};
-      const double simulation_accuracy = 0.30; // 10%
 
       dss::Time time{1, delta_t};
       auto fio_response = [tau, stp_t, stp](double t) {
          return (t < stp_t) ? 0.0 : (stp * (1 - exp(-(t - stp_t) / tau)));
       };
-      cout << "-- FirstOrder (simulation accuracy "
-           << 100 * simulation_accuracy << "%)" << endl;
+
+      cout << "-- FirstOrder" << endl;
+
       dss::Step step{2, 0.0, stp, stp_t};
       dss::FirstOrder fio{3, tau, 0.0};
 
       while (time.output() < stp_t + 10 * tau) {
          auto input = step.output();
          fio.input(input);
+         auto out1 = fio.output();
+         auto out2 = fio_response(time.output());
+         // std::cout << out1 << " == " << out2 << std::endl; 
          if (time.output() < stp_t) {
-            CHECK_CLOSE(0.0, fio.output(), EPS);
+            CHECK_CLOSE(0.0, out1, EPS);
          } else {
-            CHECK_CLOSE(fio_response(time.output()), fio.output(),
-                        fio_response(time.output()) * simulation_accuracy);
+            CHECK_CLOSE(out1, out2, EPS);
          }
          time.next();
          step.next();
