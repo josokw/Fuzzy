@@ -146,12 +146,48 @@ SUITE(DySySim)
          fio.input(input);
          auto out1 = fio.output();
          auto out2 = fio_response(time.output());
-         // std::cout << out1 << " == " << out2 << std::endl; 
+         // std::cout << out1 << " == " << out2 << std::endl;
          if (time.output() < stp_t) {
             CHECK_CLOSE(0.0, out1, EPS);
          } else {
             CHECK_CLOSE(out1, out2, EPS);
          }
+         time.next();
+         step.next();
+      }
+   }
+
+   TEST(RC_FirstOrder)
+   {
+      const double delta_t{0.005};
+      const double tau{100 * delta_t};
+      const double stp{1.0};
+      const double stp_t{5 * delta_t};
+
+      cout << "-- compare RC filter and FirstOrder" << endl;
+
+      dss::Time time{0, delta_t};
+      dss::Step step{1, 0.0, stp, stp_t};
+      dss::Attenuator att{2, tau};
+      dss::Integrator intgt{3, 0.0};
+
+      dss::FirstOrder fio{4, tau, 0.0};
+
+      while (time.output() < stp_t + 10 * tau) {
+         auto input = step.output();
+
+         att.input(input);
+         att.input(step.output() - intgt.output());
+         intgt.input(att.output());
+
+         fio.input(input);
+
+         auto out1 = intgt.output();
+         auto out2 = fio.output();
+         // std::cout << out1 << " == " << out2 << std::endl;
+
+         CHECK_CLOSE(out1, out2, EPS);
+
          time.next();
          step.next();
       }
