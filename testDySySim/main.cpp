@@ -147,11 +147,9 @@ SUITE(DySySim)
          auto out1 = fio.output();
          auto out2 = fio_response(time.output());
          // std::cout << out1 << " == " << out2 << std::endl;
-         if (time.output() < stp_t) {
-            CHECK_CLOSE(0.0, out1, EPS);
-         } else {
-            CHECK_CLOSE(out1, out2, EPS);
-         }
+
+         CHECK_CLOSE(out1, out2, EPS);
+
          time.next();
          step.next();
       }
@@ -197,12 +195,11 @@ SUITE(DySySim)
 int main()
 {
    cout << "\n== Tests DySySim lib: " << dss::libVersion << " "
-        << string(50, '=') << endl
-        << endl;
+        << string(50, '=') << "\n\n";
 
    auto result = UnitTest::RunAllTests();
 
-   cout << endl << string(80, '=') << endl;
+   cout << "\n" << string(80, '=') << endl;
 
    return result;
 }
