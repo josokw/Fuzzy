@@ -31,6 +31,10 @@ int main()
              << std::endl;
    doTippingFIS(std::cout, tippingFIS, DEFUZ::WA);
 
+   std::cout << "-- Defuzzification: Center of Sums" << std::endl
+             << std::endl;
+   doTippingFIS(std::cout, tippingFIS, DEFUZ::CoS);
+
    return 0;
 }
 

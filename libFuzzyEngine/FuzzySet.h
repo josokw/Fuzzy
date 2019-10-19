@@ -29,6 +29,8 @@ public:
    }
    virtual ~FuzzySet() = default;
 
+   virtual double membership() const = 0;
+
    double getMbs() const { return mbs_; }
    void clearMbs() const { mbs_ = 0.0; }
 

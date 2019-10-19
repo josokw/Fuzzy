@@ -49,6 +49,8 @@ int TippingFIS::inferTip(int food, int service, DEFUZ defuzFunction)
          return defuzLastOfMaxima(fuzzyTip);
       case DEFUZ::WA:
          return defuzWeightedAverage(fuzzyTip);
+      case DEFUZ::CoS:
+         return defuzCenterOfSums(fuzzyTip);
    }
 
    return 0;

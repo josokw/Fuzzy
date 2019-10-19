@@ -30,6 +30,11 @@ double OutputFuzzySetTriangular::meanOfMaximum() const
    return (firstOfMaxima() + lastOfMaxima()) / 2.0;
 }
 
+double OutputFuzzySetTriangular::area() const
+{
+   return (_t[2] - _t[0]) * mbs_;
+}
+
 std::ostream &OutputFuzzySetTriangular::write(std::ostream &os) const
 {
    return OutputFuzzySet::write(os) << " (" << _t[0] << ", " << _t[1] << ", "

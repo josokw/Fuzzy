@@ -22,11 +22,12 @@ public:
       mbs_ = membership();
    }
 
+
 protected:
    double input_{0.0};
 
    std::ostream &write(std::ostream &os) const override;
-   virtual double membership() const = 0;
+   double membership() const override  { return 0.0; }
 };
 
 #endif // INPUTFUZZYSET_H
