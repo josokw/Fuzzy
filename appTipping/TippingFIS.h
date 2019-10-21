@@ -2,6 +2,7 @@
 #define TIPPINGFIS_H
 
 #include "Defuzzification.h"
+#include "FuzzyLogic.h"
 #include "InputFuzzySetTrapezoidal.h"
 #include "InputFuzzySetTriangular.h"
 #include "OutputFuzzySetTriangular.h"
@@ -17,7 +18,8 @@ public:
    TippingFIS() = default;
    ~TippingFIS() = default;
 
-   int inferTip(int food, int service, DEFUZ defuzFunction);
+   int inferTip(int food, int service, DEFUZ defuzFunction,
+                LogicModel logicmodel);
 
 private:
    // Linguistic variable: Service

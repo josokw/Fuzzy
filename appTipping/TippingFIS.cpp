@@ -11,7 +11,8 @@ std::ostream &operator<<(std::ostream &os, const TippingFIS &lhs)
    return os;
 }
 
-int TippingFIS::inferTip(int food, int service, DEFUZ defuzFunction)
+int TippingFIS::inferTip(int food, int service, DEFUZ defuzFunction,
+                         LogicModel lm)
 {
    // Set inputs
    for (auto &fs : fuzzyService) {
@@ -20,6 +21,8 @@ int TippingFIS::inferTip(int food, int service, DEFUZ defuzFunction)
    for (auto &fs : fuzzyFood) {
       fs->setInput(food);
    }
+
+   setLogicModel(lm);
 
    cheap.clearMbs();
    // IF service is poor OR food is rancid THEN tip is cheap

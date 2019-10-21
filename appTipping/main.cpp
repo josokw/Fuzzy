@@ -1,4 +1,5 @@
 #include "AppInfo.h"
+#include "FuzzyLogic.h"
 #include "TippingFIS.h"
 
 #include <array>
@@ -6,7 +7,8 @@
 #include <iostream>
 #include <string>
 
-void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification);
+void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification,
+                  LogicModel lm = LogicModel::Zadeh);
 
 int main()
 {
@@ -31,14 +33,19 @@ int main()
              << std::endl;
    doTippingFIS(std::cout, tippingFIS, DEFUZ::WA);
 
-   std::cout << "-- Defuzzification: Center of Sums" << std::endl
-             << std::endl;
-   doTippingFIS(std::cout, tippingFIS, DEFUZ::CoS);
+   std::cout << "-- Defuzzification: Center of Sums, "
+                "logic model: Zadeh\n\n";
+   doTippingFIS(std::cout, tippingFIS, DEFUZ::CoS, LogicModel::Zadeh);
+
+   std::cout << "-- Defuzzification: Center of Sums, "
+                "logic model: Lukasiewicz\n\n";
+   doTippingFIS(std::cout, tippingFIS, DEFUZ::CoS, LogicModel::Lukasiewicz);
 
    return 0;
 }
 
-void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification)
+void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification,
+                  LogicModel logicmodel)
 {
    const int FOOD_MAX = 11;
 
@@ -46,7 +53,8 @@ void doTippingFIS(std::ostream &os, TippingFIS &tfis, DEFUZ defuzzification)
    for (int service = 10; service >= 0; --service) {
       os << std::setw(8) << service << "  ";
       for (int food = 0; food < FOOD_MAX; ++food) {
-         os << std::setw(5) << tfis.inferTip(food, service, defuzzification);
+         os << std::setw(5)
+            << tfis.inferTip(food, service, defuzzification, logicmodel);
       }
       os << std::endl;
    }
