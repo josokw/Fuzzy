@@ -284,7 +284,7 @@ SUITE(FuzzyEngine)
 
    TEST(defuz_outputsFuzzySets)
    {
-      std::cout << "-- defuz output Fuzzy Sets" << std::endl;
+      std::cout << "--- defuz output Fuzzy Sets" << std::endl;
       OutputFuzzySetTrapezoidal ofz1("Test", 0, 1, 4, 5);
       OutputFuzzySetTrapezoidal ofz2("Test", 3, 4, 6, 7);
       OutputFuzzySetTrapezoidal ofz3("Test", 5, 6, 7, 8);
@@ -300,12 +300,14 @@ SUITE(FuzzyEngine)
       std::cout << std::endl;
    }
 
-   TEST(FuzzyLogic_or)
+   TEST(FuzzyLogic_Zadeh_or)
    {
-      std::cout << "-- Fuzzy logic OR" << std::endl;
+      std::cout << "--- Fuzzy logic Zadek OR" << std::endl;
       InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
       InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
       OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+
+      setLogicModel(LogicModel::Zadeh);
 
       ifz1.setInput(12.5);
       ifz2.setInput(12.5);
@@ -314,12 +316,14 @@ SUITE(FuzzyEngine)
       std::cout << std::endl;
    }
 
-   TEST(FuzzyLogic_and)
+   TEST(FuzzyLogic_Zadeh_and)
    {
-      std::cout << "-- Fuzzy logic AND" << std::endl;
+      std::cout << "--- Fuzzy logic Zadeh AND" << std::endl;
       InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
       InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
       OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+
+      setLogicModel(LogicModel::Zadeh);
 
       ifz1.setInput(10);
       ifz2.setInput(10);
@@ -328,11 +332,63 @@ SUITE(FuzzyEngine)
       std::cout << std::endl;
    }
 
-   TEST(FuzzyLogic_not)
+   TEST(FuzzyLogic_Zadeh_not)
    {
-      std::cout << "-- Fuzzy logic NOT" << std::endl;
+      std::cout << "--- Fuzzy logic Zadeh NOT" << std::endl;
       InputFuzzySetTriangular ifz("Test", 5, 10, 15);
       OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+
+      setLogicModel(LogicModel::Zadeh);
+
+      ifz.setInput(13.75);
+      ofz = not ifz;
+      CHECK_CLOSE(0.75, ofz.getMbs(), EPS);
+
+      ifz.setInput(20);
+      ofz = not ifz;
+      CHECK_CLOSE(1.0, ofz.getMbs(), EPS);
+      std::cout << std::endl;
+   }
+
+   TEST(FuzzyLogic_Lukasiewicz_or)
+   {
+      std::cout << "--- Fuzzy logic Lukasiewicz OR" << std::endl;
+      InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
+      InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
+      OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+
+      setLogicModel(LogicModel::Lukasiewicz);
+
+      ifz1.setInput(12.5);
+      ifz2.setInput(12.5);
+      ofz = ifz1 or ifz2;
+      CHECK_CLOSE(1.0, ofz.getMbs(), EPS);
+      std::cout << std::endl;
+   }
+
+   TEST(FuzzyLogic_Lukasiewicz_and)
+   {
+      std::cout << "--- Fuzzy logic Lukasiewicz AND" << std::endl;
+      InputFuzzySetTriangular ifz1("Test", 5, 10, 15);
+      InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
+      OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+
+      setLogicModel(LogicModel::Lukasiewicz);
+
+      ifz1.setInput(12.5);
+      ifz2.setInput(12.5);
+      ofz = ifz1 and ifz2;
+      CHECK_CLOSE(0.0, ofz.getMbs(), EPS);
+      std::cout << std::endl;
+   }
+
+   TEST(FuzzyLogic_Lukasiewicz_not)
+   {
+      std::cout << "--- Fuzzy logic Lukasiewicz NOT" << std::endl;
+      InputFuzzySetTriangular ifz("Test", 5, 10, 15);
+      OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
+
+      setLogicModel(LogicModel::Lukasiewicz);
 
       ifz.setInput(13.75);
       ofz = not ifz;
