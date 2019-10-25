@@ -1,10 +1,14 @@
 #ifndef FUZZYLOGIC_H
 #define FUZZYLOGIC_H
 
+#include <iostream>
+
 class FuzzySet;
 class OutputFuzzySet;
 
 enum class LogicModel { Zadeh, Lukasiewicz };
+
+std::ostream& operator<<(std::ostream& os, const LogicModel rhs);
 
 #define USING_LUKASIEWICZ                                                      \
    using lukasiewicz::operator||;                                              \

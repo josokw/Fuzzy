@@ -2,6 +2,16 @@
 #include "FuzzySet.h"
 #include "OutputFuzzySet.h"
 
+std::ostream &operator<<(std::ostream &os, const LogicModel rhs)
+{
+   switch (rhs) {
+      case LogicModel::Zadeh:
+         return os << "Zadeh";
+      case LogicModel::Lukasiewicz:
+         return os << "Lukasiewicz";
+   }
+}
+
 namespace zadeh {
 
 OutputFuzzySet operator||(const ::FuzzySet &lhs, const ::FuzzySet &rhs)
