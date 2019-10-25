@@ -22,23 +22,48 @@ int TippingFIS::inferTip(int food, int service, DEFUZ defuzFunction,
       fs->setInput(food);
    }
 
-   setLogicModel(lm);
+   switch (lm) {
+      case LogicModel::Zadeh: {
+         USING_ZADEH;
 
-   cheap.clearMbs();
-   // IF service is poor OR food is rancid THEN tip is cheap
-   cheap = (poor or rancid) * 1.0;
+         cheap.clearMbs();
+         // IF service is poor OR food is rancid THEN tip is cheap
+         cheap = (poor or rancid) * 1.0;
 
-   average.clearMbs();
-   // IF service is good THEN tip is average
-   average = good * 1.0;
+         average.clearMbs();
+         // IF service is good THEN tip is average
+         average = good * 1.0;
 
-   generous.clearMbs();
-   // IF service is excellent OR food is delicious THEN tip is generous
-   // with 0.5
-   generous = (great or delicious) * 0.5;
-   //  IF service is excellent AND food is delicious THEN tip is generous
-   //  with 1.0
-   generous = (great and delicious) * 1.0;
+         generous.clearMbs();
+         // IF service is excellent OR food is delicious THEN tip is generous
+         // with 0.5
+         generous = (great or delicious) * 0.5;
+         //  IF service is excellent AND food is delicious THEN tip is generous
+         //  with 1.0
+         generous = (great and delicious) * 1.0;
+      }
+      break;
+
+      case LogicModel::Lukasiewicz: {
+         USING_LUKASIEWICZ;
+
+         cheap.clearMbs();
+         // IF service is poor OR food is rancid THEN tip is cheap
+         cheap = (poor or rancid) * 1.0;
+
+         average.clearMbs();
+         // IF service is good THEN tip is average
+         average = good * 1.0;
+
+         generous.clearMbs();
+         // IF service is excellent OR food is delicious THEN tip is generous
+         // with 0.5
+         generous = (great or delicious) * 0.5;
+         //  IF service is excellent AND food is delicious THEN tip is generous
+         //  with 1.0
+         generous = (great and delicious) * 1.0;
+      } break;
+   }
 
    // std::cout << *this << std::endl;
 

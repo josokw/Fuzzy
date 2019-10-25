@@ -307,11 +307,12 @@ SUITE(FuzzyEngine)
       InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
       OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
 
-      setLogicModel(LogicModel::Zadeh);
-
       ifz1.setInput(12.5);
       ifz2.setInput(12.5);
-      ofz = ifz1 or ifz2;
+      {
+         USING_ZADEH;
+         ofz = ifz1 or ifz2;
+      }
       CHECK_CLOSE(0.5, ofz.getMbs(), EPS);
       std::cout << std::endl;
    }
@@ -323,11 +324,12 @@ SUITE(FuzzyEngine)
       InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
       OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
 
-      setLogicModel(LogicModel::Zadeh);
-
       ifz1.setInput(10);
       ifz2.setInput(10);
-      ofz = ifz1 and ifz2;
+      {
+         USING_ZADEH;
+         ofz = ifz1 and ifz2;
+      }
       CHECK_CLOSE(0.0, ofz.getMbs(), EPS);
       std::cout << std::endl;
    }
@@ -338,14 +340,18 @@ SUITE(FuzzyEngine)
       InputFuzzySetTriangular ifz("Test", 5, 10, 15);
       OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
 
-      setLogicModel(LogicModel::Zadeh);
-
       ifz.setInput(13.75);
-      ofz = not ifz;
+      {
+         USING_ZADEH;
+         ofz = not ifz;
+      }
       CHECK_CLOSE(0.75, ofz.getMbs(), EPS);
 
       ifz.setInput(20);
-      ofz = not ifz;
+      {
+         USING_ZADEH;
+         ofz = not ifz;
+      }
       CHECK_CLOSE(1.0, ofz.getMbs(), EPS);
       std::cout << std::endl;
    }
@@ -357,11 +363,12 @@ SUITE(FuzzyEngine)
       InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
       OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
 
-      setLogicModel(LogicModel::Lukasiewicz);
-
       ifz1.setInput(12.5);
       ifz2.setInput(12.5);
-      ofz = ifz1 or ifz2;
+      {
+         USING_LUKASIEWICZ;
+         ofz = ifz1 or ifz2;
+      }
       CHECK_CLOSE(1.0, ofz.getMbs(), EPS);
       std::cout << std::endl;
    }
@@ -373,11 +380,12 @@ SUITE(FuzzyEngine)
       InputFuzzySetTriangular ifz2("Test", 10, 15, 20);
       OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
 
-      setLogicModel(LogicModel::Lukasiewicz);
-
       ifz1.setInput(12.5);
       ifz2.setInput(12.5);
-      ofz = ifz1 and ifz2;
+      {
+         USING_LUKASIEWICZ;
+         ofz = ifz1 and ifz2;
+      }
       CHECK_CLOSE(0.0, ofz.getMbs(), EPS);
       std::cout << std::endl;
    }
@@ -388,14 +396,18 @@ SUITE(FuzzyEngine)
       InputFuzzySetTriangular ifz("Test", 5, 10, 15);
       OutputFuzzySetTriangular ofz("Test", 0, 5, 10);
 
-      setLogicModel(LogicModel::Lukasiewicz);
-
       ifz.setInput(13.75);
-      ofz = not ifz;
+      {
+         USING_LUKASIEWICZ;
+         ofz = not ifz;
+      }
       CHECK_CLOSE(0.75, ofz.getMbs(), EPS);
 
       ifz.setInput(20);
-      ofz = not ifz;
+      {
+         USING_LUKASIEWICZ;
+         ofz = not ifz;
+      }
       CHECK_CLOSE(1.0, ofz.getMbs(), EPS);
       std::cout << std::endl;
    }

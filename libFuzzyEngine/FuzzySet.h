@@ -1,11 +1,13 @@
 #ifndef FUZZYSET_H
 #define FUZZYSET_H
 
+#include "FuzzyLogic.h"
+
+#include <cmath>
 #include <iosfwd>
 #include <string>
-#include <cmath>
 
-inline bool compare(double d1, double d2, const double EPS = 0.01) 
+inline bool compare(double d1, double d2, const double EPS = 0.01)
 {
    return std::fabs(d1 - d2) < EPS;
 }
@@ -16,9 +18,20 @@ class OutputFuzzySet;
 class FuzzySet
 {
    friend std::ostream &operator<<(std::ostream &os, const FuzzySet &fs);
-   friend OutputFuzzySet operator||(const FuzzySet &lhs, const FuzzySet &rhs);
-   friend OutputFuzzySet operator&&(const FuzzySet &lhs, const FuzzySet &rhs);
-   friend OutputFuzzySet operator!(const FuzzySet &fs);
+
+   friend OutputFuzzySet lukasiewicz::operator||(const FuzzySet &lhs,
+                                                 const FuzzySet &rhs);
+   friend OutputFuzzySet lukasiewicz::operator&&(const FuzzySet &lhs,
+                                                 const FuzzySet &rhs);
+   friend OutputFuzzySet lukasiewicz::operator!(const FuzzySet &fs);
+
+   friend OutputFuzzySet zadeh::operator||(const FuzzySet &lhs,
+                                           const FuzzySet &rhs);
+   friend OutputFuzzySet zadeh::operator&&(const FuzzySet &lhs,
+                                           const FuzzySet &rhs);
+   friend OutputFuzzySet zadeh::operator!(const FuzzySet &fs);
+
+   friend OutputFuzzySet operator*(const OutputFuzzySet &lhs, double rhs);
 
 public:
    FuzzySet() = default;
