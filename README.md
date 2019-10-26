@@ -3,7 +3,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bf89c5a36cb9439182fa7d20216c0973)](https://www.codacy.com/project/josokw/Fuzzy/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=josokw/Fuzzy&amp;utm_campaign=Badge_Grade_Dashboard)
 [![CodeFactor](https://www.codefactor.io/repository/github/josokw/fuzzy/badge)](https://www.codefactor.io/repository/github/josokw/fuzzy)
 
-FuzzyEngine library implemented.
+C++ FuzzyEngine library implemented.
 
 Build management by CMake:
 
@@ -11,7 +11,15 @@ Build management by CMake:
     cmake ..
     make
 
-Project contains some unit tests: *sudo apt-get install libunittest++-dev*
+Update CMake to the latest version (pip command must be available):
+
+    sudo apt remove cmake
+
+    sudo pip install cmake --upgrade
+
+Project contains some unit tests. Install the C++ *unittest++* library:
+
+    sudo apt-get install libunittest++-dev
 
 Tipping problem using FuzzyEngine library code:
 
