@@ -21,7 +21,7 @@ Project contains some unit tests. Install the C++ *unittest++* library:
 
     sudo apt-get install libunittest++-dev
 
-Tipping problem using FuzzyEngine library code:
+Tipping problem fuzzy rules, using FuzzyEngine library code:
 
     IF service is poor OR food is rancid THEN tip is cheap
     IF service is good THEN tip is average
@@ -40,6 +40,18 @@ Fuzzy sets definitions:
     Tip = cheap (0, 5, 10) mbs = 0
     Tip = average (10, 15, 20) mbs = 0
     Tip = generous (20, 25, 30) mbs = 0
+
+Zadeh logic:
+
+    not a = 1 - a
+    a and b = min(a, b)
+    a or b = max(a, b)
+    
+ Lukasiewicz logic:
+ 
+    not a = 1 - a
+    a and b = max(a+b-1, 0)
+    a or b = min(a+b, 1)
 
 Execute program (current dir is *build*):
 
