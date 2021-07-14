@@ -17,9 +17,8 @@ Update CMake to the latest version (pip command must be available):
 
     sudo pip install cmake --upgrade
 
-Project contains some unit tests. Install the C++ *unittest++* library:
-
-    sudo apt-get install libunittest++-dev
+This project contains some unit tests.
+Install the C++ [UnitTest++](https://github.com/unittest-cpp/unittest-cpp) library.
 
 Tipping problem fuzzy rules, using FuzzyEngine library code:
 
