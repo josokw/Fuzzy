@@ -14,7 +14,7 @@ public:
       : FuzzySet{name}
    {
    }
-   virtual ~InputFuzzySet() override = default;
+   ~InputFuzzySet() override = default;
 
    void setInput(double input)
    {

@@ -4,7 +4,6 @@
 /// Under construction.
 class FuzzyEngine
 {
-
 public:
    FuzzyEngine();
 };
