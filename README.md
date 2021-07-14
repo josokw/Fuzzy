@@ -5,11 +5,7 @@
 
 C++ FuzzyEngine library implemented.
 
-Build management by CMake:
-
-    cd build
-    cmake ..
-    make
+## Build management by CMake
 
 Update CMake to the latest version (pip command must be available):
 
@@ -17,17 +13,26 @@ Update CMake to the latest version (pip command must be available):
 
     sudo pip install cmake --upgrade
 
+Go to the Fuzzy directory:
+
+    cd build
+    cmake ..
+    make
+
+## Unit testing
+
 This project contains some unit tests.
 Install the C++ [UnitTest++](https://github.com/unittest-cpp/unittest-cpp) library.
 
-Tipping problem fuzzy rules, using FuzzyEngine library code:
+## Tipping problem
+Tipping problem fuzzy rules, using the FuzzyEngine library code:
 
     IF service is poor OR food is rancid THEN tip is cheap
     IF service is good THEN tip is average
     IF service is excellent OR food is delicious THEN tip is generous with 0.5
     IF service is excellent AND food is delicious THEN tip is generous with 1.0
 
-Fuzzy sets definitions:
+### Fuzzy sets definitions
 
     - TippingFIS v0.4.1 --------------------------------------------------
 
@@ -40,19 +45,21 @@ Fuzzy sets definitions:
     Tip = average (10, 15, 20) mbs = 0
     Tip = generous (20, 25, 30) mbs = 0
 
-Zadeh logic:
+### Zadeh logic
 
     not a = 1 - a
     a and b = min(a, b)
     a or b = max(a, b)
     
- Lukasiewicz logic:
+ ### Lukasiewicz logic
  
     not a = 1 - a
     a and b = max(a+b-1, 0)
     a or b = min(a+b, 1)
 
-Execute program (current dir is *build*):
+## Execute program
+
+Current dir is *build*:
 
     ../bin/Tipping
 
