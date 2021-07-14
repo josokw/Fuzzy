@@ -25,6 +25,7 @@ This project contains some unit tests.
 Install the C++ [UnitTest++](https://github.com/unittest-cpp/unittest-cpp) library.
 
 ## Tipping problem
+
 Tipping problem fuzzy rules, using the FuzzyEngine library code:
 
     IF service is poor OR food is rancid THEN tip is cheap
@@ -50,9 +51,9 @@ Tipping problem fuzzy rules, using the FuzzyEngine library code:
     not a = 1 - a
     a and b = min(a, b)
     a or b = max(a, b)
-    
- ### Lukasiewicz logic
- 
+
+### Lukasiewicz logic
+
     not a = 1 - a
     a and b = max(a+b-1, 0)
     a or b = min(a+b, 1)
