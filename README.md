@@ -84,7 +84,6 @@ Defuzzification example 1:
 
         food      0    1    2    3    4    5    6    7    8    9   10
 
-
 Defuzzification example 2 and 3:
 
     -- Defuzzification: Center of Sums, logic model: Zadeh
