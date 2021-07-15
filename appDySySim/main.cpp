@@ -14,22 +14,26 @@ namespace dss = dysysim;
 int main(int argc, char *argv[])
 {
    std::cout << "-- " APPNAME_VERSION " " << std::string(50, '-') << std::endl
-             << "-- uses " + dss::libName + " " << dss::libVersion << std::endl
+             << "-- uses " + dss::libName + " v" << dss::libVersion << std::endl
              << std::endl;
+
+   std::ifstream programFile;
 
    if (argc > 2) {
       return 1;
    }
 
-   std::ifstream programFile("../appDySySim/data/RCnetwork.dss");
+   if (argc == 1) {
+      programFile.open("../appDySySim/data/RCnetwork.dss");
+   } else {
+      programFile.open(argv[1]);
+   }
 
    std::vector<std::string> program;
 
-   if (programFile.is_open())
-   {
+   if (programFile.is_open()) {
       std::string line;
-      while(getline(programFile, line))
-      {
+      while (getline(programFile, line)) {
          program.push_back(line);
          std::cout << line << "\n";
       }
@@ -42,7 +46,7 @@ int main(int argc, char *argv[])
       auto iterEnd = end(input);
 
       auto value = x3::double_;
-      auto c_name = x3::alpha >> *(x3::alpha | x3::char_('_') | x3::digit);
+      auto c_name = x3::alpha >> *(x3::alnum | x3::char_('_'));
       auto set_const = c_name >> '=' >> value;
       auto input_indices = x3::int_ >> *(x3::char_(',') >> x3::int_);
 
