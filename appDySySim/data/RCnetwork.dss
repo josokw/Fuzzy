@@ -1,0 +1,3 @@
+1 PLS       t_on=1.0 t_off=2.5 on=1
+2 ATT 1,-3  att=10
+3 INT 2     out_t0=0
