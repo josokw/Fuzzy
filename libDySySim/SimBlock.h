@@ -9,6 +9,8 @@
 
 namespace dysysim {
 
+/// SimTime contains simulation time data.
+/// \todo Consider implementation as a struct?
 class SimTime
 {
 public:
@@ -21,44 +23,58 @@ public:
    static double t;
 };
 
+/// Abstract Base Class for all simulation block derived classes.
 class SimBlock
 {
 public:
-   SimBlock(int id)
-      : _id{id}
-      , _blockType{"SimBlock"}
+   using configData_t = struct ConFigData {
+      int id;
+      std::initializer_list<int> inputs;
+      std::initializer_list<double> parameters;
+   };
+
+   SimBlock()
+      : id_{-1}
+      , blockType_{"???"}
    {
-      _allSimBlocks[id] = this;
+      // allSimBlocks_s[id_] = this;
    }
    SimBlock(const SimBlock &other) = delete;
    SimBlock &operator=(const SimBlock &other) = delete;
    virtual ~SimBlock() = default;
 
-   int getId() const { return _id; }
-   const std::string &getBlockType() const { return _blockType; }
-   static std::map<int, SimBlock *> getAllSimBlocks() { return _allSimBlocks; }
-   static SimBlock *getSimBlock(int id) { return _allSimBlocks.at(id); }
+   virtual SimBlock *create() { return nullptr; }
+   virtual void config(const configData_t config) = 0;
+
+   int getId() const { return id_; }
+   const std::string &getBlockType() const { return blockType_; }
+
+   // static std::map<int, SimBlock *> getAllSimBlocks() { return
+   // allSimBlocks_s; }
+   static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
 
 protected:
-   int _id;
-   std::string _blockType;
-   static std::map<int, SimBlock *> _allSimBlocks;
+   int id_;
+   std::string blockType_;
+   static std::map<int, SimBlock *> allSimBlocks_s;
 };
 
+/// Contains simulation time data.
 class TimedSimBlock : public SimBlock
 {
 public:
-   TimedSimBlock(int id)
-      : SimBlock{id}
+   TimedSimBlock()
+      : SimBlock{}
    {
-      _blockType = "Timed" + _blockType;
-      _allSimBlocks[id] = this;
+      // blockType_ = "Timed" + blockType_;
+      // _allSimBlocks[id] = this;
    }
-   virtual ~TimedSimBlock() = default;
+   ~TimedSimBlock() override = default;
 
 protected:
    SimTime sim_time;
 };
+
 } // namespace dysysim
 
 #endif // SIMBLOCK_H

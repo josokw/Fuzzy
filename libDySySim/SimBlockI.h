@@ -2,6 +2,8 @@
 #define SIMBLOCKI_H
 
 #include "SimBlock.h"
+
+#include <cassert>
 #include <initializer_list>
 #include <vector>
 
@@ -10,41 +12,63 @@ namespace dysysim {
 class SimBlockI : public SimBlock
 {
 public:
-   SimBlockI(int id, std::initializer_list<int> ids)
-      : SimBlock{id}
-      , _ids{ids}
+   SimBlockI()
+      : SimBlock{}
+      , inputs_{}
    {
-      _blockType += "I";
    }
-   SimBlockI(int id)
-      : SimBlockI{id, {}}
+
+   void config(const SimBlock::configData_t config) override
    {
+      id_ = config.id;
+      inputs_ = config.inputs;
    }
    virtual void next() const = 0;
 
 protected:
-   std::vector<int> _ids;
+   std::vector<int> inputs_;
 };
 
 class TimedSimBlockI : public TimedSimBlock
 {
 public:
-   TimedSimBlockI(int id)
-      : TimedSimBlock{id}
+   TimedSimBlockI()
+      : TimedSimBlock()
    {
-      _blockType = "Timed" + _blockType;
    }
    virtual ~TimedSimBlockI() = default;
+
+   void config(const SimBlock::configData_t config) override
+   {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+   }
+
+protected:
+   std::vector<int> inputs_;
 };
 
 class Log : public SimBlockI
 {
 public:
-   Log(std::initializer_list<int> ids)
-      : SimBlockI{-1, ids}
+   Log()
+      : SimBlockI{}
    {
-      _blockType += "-Log";
+      blockType_ = "LOG";
    }
+
+   void config(const SimBlock::configData_t config) override
+   {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+   }
+
    virtual void next() const
    {
       //      std::cout << _blockType << " ";
@@ -59,6 +83,7 @@ public:
 private:
    // std::ostream _ofs;
 };
+
 } // namespace dysysim
 
 #endif // SIMBLOCKI_H

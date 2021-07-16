@@ -17,8 +17,11 @@ int main(int argc, char *argv[])
    // Initial conditions
    const double Tsimulation{0.005};
    const double RCtime{0.47};
+
    // Model
-   dss::Time time{1, Tsimulation};
+   dss::Time time;
+   time.config({1, {}, {Tsimulation}});
+
    dss::Step step{2, 0, 3000, 0.0};
    dss::Summator sum{3};
    dss::OnOff onoff{4, 0, 4000, 0};
@@ -47,8 +50,7 @@ int main(int argc, char *argv[])
       cout << setw(4) << tn << "  t = " << setw(5) << time.output()
            << "  Setpoint = " << setw(5) << setpoint
            << "  Control = " << setw(5) << control
-           << "  Measured Value = " << setw(8) << RCcircuit.output()
-           << endl;
+           << "  Measured Value = " << setw(8) << RCcircuit.output() << endl;
 
       if (argc == 2) {
          simdata << setw(4) << time.output() << " " << setpoint << " "

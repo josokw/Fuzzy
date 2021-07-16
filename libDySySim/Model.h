@@ -12,9 +12,9 @@ class Model
 public:
    Model(const std::string &name, double delta_t_simulation,
          std::initializer_list<int> ids)
-      : _name{name}
-      , _time{0, delta_t_simulation}
-      , _logger{ids}
+      : name_{name}
+      , time_{}
+      , logger_{}
    {
    }
    virtual ~Model() = default;
@@ -22,9 +22,10 @@ public:
    void simulate(int steps);
 
 private:
-   std::string _name;
-   Time _time;
-   Log _logger;
+   std::string name_;
+   Time time_;
+   Log logger_;
+
    void connect();
 };
 

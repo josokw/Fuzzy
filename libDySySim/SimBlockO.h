@@ -8,49 +8,55 @@ namespace dysysim {
 class SimBlockO : public SimBlock
 {
 public:
-   SimBlockO(int id, double initial_out)
-      : SimBlock{id}
-      , _out{initial_out}
-   {
-      _blockType += "O";
-   }
-   SimBlockO(int id)
-      : SimBlockO(id, 0.0)
+   SimBlockO()
+      : SimBlock{}
+      , out_{0.0}
    {
    }
    SimBlockO(const SimBlockO &other) = delete;
    SimBlockO &operator=(const SimBlockO &other) = delete;
    virtual ~SimBlockO() = default;
 
-   double output() const { return _out; }
+   void config(const SimBlock::configData_t config) override
+   {
+      id_ = config.id;
+      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+   }
+
+   double output() const { return out_; }
    // static double getOutputSimBlock(int id) { return
    // getSimBlock(id)->output(); }
 
 protected:
-   double _out;
+   double out_;
 };
 
 class TimedSimBlockO : public TimedSimBlock
 {
 public:
-   TimedSimBlockO(int id, double initial_out)
-      : TimedSimBlock{id}
-      , _initial_out{initial_out}
-      , _out{initial_out}
-   {
-      _blockType += "O";
-   }
-   TimedSimBlockO(int id)
-      : TimedSimBlockO{id, 0.0}
+   TimedSimBlockO()
+      : TimedSimBlock{}
+      , out_{0.0}
    {
    }
    virtual ~TimedSimBlockO() = default;
 
-   double output() const { return _out; }
+   void config(const SimBlock::configData_t config) override
+   {
+      id_ = config.id;
+      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+      out_ = *begin(config.parameters);
+   }
+
+   double output() const { return out_; }
 
 protected:
-   const double _initial_out;
-   double _out;
+   const double initial_out_;
+   double out_;
 };
 
 } // namespace dysysim

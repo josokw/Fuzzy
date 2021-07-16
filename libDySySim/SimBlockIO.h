@@ -8,45 +8,41 @@ namespace dysysim {
 class SimBlockIO : public SimBlockI
 {
 public:
-   SimBlockIO(int id, std::initializer_list<int> ids)
-      : SimBlockI{id, ids}
-   {
-      _blockType += "O";
-   }
-   SimBlockIO(int id)
-      : SimBlockI{id, {}}
+   SimBlockIO()
+      : SimBlockI{}
    {
    }
    virtual ~SimBlockIO() = default;
 
-   double output() const { return _out; }
+   void config(const SimBlock::configData_t config) override
+   {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+   }
+
+   double output() const { return out_; }
    virtual void next() const {}
 
 protected:
-   double _out;
+   double out_;
 };
 
 class TimedSimBlockIO : public TimedSimBlockI
 {
 public:
-   TimedSimBlockIO(int id, double initial_out)
-      : TimedSimBlockI{id}
-      , _initial_out{initial_out}
-      , _out{initial_out}
-   {
-      _blockType = "Timed" + _blockType;
-   }
-   TimedSimBlockIO(int id)
-      : TimedSimBlockIO{id, 0.0}
+   TimedSimBlockIO()
+      : TimedSimBlockI{}
    {
    }
    virtual ~TimedSimBlockIO() = default;
 
-   double output() const { return _out; }
+   double output() const { return out_; }
 
 protected:
-   const double _initial_out;
-   double _out;
+   double out_;
 };
 
 } // namespace dysysim
