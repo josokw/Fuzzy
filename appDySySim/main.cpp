@@ -1,5 +1,6 @@
 #include "AppInfo.h"
 #include "LibInfoDySySim.h"
+#include "SimBlockFactory.h"
 
 #include <boost/spirit/home/x3.hpp>
 
@@ -7,6 +8,8 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+
+#include "DySySim.h"
 
 namespace x3 = boost::spirit::x3;
 namespace dss = dysysim;
@@ -16,6 +19,12 @@ int main(int argc, char *argv[])
    std::cout << "-- " APPNAME_VERSION " " << std::string(50, '-') << std::endl
              << "-- uses " + dss::libName + " v" << dss::libVersion << std::endl
              << std::endl;
+
+   dss::SimBlockFactory sbf;
+
+   sbf.add("ATT", new dss::Attenuator(1, 3.3));
+
+   std::cout << "  sbf size = " << sbf.size() << "\n";
 
    std::ifstream programFile;
 
@@ -41,6 +50,8 @@ int main(int argc, char *argv[])
 
    std::cout << "\n-- Syntax check\n";
 
+   auto f = [](auto &ctx) { std::cout << "SA " << x3::_attr(ctx) << "\n"; };
+
    for (auto input : program) {
       auto iter = begin(input);
       auto iterEnd = end(input);
@@ -48,10 +59,10 @@ int main(int argc, char *argv[])
       auto value = x3::double_;
       auto c_name = x3::alpha >> *(x3::alnum | x3::char_('_'));
       auto set_const = c_name >> '=' >> value;
-      auto input_indices = x3::int_ >> *(x3::char_(',') >> x3::int_);
+      auto input_indices = x3::int_[f] >> *(x3::char_(',') >> x3::int_[f]);
 
       auto dssLine =
-         x3::uint_ >> +x3::char_("A-Z") >> *input_indices >> *set_const;
+         x3::uint_[f][f] >> (+x3::char_("A-Z"))[f] >> *(input_indices) >> *set_const;
 
       auto p = x3::phrase_parse(iter, iterEnd, dssLine, x3::space);
 
