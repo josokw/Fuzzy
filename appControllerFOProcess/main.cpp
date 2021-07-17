@@ -16,19 +16,27 @@ int main(int argc, char *argv[])
              << std::endl;
 
    const double Tsample{0.005}; // 5 msec
-   const double Tsimulation{Tsample};
+   double Tsimulation{Tsample};
    //  const double stepTime = 10 * Tsimulation;
    const double RCtime{0.47}; // tau 0.47 sec
 
    // Model
-   dss::Time time{1, Tsimulation};
-   dss::Step step{2, 0, 2048, 0 /*stepTime*/};
-   dss::Summator sum{3};
+   dss::Time time;
+   time.config({1, {}, {Tsimulation}});
+   dss::Step step;
+   step.config({2, {}, {0, 2048, 0}});
+   dss::Summator sum;
+   sum.config({3, {}, {}});
+
    FuzzyController fuzzyController;
-   dss::Function<double> fuzzyC(4, [&fuzzyController](double in) {
+   dss::Function<double> fuzzyC;
+   fuzzyC.setFunction([&fuzzyController](double in) {
       return fuzzyController.inferControl(in);
    });
-   dss::FirstOrder RCcircuit{5, RCtime};
+   fuzzyC.config({4, {}, {}});
+
+   dss::FirstOrder RCcircuit;
+   RCcircuit.config({5, {}, {RCtime}});
 
    double setpoint{0.0};
    double error{0.0};
