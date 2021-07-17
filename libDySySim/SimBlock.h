@@ -44,7 +44,7 @@ public:
    virtual ~SimBlock() = default;
 
    virtual SimBlock *create() { return nullptr; }
-   virtual void config(const configData_t config) = 0;
+   virtual void config(const configData_t &config) = 0;
 
    int getId() const { return id_; }
    const std::string &getBlockType() const { return blockType_; }
@@ -52,6 +52,7 @@ public:
    // static std::map<int, SimBlock *> getAllSimBlocks() { return
    // allSimBlocks_s; }
    static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
+   static bool idIsUnique(int id);
 
 protected:
    int id_;

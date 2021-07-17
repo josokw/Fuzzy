@@ -18,6 +18,7 @@ public:
    {
    }
    virtual ~Model() = default;
+   
    std::ostream &write(std::ostream &os) const;
    void simulate(int steps);
 

@@ -18,7 +18,7 @@ public:
    {
    }
 
-   void config(const SimBlock::configData_t config) override
+   void config(const SimBlock::configData_t &config) override
    {
       id_ = config.id;
       inputs_ = config.inputs;
@@ -38,7 +38,7 @@ public:
    }
    virtual ~TimedSimBlockI() = default;
 
-   void config(const SimBlock::configData_t config) override
+   void config(const SimBlock::configData_t &config) override
    {
       id_ = config.id;
       inputs_ = config.inputs;
@@ -60,7 +60,7 @@ public:
       blockType_ = "LOG";
    }
 
-   void config(const SimBlock::configData_t config) override
+   void config(const SimBlock::configData_t &config) override
    {
       id_ = config.id;
       inputs_ = config.inputs;

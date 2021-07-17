@@ -25,15 +25,7 @@ public:
    {
    }
    virtual ~Constant() = default;
-
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-      out_ = *begin(config.parameters);
-   }
+   void config(const SimBlock::configData_t &config) override;
 };
 
 // Input output blocks ----------------------------------------------------
@@ -43,19 +35,12 @@ class AlgebraicDelay : public SimBlockIO
 public:
    AlgebraicDelay()
       : SimBlockIO{}
-      , out_previous_{initValue}
+      , out_previous_{0.0}
    {
    }
    virtual ~AlgebraicDelay() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
+   void config(const SimBlock::configData_t &config) override;
 
    void input(double in)
    {
@@ -76,16 +61,8 @@ public:
    {
    }
    virtual ~Attenuator() = default;
-   
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-      attenuation_ = *begin(config.parameters);
-   }
+
+   void config(const SimBlock::configData_t &config) override;
    void input(double in) { out_ = in / attenuation_; }
 
 private:
@@ -103,16 +80,7 @@ public:
    }
    virtual ~Cos() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-
-   }
-
+   void config(const SimBlock::configData_t &config) override;
    void input(double in) { out_ = std::cos(in * multipier_ + phase_); }
 
 private:
@@ -129,14 +97,7 @@ public:
    }
    virtual ~Divider() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
+   void config(const SimBlock::configData_t &config) override;
    void input(double in1, double in2) { out_ = in1 / in2; }
 };
 
@@ -150,15 +111,7 @@ public:
    }
    virtual ~Gain() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-
+   void config(const SimBlock::configData_t &config) override;
    void input(double in) { out_ = in * gain_; }
 
 private:
@@ -168,114 +121,78 @@ private:
 class Limit : public SimBlockIO
 {
 public:
-   Limit(int id, double min, double max)
-      : SimBlockIO{id}
-      , _min(min)
-      , _max(max)
+   Limit()
+      : SimBlockIO{}
+      , min_(-1.0)
+      , max_(1.0)
    {
    }
    virtual ~Limit() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-   void input(double in) { _out = std::min(std::max(_min, in), _max); }
+   void config(const SimBlock::configData_t &config) override;
+   void input(double in) { out_ = std::min(std::max(min_, in), max_); }
 
 private:
-   const double _min;
-   const double _max;
+   const double min_;
+   const double max_;
 };
 
 class Max : public SimBlockIO
 {
 public:
-   Max(int id)
-      : SimBlockIO{id}
+   Max()
+      : SimBlockIO{}
    {
    }
    virtual ~Max() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-   void input(double in1, double in2) { _out = in1 > in2 ? in1 : in2; }
+   void config(const SimBlock::configData_t &config) override;
+   void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
 };
 
 class Min : public SimBlockIO
 {
 public:
-   Min(int id)
-      : SimBlockIO{id}
+   Min()
+      : SimBlockIO{}
    {
    }
    virtual ~Min() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-
-   void input(double in1, double in2) { _out = in1 < in2 ? in1 : in2; }
+   void config(const SimBlock::configData_t &config) override;
+   void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
 };
 
 class Multiplier : public SimBlockIO
 {
 public:
-   Multiplier(int id)
-      : SimBlockIO{id}
+   Multiplier()
+      : SimBlockIO{}
    {
    }
    virtual ~Multiplier() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-
-   void input(double in1, double in2) { _out = in1 * in2; }
+   void config(const SimBlock::configData_t &config) override;
+   void input(double in1, double in2) { out_ = in1 * in2; }
 };
 
 class Sin : public SimBlockIO
 {
 public:
-   Sin(int id, double multiplier = 1.0, double phase = 0.0)
-      : SimBlockIO{id}
-      , _multiplier{multiplier}
-      , _phase{phase}
+   Sin()
+      : SimBlockIO{}
+      , multiplier_{1.0}
+      , phase_{0.0}
    {
    }
    virtual ~Sin() = default;
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-   void input(double in) { _out = std::sin(in * _multiplier + _phase); }
+
+   void config(const SimBlock::configData_t &config) override;
+   void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
 
 private:
-   const double _multiplier;
-   const double _phase;
+   double multiplier_;
+   double phase_;
 };
 
 class Summator : public SimBlockIO
@@ -287,20 +204,12 @@ public:
    }
    virtual ~Summator() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-
-   void input(double in1, double in2) { _out = in1 + in2; }
-   void input(double in1, double in2, double in3) { _out = in1 + in2 + in3; }
+   void config(const SimBlock::configData_t &config) override;
+   void input(double in1, double in2) { out_ = in1 + in2; }
+   void input(double in1, double in2, double in3) { out_ = in1 + in2 + in3; }
    void input(double in1, double in2, double in3, double in4)
    {
-      _out = in1 + in2 + in3 + in4;
+      out_ = in1 + in2 + in3 + in4;
    }
 };
 
@@ -311,82 +220,59 @@ public:
 class Frequency : public TimedSimBlockO
 {
 public:
-   Frequency(int id, double frequency, double phase = 0.0)
-      : TimedSimBlockO{id}
-      , _frequency{frequency}
-      , _phase{phase}
+   Frequency()
+      : TimedSimBlockO{}
+      , frequency_{1.0}
+      , phase_{0.0}
    {
    }
    virtual ~Frequency() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-
-   void next() { _out = std::sin(2 * M_PI * _frequency * SimTime::t + _phase); }
+   void config(const SimBlock::configData_t &config) override;
+   void next() { out_ = std::sin(2 * M_PI * frequency_ * SimTime::t + phase_); }
 
 private:
-   const double _frequency;
-   const double _phase;
+   double frequency_;
+   double phase_;
 };
 
 class Step : public TimedSimBlockO
 {
 public:
-   Step(int id, double initial_out, double step_out, double step_t)
-      : TimedSimBlockO{id, initial_out}
-      , _step_out{step_out}
-      , _step_t{step_t}
+   Step()
+      : TimedSimBlockO{}
+      , step_out_{1.0}
+      , step_t_{10}
    {
    }
    virtual ~Step() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-
-   void next() { _out = (SimTime::t >= _step_t) ? _step_out : _initial_out; }
+   void config(const SimBlock::configData_t &config) override;
+   void next() { out_ = (SimTime::t >= step_t_) ? step_out_ : initial_out_; }
 
 private:
-   const double _step_out;
-   const double _step_t;
+   double step_out_;
+   double step_t_;
 };
 
 /// Every new instantiated Time object will reset the time to 0.
 class Time : public TimedSimBlockO
 {
 public:
-   Time(int id, double delta_t)
-      : TimedSimBlockO{id}
+   Time()
+      : TimedSimBlockO{}
    {
       SimTime::reset();
-      SimTime::delta_t = delta_t;
+      SimTime::delta_t = 1.0;
    }
    virtual ~Time() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
+   void config(const SimBlock::configData_t &config) override;
 
    void next()
    {
       SimTime::next();
-      _out = SimTime::t;
+      out_ = SimTime::t;
    }
 };
 
@@ -396,262 +282,220 @@ public:
 class Delay : public TimedSimBlockIO
 {
 public:
-   Delay(int id, double delaytime, double initial_out)
-      : TimedSimBlockIO{id, initial_out}
-      , _delaytime{delaytime}
-      , _buffer{}
+   Delay()
+      : TimedSimBlockIO{}
+      , delaytime_{1.0}
+      , buffer_{}
    {
-      for (int i = 0; i < int(delaytime / SimTime::delta_t); i++) {
-         _buffer.push(initial_out);
-      }
+      // for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
+      //    _buffer.push(initial_out);
+      // }
    }
    virtual ~Delay() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-
+   void config(const SimBlock::configData_t &config) override;
    void input(double in)
    {
-      _buffer.push(in);
-      _out = _buffer.front();
-      _buffer.pop();
+      buffer_.push(in);
+      out_ = buffer_.front();
+      buffer_.pop();
    }
 
 private:
-   const double _delaytime;
-   std::queue<double> _buffer;
+   double delaytime_;
+   std::queue<double> buffer_;
 };
 
 class FirstOrder : public TimedSimBlockIO
 {
 public:
-   FirstOrder(int id, double timeConstant, double initial_out = 0.0)
-      : TimedSimBlockIO{id, initial_out}
-      , _timeConstant{timeConstant}
+   FirstOrder()
+      : TimedSimBlockIO{}
+      , timeConstant_{1.0}
    {
    }
    ~FirstOrder() = default;
+
+   void config(const SimBlock::configData_t &config) override;
    void input(double in)
    {
-      _out += SimTime::delta_t * (in - _out) / _timeConstant;
+      out_ += SimTime::delta_t * (in - out_) / timeConstant_;
    }
 
 private:
-   const double _timeConstant;
+   double timeConstant_;
 };
 
+/// \todo Implement setter for callback_
 template <typename T>
 class Function : public SimBlockIO
 {
 public:
-   Function(int id, std::function<double(T)> callback)
-      : SimBlockIO{id}
-      , _callback{callback}
+   Function()
+      : SimBlockIO{}
+      , callback_{cos}
    {
    }
    virtual ~Function() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-
-   void input(double in) { _out = _callback(in); }
+   void config(const SimBlock::configData_t &config) override;
+   void setFunction(std::function<double(T)> cbf) { callback_ = cbf; }
+   void input(double in) { out_ = callback_(in); }
 
 private:
-   std::function<double(T)> _callback;
+   std::function<double(T)> callback_;
 };
+
+template <typename T>
+void dysysim::Function<T>::config(const SimBlock::configData_t &config)
+{
+   id_ = config.id;
+   inputs_ = config.inputs;
+   if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
+      SimBlock::allSimBlocks_s[id_] = this;
+   }
+}
 
 class OnOff : public SimBlockIO
 {
 public:
-   OnOff(int id, double onoff, double on, double off)
-      : SimBlockIO{id}
-      , _onoff{onoff}
-      , _on(on)
-      , _off{off}
+   OnOff()
+      : SimBlockIO{}
+      , onoff_{1.0}
+      , on_{1.0}
+      , off_{0.0}
    {
    }
    virtual ~OnOff() = default;
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
 
-   void input(double in) { _out = (in < _onoff) ? _off : _on; }
+   void config(const SimBlock::configData_t &config) override;
+   void input(double in) { out_ = (in < onoff_) ? off_ : on_; }
 
 private:
-   const double _onoff;
-   const double _on;
-   const double _off;
+   const double onoff_;
+   const double on_;
+   const double off_;
 };
 
-// Trapezoidal integration
+/// Trapezoidal integration
 class Integrator : public TimedSimBlockIO
 {
 public:
-   Integrator(int id, double initial_out = 0)
-      : TimedSimBlockIO{id, initial_out}
+   Integrator()
+      : TimedSimBlockIO{}
    {
    }
    virtual ~Integrator() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
+   void config(const SimBlock::configData_t &config) override;
    void input(double in)
    {
-      _out += 0.5 * (in + in_previous) * SimTime::delta_t;
+      out_ += 0.5 * (in + in_previous) * SimTime::delta_t;
       in_previous = in;
    }
-   void reset() { _out = _initial_out; }
+   void reset() { out_ = initial_out_; }
 
 private:
-   double in_previous = _initial_out;
+   double initial_out_{0.0};
+   double in_previous = initial_out_;
 };
 
-// Forward Euler integration
+/// Forward Euler integration
 class IntegratorEuler : public TimedSimBlockIO
 {
 public:
-   IntegratorEuler(int id, double initial_out = 0)
-      : TimedSimBlockIO{id, initial_out}
-      , _initial_out{initial_out}
+   IntegratorEuler()
+      : TimedSimBlockIO{}
+      , initial_out_{0.0}
    {
    }
    virtual ~IntegratorEuler() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-   void input(double in) { _out += in * SimTime::delta_t; }
-   void reset() { _out = _initial_out; }
+   void config(const SimBlock::configData_t &config) override;
+   void input(double in) { out_ += in * SimTime::delta_t; }
+   void reset() { out_ = initial_out_; }
 
 private:
-   const double _initial_out;
+   double initial_out_;
 };
 
-// Trapezoidal integration
+/// Trapezoidal integration.
 class IntegratorTrapezoidal : public TimedSimBlockIO
 {
 public:
-   IntegratorTrapezoidal(int id, double initial_out = 0)
-      : TimedSimBlockIO{id, initial_out}
-      , _initial_out{initial_out}
-      , _in_previous{0}
+   IntegratorTrapezoidal()
+      : TimedSimBlockIO{}
+      , initial_out_{0.0}
+      , in_previous_{0}
    {
    }
    virtual ~IntegratorTrapezoidal() = default;
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
+   void config(const SimBlock::configData_t &config) override;
    void input(double in)
    {
-      _out += 0.5 * (in + _in_previous) * SimTime::delta_t;
-      _in_previous = in;
+      out_ += 0.5 * (in + in_previous_) * SimTime::delta_t;
+      in_previous_ = in;
    }
    void reset()
    {
-      _out = _initial_out;
-      _in_previous = 0.0;
+      out_ = initial_out_;
+      in_previous_ = 0.0;
    }
 
 private:
-   const double _initial_out;
-   double _in_previous;
+   double initial_out_;
+   double in_previous_;
 };
 
 // @TBD not tested
 class PI : public TimedSimBlockIO
 {
 public:
-   PI(int id, double Kp, double tau_I, double initial_out = 0)
-      : TimedSimBlockIO{id, initial_out}
-      , _Kp{Kp}
-      , _tau_I{tau_I}
-      , _z{3, initial_out}
+   PI()
+      : TimedSimBlockIO{}
+      , Kp_{1.0}
+      , tau_I_{1.0}
+      , z_{3, 0.0}
    {
    }
    virtual ~PI() = default;
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
+
+   void config(const SimBlock::configData_t &config) override;
    void input(double in)
    {
-      _z.push_back(in);
-      _z.pop_front();
-      _out = _z[0] + _K1 * _z[1] + _K2 * _z[2];
+      z_.push_back(in);
+      z_.pop_front();
+      out_ = z_[0] + K1_ * z_[1] + K2_ * z_[2];
    }
    void reset()
    {
-      _z.clear();
-      _z = {0, 0, 0};
+      z_.clear();
+      z_ = {0, 0, 0};
    }
 
 private:
-   const double _Kp;
-   const double _tau_I;
-   const double _K1{_Kp * (1 + (1 / _tau_I))};
-   const double _K2{_Kp};
-   std::deque<double> _z;
+   double Kp_;
+   double tau_I_;
+   double K1_{Kp_ * (1 + (1 / tau_I_))};
+   double K2_{Kp_};
+   std::deque<double> z_;
 };
 
 // @TBD not tested
 class PID : public TimedSimBlockIO
 {
 public:
-   PID(int id, double Kp, double tau_I, double tau_D, double initValue = 0)
-      : TimedSimBlockIO{id, initValue}
-      , _Kp{Kp}
-      , _tau_I{tau_I}
-      , _tau_D{tau_D}
-      , _z{4, initValue}
+   PID()
+      : TimedSimBlockIO{}
+      , _Kp{1.0}
+      , _tau_I{1.0}
+      , _tau_D{1.0}
+      , _z{4, 0.0}
    {
    }
    virtual ~PID() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
+   void config(const SimBlock::configData_t &config) override;
    void input(double in)
    {
       _z.push_back(in);
@@ -685,15 +529,7 @@ public:
    }
    virtual ~ZeroOrderHold() = default;
 
-   void config(const SimBlock::configData_t config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-   }
-
+   void config(const SimBlock::configData_t &config) override;
    void input(double in) { out_ = (sample_++ % nSamples_ == 0) ? in : out_; }
 
 private:
