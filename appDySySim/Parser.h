@@ -1,18 +1,25 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include <string>
+#include <tuple>
+
 namespace dysysim {
 
-/// Parser parsers input string.
+/// Parser parsers one line of DySySim code.
 /// \todo Implement Parser.
 class Parser final
 {
 public:
-   Parser();
+   using result_t = std::tuple<int, std::string, std::initializer_list<int>,
+                               std::initializer_list<double>>;
+
+   Parser() = default;
    ~Parser() = default;
 
-private:
+   result_t operator()(const std::string &codeLine);
 
+private:
 };
 
 } // namespace dysysim
