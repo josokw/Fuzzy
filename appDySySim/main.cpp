@@ -1,9 +1,6 @@
 #include "AppInfo.h"
 #include "Builder.h"
-#include "DySySim.h"
 #include "LibInfoDySySim.h"
-#include "Parser.h"
-#include "SimBlockFactory.h"
 
 #include <boost/spirit/home/x3.hpp>
 
@@ -22,13 +19,6 @@ int main(int argc, char *argv[])
              << std::endl;
 
    dss::Builder builder;
-   dss::Parser parser;
-
-   dss::SimBlockFactory sbf;
-
-   sbf.add("ATT", new dss::Attenuator);
-
-   std::cout << "  sbf size = " << sbf.size() << "\n";
 
    std::ifstream programFile;
 
@@ -55,7 +45,7 @@ int main(int argc, char *argv[])
    std::cout << "\n-- Syntax check\n";
 
    for (auto input : program) {
-      parser(input);
+      builder(input);
    }
 
    return 0;

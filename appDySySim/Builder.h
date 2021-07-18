@@ -4,20 +4,24 @@
 #include "Parser.h"
 #include "SimBlockFactory.h"
 
+#include <string>
+
 namespace dysysim {
 
-/// Builder parsers input and creates ...
-/// \todo Implement Builder
+/// Builder parsers input stream text and creates ...
+/// \todo implement input stream
 class Builder final
 {
 public:
-   using id_t = int;
+   Builder();
 
-   Builder() = default;
+   Parser::result_t operator()(const std::string &codeLine);
 
 private:
-   Parser parser_;
    SimBlockFactory factory_;
+   Parser parser_;
+
+   void init();
 };
 
 } // namespace dysysim

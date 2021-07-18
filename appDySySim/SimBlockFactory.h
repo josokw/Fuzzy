@@ -12,6 +12,9 @@ class SimBlockFactory
 {
 public:
    SimBlockFactory() = default;
+   ~SimBlockFactory() = default;
+
+   void init();
    bool add(const std::string &key, SimBlock *tbm)
    {
        return factory_.add(key, tbm);
