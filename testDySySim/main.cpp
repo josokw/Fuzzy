@@ -15,7 +15,9 @@ SUITE(DySySim)
    TEST(Attenuator)
    {
       cout << "-- Attenuator" << endl;
-      dss::Attenuator att{1, 10.0};
+
+      dss::Attenuator att;
+      att.config({1, {}, {10.0}});
       att.input(1.0);
       CHECK_CLOSE(0.1, att.output(), EPS);
       att.input(-1.0);
@@ -25,14 +27,18 @@ SUITE(DySySim)
    TEST(Constant)
    {
       cout << "-- Constant" << endl;
-      dss::Constant con{1, 10.0};
+
+      dss::Constant con;
+      con.config({1, {}, {10.0}});
       CHECK_CLOSE(10.0, con.output(), EPS);
    }
 
    TEST(Gain)
    {
       cout << "-- Gain" << endl;
-      dss::Gain gain{1, 10.0};
+
+      dss::Gain gain;
+      gain.config({1, {}, {10.0}});
       gain.input(1.0);
       CHECK_CLOSE(10.0, gain.output(), EPS);
       gain.input(-1.0);
@@ -42,7 +48,9 @@ SUITE(DySySim)
    TEST(Limit)
    {
       cout << "-- Limit" << endl;
-      dss::Limit limit{1, -10.0, 20.0};
+
+      dss::Limit limit;
+      limit.config({1, {}, {-10.0, 20.0}});
       limit.input(0.0);
       CHECK_CLOSE(0.0, limit.output(), EPS);
       limit.input(-12.0);
@@ -54,7 +62,9 @@ SUITE(DySySim)
    TEST(OnOff)
    {
       cout << "-- OnOff" << endl;
-      dss::OnOff onoff{2, 10, 1.0, 0.0};
+
+      dss::OnOff onoff;
+      onoff.config({2, {}, {10, 1.0, 0.0}});
       onoff.input(-1.0);
       CHECK_CLOSE(0.0, onoff.output(), EPS);
       onoff.input(0.0);
@@ -71,7 +81,9 @@ SUITE(DySySim)
    {
       cout << "-- Time" << endl;
       const double delta_t{0.1};
-      dss::Time time{1, delta_t};
+
+      dss::Time time;
+      time.config({1, {}, {delta_t}});
       CHECK_CLOSE(0.0, time.output(), EPS);
       for (int i = 1; i < 10; ++i) {
          time.next();
@@ -82,9 +94,14 @@ SUITE(DySySim)
    TEST(Step)
    {
       const double delta_t{0.1};
-      dss::Time time{1, delta_t};
+
+      dss::Time time;
+      time.config({1, {}, {delta_t}});
+
       cout << "-- Step" << endl;
-      dss::Step step{2, 0.0, 1.0, 4 * delta_t};
+
+      dss::Step step;
+      step.config({2, {}, {0.0, 1.0, 4 * delta_t}});
       CHECK_CLOSE(0.0, step.output(), EPS);
       time.next();
       step.next();
@@ -107,10 +124,17 @@ SUITE(DySySim)
    {
       const double delta_t{0.1};
       const double delayTime{3 * delta_t};
-      dss::Time time{1, delta_t};
+
+      dss::Time time;
+      time.config({1, {}, {delta_t}});
+
       cout << "-- Delay" << endl;
-      dss::Step step{2, 0.0, 1.0, 2 * delta_t};
-      dss::Delay delay{3, delayTime, 0.0};
+      dss::Step step;
+      step.config({2, {}, {0.0, 1.0, 2 * delta_t}});
+
+      dss::Delay delay;
+      delay.config({3, {}, {delayTime, 0.0}});
+
       for (int i = 0; i < 10; ++i) {
          auto input = step.output();
          delay.input(input);
@@ -131,15 +155,20 @@ SUITE(DySySim)
       const double stp{1.0};
       const double stp_t{5 * delta_t};
 
-      dss::Time time{1, delta_t};
+      dss::Time time;
+      time.config({1, {}, {delta_t}});
+
       auto fio_response = [tau, stp_t, stp](double t) {
          return (t < stp_t) ? 0.0 : (stp * (1 - exp(-(t - stp_t) / tau)));
       };
 
       cout << "-- FirstOrder" << endl;
 
-      dss::Step step{2, 0.0, stp, stp_t};
-      dss::FirstOrder fio{3, tau, 0.0};
+      dss::Step step;
+      step.config({2, {}, {0.0, stp, stp_t}});
+
+      dss::FirstOrder fio;
+      fio.config({3, {}, {tau, 0.0}});
 
       while (time.output() < stp_t + 10 * tau) {
          auto input = step.output();
@@ -164,12 +193,20 @@ SUITE(DySySim)
 
       cout << "-- compare RC filter and FirstOrder" << endl;
 
-      dss::Time time{0, delta_t};
-      dss::Step step{1, 0.0, stp, stp_t};
-      dss::Attenuator att{2, tau};
-      dss::Integrator intgt{3, 0.0};
+      dss::Time time;
+      time.config({0, {}, {delta_t}});
 
-      dss::FirstOrder fio{4, tau, 0.0};
+      dss::Step step;
+      step.config({1, {}, {0.0, stp, stp_t}});
+
+      dss::Attenuator att;
+      att.config({2, {}, {tau}});
+
+      dss::Integrator intgt;
+      intgt.config({3, {}, {0.0}});
+
+      dss::FirstOrder fio;
+      fio.config({4, {}, {tau, 0.0}});
 
       while (time.output() < stp_t + 10 * tau) {
          auto input = step.output();
