@@ -1,4 +1,4 @@
-# Fuzzy
+# Fuzzy and DySySim (Dynamical Systems Simulator)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bf89c5a36cb9439182fa7d20216c0973)](https://www.codacy.com/project/josokw/Fuzzy/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=josokw/Fuzzy&amp;utm_campaign=Badge_Grade_Dashboard)
 [![CodeFactor](https://www.codefactor.io/repository/github/josokw/fuzzy/badge)](https://www.codefactor.io/repository/github/josokw/fuzzy)
@@ -19,10 +19,12 @@ Go to the Fuzzy directory:
     cmake ..
     make
 
-## Unit testing
+## DySySim parser and Unit testing
 
 This project contains some unit tests.
 Install the C++ [UnitTest++](https://github.com/unittest-cpp/unittest-cpp) library.
+
+DySySim uses C++ [Boost Spirit X3](https://www.boost.org/doc/libs/develop/libs/spirit/doc/x3/html/index.html).
 
 ## Tipping problem
 
