@@ -7,12 +7,35 @@
 namespace dysysim {
 
 /// Parser parsers one line of DySySim code.
-/// \todo Implement Parser.
+///
+/// Syntax line of code in PEG (Parsing Expression Grammer) notation
+/// using Spirit parser x3 names (white space ignored x3::space)
+/// for configuring a simulation block:
+/// ``
+/// id             <- x3::uint_
+/// type           <- x3::alpha (x3::alnum / x3::char_('_'))*
+/// value          <- x3::double_
+/// parameter_name <- x3::alpha (x3::alnum / x3::char_('_'))*;
+/// inputs         <- x3::int_ (x3::char_(',') x3::int_)*;
+/// set_parameter  <- parameter_name '=' value;
+///
+/// codeline       <- id (inputs)* (set_parameter)*
+/// ```
+///
+/// Example DySySim script 3 lines of code:
+/// ```
+/// 1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
+/// 2 ATT 1,-3 att=10.0
+/// 3 INT 2    out_t0=0.0
+/// ```
 class Parser final
 {
 public:
-   using result_t = std::tuple<int, std::string, std::initializer_list<int>,
-                               std::initializer_list<double>>;
+   using id_t = int;
+   using type_t = std::string;
+   using value_t = double;
+   using result_t = std::tuple<id_t, type_t, std::initializer_list<id_t>,
+                               std::initializer_list<value_t>>;
 
    Parser() = default;
    ~Parser() = default;
