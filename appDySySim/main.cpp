@@ -2,14 +2,11 @@
 #include "Builder.h"
 #include "LibInfoDySySim.h"
 
-#include <boost/spirit/home/x3.hpp>
-
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <string>
 
-namespace x3 = boost::spirit::x3;
 namespace dss = dysysim;
 
 int main(int argc, char *argv[])
