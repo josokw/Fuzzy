@@ -29,21 +29,11 @@ int main(int argc, char *argv[])
       programFile.open(argv[1]);
    }
 
-   std::vector<std::string> program;
-
    if (programFile.is_open()) {
-      std::string line;
-      while (getline(programFile, line)) {
-         program.push_back(line);
-         std::cout << line << "\n";
-      }
+       std::cout << "\n-- Syntax check\n";
+     builder(programFile);
    }
-
-   std::cout << "\n-- Syntax check\n";
-
-   for (auto input : program) {
-      builder(input);
-   }
+   std::cout << "\n";
 
    return 0;
 }

@@ -5,10 +5,16 @@ dysysim::Builder::Builder()
    init();
 }
 
-dysysim::Parser::result_t
-dysysim::Builder::operator()(const std::string &codeLine)
+void dysysim::Builder::operator()(std::ifstream &script)
 {
-   return parser_(codeLine);
+   std::string line;
+   while (getline(script, line)) {
+      scriptLines_.push_back(line);
+   }
+   for (const auto& line: scriptLines_)
+   {
+      parser_(line);
+   }
 }
 
 void dysysim::Builder::init()
