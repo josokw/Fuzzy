@@ -3,6 +3,7 @@
 
 #include <string>
 #include <tuple>
+#include <vector>
 
 namespace dysysim {
 
@@ -34,8 +35,8 @@ public:
    using id_t = int;
    using type_t = std::string;
    using value_t = double;
-   using result_t = std::tuple<id_t, type_t, std::initializer_list<id_t>,
-                               std::initializer_list<value_t>>;
+   using result_t =
+      std::tuple<id_t, type_t, std::vector<id_t>, std::vector<value_t>>;
 
    Parser() = default;
    ~Parser() = default;
