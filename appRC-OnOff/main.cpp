@@ -1,18 +1,17 @@
 #include "AppInfo.h"
 #include "DySySim.h"
 #include "LibInfoDySySim.h"
+
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 
 namespace dss = dysysim;
-using namespace std;
 
 int main(int argc, char *argv[])
 {
-   cout << "-- " APPNAME_VERSION " " << string(50, '-') << endl
-        << "-- uses " + dss::libName + " " << dss::libVersion << endl
-        << endl;
+   std::cout << "-- " APPNAME_VERSION " " << std::string(50, '-') << "\n"
+             << "-- uses " + dss::libName + " " << dss::libVersion << "\n\n";
 
    // Initial conditions
    const double Tsimulation{0.005};
@@ -22,10 +21,14 @@ int main(int argc, char *argv[])
    dss::Time time;
    time.config({1, {}, {Tsimulation}});
 
-   dss::Step step{2, 0, 3000, 0.0};
-   dss::Summator sum{3};
-   dss::OnOff onoff{4, 0, 4000, 0};
-   dss::FirstOrder RCcircuit{5, RCtime, 0};
+   dss::Step step;
+   step.config({2, {}, {0, 3000, 0.0}});
+   dss::Summator sum;
+   sum.config({3, {}, {}});
+   dss::OnOff onoff;
+   onoff.config({4, {}, {0, 4000, 0}});
+   dss::FirstOrder RCcircuit;
+   RCcircuit.config({5, {}, {RCtime, 0.0}});
 
    double setpoint{0.0};
    double error{0.0};
@@ -47,14 +50,15 @@ int main(int argc, char *argv[])
       onoff.input(error);
       control = onoff.output();
 
-      cout << setw(4) << tn << "  t = " << setw(5) << time.output()
-           << "  Setpoint = " << setw(5) << setpoint
-           << "  Control = " << setw(5) << control
-           << "  Measured Value = " << setw(8) << RCcircuit.output() << endl;
+      std::cout << std::setw(4) << tn << "  t = " << std::setw(5)
+                << time.output() << "  Setpoint = " << std::setw(5) << setpoint
+                << "  Control = " << std::setw(5) << control
+                << "  Measured Value = " << std::setw(8) << RCcircuit.output()
+                << std::endl;
 
       if (argc == 2) {
-         simdata << setw(4) << time.output() << " " << setpoint << " "
-                 << control << " " << RCcircuit.output() << endl;
+         simdata << std::setw(4) << time.output() << " " << setpoint << " "
+                 << control << " " << RCcircuit.output() << std::endl;
       }
 
       RCcircuit.input(control);
