@@ -10,6 +10,7 @@ class SimBlockIO : public SimBlockI
 public:
    SimBlockIO()
       : SimBlockI{}
+      , out_{0.0}
    {
    }
    virtual ~SimBlockIO() = default;
@@ -35,6 +36,7 @@ class TimedSimBlockIO : public TimedSimBlockI
 public:
    TimedSimBlockIO()
       : TimedSimBlockI{}
+      , out_{0.0}
    {
    }
    virtual ~TimedSimBlockIO() = default;

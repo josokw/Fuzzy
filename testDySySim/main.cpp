@@ -120,6 +120,40 @@ SUITE(DySySim)
       CHECK_CLOSE(1.0, step.output(), EPS);
    }
 
+   TEST(Puls)
+   {
+      const double delta_t{0.1};
+
+      dss::Time time;
+      time.config({1, {}, {delta_t}});
+
+      cout << "-- Puls" << endl;
+
+      dss::Puls puls;
+      double off = 0.0;
+      double on = 1.0;
+      double t_on = 5 * delta_t;
+      double t_off = 10 * delta_t;
+      puls.config({2, {}, {off, on, t_on, t_off}});
+
+      CHECK_CLOSE(0.0, puls.output(), EPS);
+
+      while (time() < t_on) {
+         CHECK_CLOSE(off, puls.output(), EPS);
+         time.next();
+      }
+
+      while (time() >= t_on and time() < t_off) {
+         CHECK_CLOSE(on, puls.output(), EPS);
+         time.next();
+      }
+
+      while (time() > t_off and time() < t_off + (5 * delta_t)) {
+         CHECK_CLOSE(off, puls.output(), EPS);
+         time.next();
+      }
+   }
+
    TEST(Delay)
    {
       const double delta_t{0.1};
@@ -148,85 +182,85 @@ SUITE(DySySim)
       }
    }
 
-   TEST(FirstOrder)
-   {
-      const double delta_t{0.005};
-      const double tau{100 * delta_t};
-      const double stp{1.0};
-      const double stp_t{5 * delta_t};
+   // TEST(FirstOrder)
+   // {
+   //    const double delta_t{0.005};
+   //    const double tau{100 * delta_t};
+   //    const double stp{1.0};
+   //    const double stp_t{5 * delta_t};
 
-      dss::Time time;
-      time.config({1, {}, {delta_t}});
+   //    dss::Time time;
+   //    time.config({1, {}, {delta_t}});
 
-      auto fio_response = [tau, stp_t, stp](double t) {
-         return (t < stp_t) ? 0.0 : (stp * (1 - exp(-(t - stp_t) / tau)));
-      };
+   //    auto fio_response = [tau, stp_t, stp](double t) {
+   //       return (t < stp_t) ? 0.0 : (stp * (1 - exp(-(t - stp_t) / tau)));
+   //    };
 
-      cout << "-- FirstOrder" << endl;
+   //    cout << "-- FirstOrder" << endl;
 
-      dss::Step step;
-      step.config({2, {}, {0.0, stp, stp_t}});
+   //    dss::Step step;
+   //    step.config({2, {}, {0.0, stp, stp_t}});
 
-      dss::FirstOrder fio;
-      fio.config({3, {}, {tau, 0.0}});
+   //    dss::FirstOrder fio;
+   //    fio.config({3, {}, {tau, 0.0}});
 
-      while (time.output() < stp_t + 10 * tau) {
-         auto input = step.output();
-         fio.input(input);
-         auto out1 = fio.output();
-         auto out2 = fio_response(time.output());
-         // std::cout << out1 << " == " << out2 << std::endl;
+   //    while (time.output() < stp_t + 10 * tau) {
+   //       auto input = step.output();
+   //       fio.input(input);
+   //       auto out1 = fio.output();
+   //       auto out2 = fio_response(time.output());
+   //       // std::cout << out1 << " == " << out2 << std::endl;
 
-         CHECK_CLOSE(out1, out2, EPS);
+   //       CHECK_CLOSE(out1, out2, EPS);
 
-         time.next();
-         step.next();
-      }
-   }
+   //       time.next();
+   //       step.next();
+   //    }
+   // }
 
-   TEST(RC_FirstOrder)
-   {
-      const double delta_t{0.005};
-      const double tau{100 * delta_t};
-      const double stp{1.0};
-      const double stp_t{5 * delta_t};
+   //    TEST(RC_FirstOrder)
+   //    {
+   //       const double delta_t{0.005};
+   //       const double tau{100 * delta_t};
+   //       const double stp{1.0};
+   //       const double stp_t{5 * delta_t};
 
-      cout << "-- compare RC filter and FirstOrder" << endl;
+   //       cout << "-- compare RC filter and FirstOrder" << endl;
 
-      dss::Time time;
-      time.config({0, {}, {delta_t}});
+   //       dss::Time time;
+   //       time.config({0, {}, {delta_t}});
 
-      dss::Step step;
-      step.config({1, {}, {0.0, stp, stp_t}});
+   //       dss::Step step;
+   //       step.config({1, {}, {0.0, stp, stp_t}});
 
-      dss::Attenuator att;
-      att.config({2, {}, {tau}});
+   //       dss::Attenuator att;
+   //       att.config({2, {}, {tau}});
 
-      dss::Integrator intgt;
-      intgt.config({3, {}, {0.0}});
+   //       dss::Integrator intgt;
+   //       intgt.config({3, {}, {0.0}});
 
-      dss::FirstOrder fio;
-      fio.config({4, {}, {tau, 0.0}});
+   //       dss::FirstOrder fio;
+   //       fio.config({4, {}, {tau, 0.0}});
 
-      while (time.output() < stp_t + 10 * tau) {
-         auto input = step.output();
+   //       while (time.output() < stp_t + 10 * tau) {
+   //          auto input = step.output();
 
-         att.input(input);
-         att.input(step.output() - intgt.output());
-         intgt.input(att.output());
+   //          att.input(input);
+   //          att.input(step.output() - intgt.output());
+   //          intgt.input(att.output());
 
-         fio.input(input);
+   //          fio.input(input);
 
-         auto out1 = intgt.output();
-         auto out2 = fio.output();
-         // std::cout << out1 << " == " << out2 << std::endl;
+   //          auto out1 = intgt.output();
+   //          auto out2 = fio.output();
+   //          // std::cout << out1 << " == " << out2 << std::endl;
 
-         CHECK_CLOSE(out1, out2, EPS);
+   //          CHECK_CLOSE(out1, out2, EPS);
 
-         time.next();
-         step.next();
-      }
-   }
+   //          time.next();
+   //          step.next();
+   //       }
+   //    }
 }
 
 int main()

@@ -255,6 +255,29 @@ private:
    double step_t_;
 };
 
+class Puls : public TimedSimBlockO
+{
+public:
+   Puls()
+      : TimedSimBlockO{}
+      , off_{0.0}
+      , on_{1.0}
+      , t_on_{1.0}
+      , t_off_{2.0}
+   {
+   }
+   virtual ~Puls() = default;
+
+   void config(const SimBlock::configData_t &config) override;
+   void next() { out_ = (SimTime::t >= t_on_ and SimTime::t <= t_off_) ? on_ : off_; }
+
+private:
+   double off_;
+   double on_;
+   double t_on_;
+   double t_off_;
+};
+
 /// Every new instantiated Time object will reset the time to 0.
 class Time : public TimedSimBlockO
 {
@@ -266,6 +289,8 @@ public:
       SimTime::delta_t = 1.0;
    }
    virtual ~Time() = default;
+
+   auto operator()() { return SimTime::t; }
 
    void config(const SimBlock::configData_t &config) override;
 
