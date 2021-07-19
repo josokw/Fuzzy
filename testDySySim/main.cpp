@@ -64,17 +64,19 @@ SUITE(DySySim)
       cout << "-- OnOff" << endl;
 
       dss::OnOff onoff;
-      onoff.config({2, {}, {10, 1.0, 0.0}});
+      double off = -2.0;
+      double on = 2.0;
+      double on_off = 1.0;
+      onoff.config({2, {}, {off, on, on_off}});
+
       onoff.input(-1.0);
-      CHECK_CLOSE(0.0, onoff.output(), EPS);
+      CHECK_CLOSE(off, onoff.output(), EPS);
       onoff.input(0.0);
-      CHECK_CLOSE(0.0, onoff.output(), EPS);
-      onoff.input(5.0);
-      CHECK_CLOSE(0.0, onoff.output(), EPS);
+      CHECK_CLOSE(off, onoff.output(), EPS);
+      onoff.input(1.5);
+      CHECK_CLOSE(on, onoff.output(), EPS);
       onoff.input(10.0);
-      CHECK_CLOSE(1.0, onoff.output(), EPS);
-      onoff.input(20.0);
-      CHECK_CLOSE(1.0, onoff.output(), EPS);
+      CHECK_CLOSE(on, onoff.output(), EPS);
    }
 
    TEST(Time)
