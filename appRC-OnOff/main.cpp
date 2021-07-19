@@ -14,12 +14,12 @@ int main(int argc, char *argv[])
              << "-- uses " + dss::libName + " " << dss::libVersion << "\n\n";
 
    // Initial conditions
-   const double Tsimulation{0.005};
+   const double delta_t{0.025};
    const double RCtime{0.47};
 
    // Model
    dss::Time time;
-   time.config({1, {}, {Tsimulation}});
+   time.config({1, {}, {delta_t}});
 
    dss::Step step;
    step.config({2, {}, {0, 3000, 0.0}});
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
       simdata.open(argv[1]);
    }
 
-   int tnMax{8 * int(RCtime / Tsimulation)};
+   int tnMax{8 * int(RCtime / delta_t)};
 
    for (int tn = 0; tn < tnMax; ++tn) {
       setpoint = step.output();
