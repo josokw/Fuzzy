@@ -53,6 +53,8 @@ void dysysim::Gain::config(const SimBlock::configData_t &config)
    if (SimBlock::idIsUnique(id_)) {
       SimBlock::allSimBlocks_s[id_] = this;
    }
+   auto par = begin(config.parameters);
+   gain_ = par[0];
 }
 
 void dysysim::Limit::config(const SimBlock::configData_t &config)

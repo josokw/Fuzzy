@@ -115,7 +115,7 @@ public:
    void input(double in) { out_ = in * gain_; }
 
 private:
-   const double gain_;
+   double gain_;
 };
 
 class Limit : public SimBlockIO
