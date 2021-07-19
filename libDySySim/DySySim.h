@@ -271,7 +271,10 @@ public:
    virtual ~Puls() = default;
 
    void config(const SimBlock::configData_t &config) override;
-   void next() { out_ = (SimTime::t >= t_on_ and SimTime::t <= t_off_) ? on_ : off_; }
+   void next()
+   {
+      out_ = (SimTime::t >= t_on_ and SimTime::t <= t_off_) ? on_ : off_;
+   }
 
 private:
    double off_;
@@ -290,12 +293,10 @@ public:
       SimTime::reset();
       SimTime::delta_t = 1.0;
    }
-   virtual ~Time() = default;
+   ~Time() override = default;
 
    auto operator()() { return SimTime::t; }
-
    void config(const SimBlock::configData_t &config) override;
-
    void next()
    {
       SimTime::next();
@@ -311,6 +312,7 @@ class Delay : public TimedSimBlockIO
 public:
    Delay()
       : TimedSimBlockIO{}
+      , out_t0_{0.0}
       , delaytime_{1.0}
       , buffer_{}
    {
@@ -329,6 +331,7 @@ public:
    }
 
 private:
+   double out_t0_;
    double delaytime_;
    std::queue<double> buffer_;
 };
@@ -383,25 +386,27 @@ void dysysim::Function<T>::config(const SimBlock::configData_t &config)
    }
 }
 
+/// OnOff starts (t == 0) off.
+/// \todo Add hysteresis
 class OnOff : public SimBlockIO
 {
 public:
    OnOff()
       : SimBlockIO{}
-      , onoff_{1.0}
-      , on_{1.0}
       , off_{0.0}
+      , on_{1.0}
+      , onoff_{1.0}
    {
    }
-   virtual ~OnOff() = default;
+   ~OnOff() override = default;
 
    void config(const SimBlock::configData_t &config) override;
    void input(double in) { out_ = (in < onoff_) ? off_ : on_; }
 
 private:
-   const double onoff_;
-   const double on_;
-   const double off_;
+   double off_;
+   double on_;
+   double onoff_;
 };
 
 /// Trapezoidal integration

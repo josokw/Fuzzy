@@ -168,10 +168,12 @@ void dysysim::Delay::config(const SimBlock::configData_t &config)
       SimBlock::allSimBlocks_s[id_] = this;
    }
    auto par = begin(config.parameters);
-   auto initial_out_ = par[0];
+   out_t0_ = par[0];
+   delaytime_ = par[1];
    for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
-      buffer_.push(initial_out_);
+      buffer_.push(out_t0_);
    }
+   std::cout << "Delay buffer = " << buffer_.size() << "\n";
 }
 
 void dysysim::FirstOrder::config(const SimBlock::configData_t &config)
@@ -191,6 +193,10 @@ void dysysim::OnOff::config(const SimBlock::configData_t &config)
    if (SimBlock::idIsUnique(id_)) {
       SimBlock::allSimBlocks_s[id_] = this;
    }
+   auto par = begin(config.parameters);
+   off_ = par[0];
+   on_ = par[1];
+   onoff_ = par[2];
 }
 
 void dysysim::Integrator::config(const SimBlock::configData_t &config)

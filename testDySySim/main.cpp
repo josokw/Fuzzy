@@ -147,7 +147,7 @@ SUITE(DySySim)
          time.next();
       }
 
-      while (time() >= t_on and time() < t_off) {
+      while (time() >= t_on and time() <= t_off) {
          CHECK_CLOSE(on, puls.output(), EPS);
          time.next();
       }
@@ -167,16 +167,19 @@ SUITE(DySySim)
       time.config({1, {}, {delta_t}});
 
       cout << "-- Delay" << endl;
+      double t_on = 2 * delta_t;
       dss::Step step;
-      step.config({2, {}, {0.0, 1.0, 2 * delta_t}});
+      step.config({2, {}, {0.0, 1.0, t_on}});
 
       dss::Delay delay;
-      delay.config({3, {}, {delayTime, 0.0}});
+      delay.config({3, {}, {0.0, delayTime}});
 
-      for (int i = 0; i < 10; ++i) {
+      CHECK_CLOSE(0.0, delay.output(), EPS);
+
+      for (int i = 0; i < 20; ++i) {
          auto input = step.output();
          delay.input(input);
-         if (i < 5) {
+         if (time() < t_on + delayTime) {
             CHECK_CLOSE(0.0, delay.output(), EPS);
          } else {
             CHECK_CLOSE(1.0, delay.output(), EPS);

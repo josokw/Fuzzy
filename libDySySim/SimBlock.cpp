@@ -11,6 +11,7 @@ bool dysysim::SimBlock::idIsUnique(int id)
    if (allSimBlocks_s.find(id) == end(allSimBlocks_s)) {
       return true;
    }
-   std::cerr << "--- Error DYSYSIM id " << id << " already exists\n";
+   std::cerr << "---- DYSYSIM simulation block id " << id
+             << " already exists\n";
    return false;
 }
