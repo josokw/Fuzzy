@@ -21,10 +21,12 @@ Go to the Fuzzy directory:
 
 ## DySySim parser and Unit testing
 
-This project contains some unit tests.
+This project contains some unit tests for **Fuzzy** and **DySySim**.
 Install the C++ [UnitTest++](https://github.com/unittest-cpp/unittest-cpp) library.
 
 DySySim uses C++ [Boost Spirit X3](https://www.boost.org/doc/libs/develop/libs/spirit/doc/x3/html/index.html).
+
+For creating diagrams [gnuplot](http://www.gnuplot.info) is used.
 
 ## Tipping problem
 
