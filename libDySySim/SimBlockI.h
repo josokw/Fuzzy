@@ -18,13 +18,6 @@ public:
    {
    }
 
-   void config(const SimBlock::configData_t &config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-   }
-   virtual void next() const = 0;
-
 protected:
    std::vector<int> inputs_;
 };
@@ -69,16 +62,16 @@ public:
       }
    }
 
-   virtual void next() const
-   {
-      //      std::cout << _blockType << " ";
-      //      for (auto i: _ids) {
-      //         std::cout << i << " ";
-      //         auto sb {getSimBlock(i)};
-      //         std::cout << i << ": " << sb->getBlockType() << "  ";
-      //      }
-      //      std::cout << std::endl;
-   }
+   // virtual void next() const
+   // {
+   //    //      std::cout << _blockType << " ";
+   //    //      for (auto i: _ids) {
+   //    //         std::cout << i << " ";
+   //    //         auto sb {getSimBlock(i)};
+   //    //         std::cout << i << ": " << sb->getBlockType() << "  ";
+   //    //      }
+   //    //      std::cout << std::endl;
+   // }
 
 private:
    // std::ostream _ofs;

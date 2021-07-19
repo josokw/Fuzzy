@@ -11,6 +11,7 @@ namespace dysysim {
 
 /// SimTime contains simulation time data.
 /// \todo Consider implementation as a struct?
+/// \todo Consider implementation t as std::chrono::...
 class SimTime
 {
 public:

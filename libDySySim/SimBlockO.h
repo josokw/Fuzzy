@@ -39,25 +39,15 @@ class TimedSimBlockO : public TimedSimBlock
 public:
    TimedSimBlockO()
       : TimedSimBlock{}
-      , initial_out_{0.0}
       , out_{0.0}
    {
    }
    virtual ~TimedSimBlockO() = default;
 
-   // void config(const SimBlock::configData_t &config) override
-   // {
-   //    id_ = config.id;
-   //    if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
-   //       SimBlock::allSimBlocks_s[id_] = this;
-   //    }
-   //    out_ = *begin(config.parameters);
-   // }
 
    double output() const { return out_; }
 
 protected:
-   double initial_out_;
    double out_;
 };
 

@@ -225,6 +225,7 @@ public:
       , frequency_{1.0}
       , phase_{0.0}
    {
+      blockType_ = "FRQ";
    }
    virtual ~Frequency() = default;
 
@@ -245,6 +246,7 @@ public:
       , on_{1.0}
       , t_on_{1.0}
    {
+      blockType_ = "STP";
    }
    virtual ~Step() = default;
 
@@ -267,13 +269,16 @@ public:
       , t_on_{1.0}
       , t_off_{2.0}
    {
+      blockType_ = "PLS";
    }
    virtual ~Puls() = default;
 
    void config(const SimBlock::configData_t &config) override;
    void next()
    {
-      out_ = (SimTime::t >= t_on_ and SimTime::t <= t_off_) ? on_ : off_;
+      std::cerr << "Puls.next() start out = " << out_ << "\n";
+      out_ = (SimTime::t >= t_on_ and SimTime::t < t_off_) ? on_ : off_;
+      std::cerr << "Puls.next() result out = " << out_ << "\n";
    }
 
 private:
@@ -292,6 +297,7 @@ public:
    {
       SimTime::reset();
       SimTime::delta_t = 1.0;
+      blockType_ = "TIME";
    }
    ~Time() override = default;
 
@@ -316,9 +322,7 @@ public:
       , delaytime_{1.0}
       , buffer_{}
    {
-      // for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
-      //    _buffer.push(initial_out);
-      // }
+      blockType_ = "DLY";
    }
    virtual ~Delay() = default;
 
@@ -343,6 +347,7 @@ public:
       : TimedSimBlockIO{}
       , timeConstant_{1.0}
    {
+      blockType_ = "FIO";
    }
    ~FirstOrder() = default;
 
@@ -365,6 +370,7 @@ public:
       : SimBlockIO{}
       , callback_{cos}
    {
+      blockType_ = "FNC";
    }
    virtual ~Function() = default;
 
@@ -397,6 +403,7 @@ public:
       , on_{1.0}
       , onoff_{1.0}
    {
+      blockType_ = "ONOFF";
    }
    ~OnOff() override = default;
 
@@ -416,6 +423,7 @@ public:
    Integrator()
       : TimedSimBlockIO{}
    {
+      blockType_ = "INT";
    }
    virtual ~Integrator() = default;
 
@@ -440,6 +448,7 @@ public:
       : TimedSimBlockIO{}
       , initial_out_{0.0}
    {
+      blockType_ = "EUL";
    }
    virtual ~IntegratorEuler() = default;
 
@@ -489,6 +498,7 @@ public:
       , tau_I_{1.0}
       , z_{3, 0.0}
    {
+      blockType_ = "PI";
    }
    virtual ~PI() = default;
 
@@ -524,6 +534,7 @@ public:
       , _tau_D{1.0}
       , _z{4, 0.0}
    {
+      blockType_ = "PID";
    }
    virtual ~PID() = default;
 
@@ -558,6 +569,7 @@ public:
       , nSamples_{1}
       , sample_{0}
    {
+      blockType_ = "ZOH";
    }
    virtual ~ZeroOrderHold() = default;
 
