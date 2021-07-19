@@ -129,6 +129,4 @@ Defuzzification example 2 and 3:
 DySySim is a very basic [TUTSIM](http://tutsim.com/) look-a-like.
 TUTSIM was developed in the early 70's.
 
-Example DySySim script:
-
-    ![](../appDySySim/data/RCnetwork.dss)
+Example [DySySim script](../appDySySim/data/RCnetwork.dss).
