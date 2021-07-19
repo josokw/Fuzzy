@@ -142,19 +142,17 @@ SUITE(DySySim)
       double t_off = 10 * delta_t;
       puls.config({2, {}, {off, on, t_on, t_off}});
 
-      CHECK_CLOSE(0.0, puls.output(), EPS);
-
       while (time() < t_on) {
          CHECK_CLOSE(off, puls.output(), EPS);
          time.next();
       }
 
-      while (time() >= t_on and time() <= t_off) {
+      while (time() >= t_on and time() < t_off) {
          CHECK_CLOSE(on, puls.output(), EPS);
          time.next();
       }
 
-      while (time() > t_off and time() < t_off + (5 * delta_t)) {
+      while (time() >= t_off + (5 * delta_t)) {
          CHECK_CLOSE(off, puls.output(), EPS);
          time.next();
       }
