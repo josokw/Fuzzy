@@ -241,18 +241,20 @@ class Step : public TimedSimBlockO
 public:
    Step()
       : TimedSimBlockO{}
-      , step_out_{1.0}
-      , step_t_{10}
+      , off_{0.0}
+      , on_{1.0}
+      , t_on_{1.0}
    {
    }
    virtual ~Step() = default;
 
    void config(const SimBlock::configData_t &config) override;
-   void next() { out_ = (SimTime::t >= step_t_) ? step_out_ : initial_out_; }
+   void next() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
 
 private:
-   double step_out_;
-   double step_t_;
+   double off_;
+   double on_;
+   double t_on_;
 };
 
 class Puls : public TimedSimBlockO

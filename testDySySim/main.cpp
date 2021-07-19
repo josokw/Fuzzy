@@ -101,23 +101,27 @@ SUITE(DySySim)
       cout << "-- Step" << endl;
 
       dss::Step step;
-      step.config({2, {}, {0.0, 1.0, 4 * delta_t}});
-      CHECK_CLOSE(0.0, step.output(), EPS);
+      double off = 0.0;
+      double on = 1.0;
+      double t_on = 4 * delta_t;
+      step.config({2, {}, {off, on, t_on}});
+
+      CHECK_CLOSE(off, step.output(), EPS);
       time.next();
       step.next();
-      CHECK_CLOSE(0.0, step.output(), EPS);
+      CHECK_CLOSE(off, step.output(), EPS);
       time.next();
       step.next();
-      CHECK_CLOSE(0.0, step.output(), EPS);
+      CHECK_CLOSE(off, step.output(), EPS);
       time.next();
       step.next();
-      CHECK_CLOSE(0.0, step.output(), EPS);
+      CHECK_CLOSE(off, step.output(), EPS);
       time.next();
       step.next();
-      CHECK_CLOSE(1.0, step.output(), EPS);
+      CHECK_CLOSE(on, step.output(), EPS);
       time.next();
       step.next();
-      CHECK_CLOSE(1.0, step.output(), EPS);
+      CHECK_CLOSE(on, step.output(), EPS);
    }
 
    TEST(Puls)

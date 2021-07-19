@@ -133,8 +133,9 @@ void dysysim::Step::config(const SimBlock::configData_t &config)
       SimBlock::allSimBlocks_s[id_] = this;
    }
    auto par = begin(config.parameters);
-   step_out_ = par[0];
-   step_t_ = par[1];
+   off_ = par[0];
+   on_ = par[1];
+   t_on_ = par[2];
 }
 
 void dysysim::Puls::config(const SimBlock::configData_t &config)
