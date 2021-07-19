@@ -133,8 +133,8 @@ public:
    void input(double in) { out_ = std::min(std::max(min_, in), max_); }
 
 private:
-   const double min_;
-   const double max_;
+   double min_;
+   double max_;
 };
 
 class Max : public SimBlockIO
