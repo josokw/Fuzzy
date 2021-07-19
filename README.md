@@ -123,3 +123,12 @@ Defuzzification example 2 and 3:
            0      5    5    5    5    5    5    5    8   10   11   11
 
         food      0    1    2    3    4    5    6    7    8    9   10
+
+## DySySim
+
+DySySim is a very basic [TUTSIM](http://tutsim.com/) look-a-like.
+TUTSIM was developed in the early 70's.
+
+Example DySySim script:
+
+    ![](../appDySySim/data/RCnetwork.dss)
