@@ -24,7 +24,7 @@ public:
       : SimBlockO{}
    {
    }
-   virtual ~Constant() = default;
+   ~Constant() override = default;
    void config(const SimBlock::configData_t &config) override;
 };
 
@@ -202,7 +202,7 @@ public:
       : SimBlockIO{}
    {
    }
-   virtual ~Summator() = default;
+   ~Summator() override = default;
 
    void config(const SimBlock::configData_t &config) override;
    void input(double in1, double in2) { out_ = in1 + in2; }

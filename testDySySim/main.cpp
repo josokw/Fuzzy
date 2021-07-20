@@ -128,6 +128,8 @@ SUITE(DySySim)
 
    TEST(Puls)
    {
+      dysysim::SimBlock::clearSimBlocks();
+      
       const double delta_t{0.1};
 
       dss::Time time;
@@ -141,6 +143,10 @@ SUITE(DySySim)
       double t_on = 5 * delta_t;
       double t_off = 10 * delta_t;
       puls.config({2, {}, {off, on, t_on, t_off}});
+
+      dss::Log log;
+      log.config({3, {1, 2}, {}});
+      log.exe();
 
       while (time() < t_on) {
          CHECK_CLOSE(off, puls.output(), EPS);

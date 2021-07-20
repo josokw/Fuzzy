@@ -38,7 +38,6 @@ public:
       : id_{-1}
       , blockType_{"???"}
    {
-      // allSimBlocks_s[id_] = this;
    }
    SimBlock(const SimBlock &other) = delete;
    SimBlock &operator=(const SimBlock &other) = delete;
@@ -49,9 +48,10 @@ public:
 
    int getId() const { return id_; }
    const std::string &getBlockType() const { return blockType_; }
+   /// Calculate out
+   virtual void exe() { std::cerr << "--- exe() NOT implemented\n"; }
 
-   // static std::map<int, SimBlock *> getAllSimBlocks() { return
-   // allSimBlocks_s; }
+   static void clearSimBlocks() { allSimBlocks_s.clear(); }
    static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
    static bool idIsUnique(int id);
 

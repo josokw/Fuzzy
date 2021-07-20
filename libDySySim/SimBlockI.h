@@ -57,24 +57,19 @@ public:
    {
       id_ = config.id;
       inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
+      if (SimBlock::allSimBlocks_s.find(id_) == end(SimBlock::allSimBlocks_s)) {
          SimBlock::allSimBlocks_s[id_] = this;
       }
    }
 
-   // virtual void next() const
-   // {
-   //    //      std::cout << _blockType << " ";
-   //    //      for (auto i: _ids) {
-   //    //         std::cout << i << " ";
-   //    //         auto sb {getSimBlock(i)};
-   //    //         std::cout << i << ": " << sb->getBlockType() << "  ";
-   //    //      }
-   //    //      std::cout << std::endl;
-   // }
-
-private:
-   // std::ostream _ofs;
+   void exe() override
+   {
+      for (auto id: inputs_)
+      {
+         auto pSB = SimBlock::getSimBlock(id);
+         std::cerr << id << " " << pSB->getBlockType() << "\n";
+      }
+   }
 };
 
 } // namespace dysysim
