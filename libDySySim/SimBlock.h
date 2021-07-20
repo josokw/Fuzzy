@@ -9,6 +9,8 @@
 
 namespace dysysim {
 
+class SimBlock;
+
 /// SimTime contains simulation time data.
 /// \todo Consider implementation as a struct?
 /// \todo Consider implementation t as std::chrono::...
@@ -17,6 +19,8 @@ class SimTime
 public:
    SimTime() = default;
    ~SimTime() = default;
+
+   double output() const { return t; }
 
    static void reset() { t = 0.0; }
    static void next() { t += delta_t; }
@@ -30,13 +34,14 @@ class SimBlock
 public:
    using configData_t = struct ConFigData {
       int id;
-      std::initializer_list<int> inputs;
-      std::initializer_list<double> parameters;
+      std::vector<int> inputs;
+      std::vector<double> parameters;
    };
 
    SimBlock()
       : id_{-1}
-      , blockType_{"???"}
+      , blockType_{""}
+      , out_{0.0}
    {
    }
    SimBlock(const SimBlock &other) = delete;
@@ -48,8 +53,12 @@ public:
 
    int getId() const { return id_; }
    const std::string &getBlockType() const { return blockType_; }
+   double output() const { return out_; }
    /// Calculate out
-   virtual void exe() { std::cerr << "--- exe() NOT implemented\n"; }
+   virtual void exe()
+   {
+      std::cerr << blockType_ << " --- exe() NOT implemented\n";
+   }
 
    static void clearSimBlocks() { allSimBlocks_s.clear(); }
    static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
@@ -63,6 +72,12 @@ public:
 protected:
    int id_;
    std::string blockType_;
+   std::vector<int> inputs_;
+   double out_;
+
+   virtual bool configDataIsOK() { return true; }
+
+   static SimTime sim_time;
    static std::map<int, SimBlock *> allSimBlocks_s;
 };
 

@@ -2,8 +2,6 @@
 #define DYSYSIM_H
 
 #include "SimBlock.h"
-#include "SimBlockIO.h"
-#include "SimBlockO.h"
 
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -17,24 +15,22 @@ namespace dysysim {
 
 // Output blocks ----------------------------------------------------------
 
-class Constant : public SimBlockO
+class Constant : public SimBlock
 {
 public:
    Constant()
-      : SimBlockO{}
+      : SimBlock{}
    {
    }
    ~Constant() override = default;
    void config(const SimBlock::configData_t &config) override;
 };
 
-// Input output blocks ----------------------------------------------------
-
-class AlgebraicDelay : public SimBlockIO
+class AlgebraicDelay : public SimBlock
 {
 public:
    AlgebraicDelay()
-      : SimBlockIO{}
+      : SimBlock{}
       , out_previous_{0.0}
    {
    }
@@ -52,11 +48,11 @@ private:
    double out_previous_;
 };
 
-class Attenuator : public SimBlockIO
+class Attenuator : public SimBlock
 {
 public:
    Attenuator()
-      : SimBlockIO{}
+      : SimBlock{}
       , attenuation_{1.0}
    {
    }
@@ -69,11 +65,11 @@ private:
    double attenuation_;
 };
 
-class Cos : public SimBlockIO
+class Cos : public SimBlock
 {
 public:
    Cos()
-      : SimBlockIO{}
+      : SimBlock{}
       , multipier_{1.0}
       , phase_{0.0}
    {
@@ -88,11 +84,11 @@ private:
    double phase_;
 };
 
-class Divider : public SimBlockIO
+class Divider : public SimBlock
 {
 public:
    Divider()
-      : SimBlockIO{}
+      : SimBlock{}
    {
    }
    virtual ~Divider() = default;
@@ -101,11 +97,11 @@ public:
    void input(double in1, double in2) { out_ = in1 / in2; }
 };
 
-class Gain : public SimBlockIO
+class Gain : public SimBlock
 {
 public:
    Gain()
-      : SimBlockIO{}
+      : SimBlock{}
       , gain_(1.0)
    {
    }
@@ -118,11 +114,11 @@ private:
    double gain_;
 };
 
-class Limit : public SimBlockIO
+class Limit : public SimBlock
 {
 public:
    Limit()
-      : SimBlockIO{}
+      : SimBlock{}
       , min_(-1.0)
       , max_(1.0)
    {
@@ -137,11 +133,11 @@ private:
    double max_;
 };
 
-class Max : public SimBlockIO
+class Max : public SimBlock
 {
 public:
    Max()
-      : SimBlockIO{}
+      : SimBlock{}
    {
    }
    virtual ~Max() = default;
@@ -150,11 +146,11 @@ public:
    void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
 };
 
-class Min : public SimBlockIO
+class Min : public SimBlock
 {
 public:
    Min()
-      : SimBlockIO{}
+      : SimBlock{}
    {
    }
    virtual ~Min() = default;
@@ -163,11 +159,11 @@ public:
    void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
 };
 
-class Multiplier : public SimBlockIO
+class Multiplier : public SimBlock
 {
 public:
    Multiplier()
-      : SimBlockIO{}
+      : SimBlock{}
    {
    }
    virtual ~Multiplier() = default;
@@ -176,11 +172,11 @@ public:
    void input(double in1, double in2) { out_ = in1 * in2; }
 };
 
-class Sin : public SimBlockIO
+class Sin : public SimBlock
 {
 public:
    Sin()
-      : SimBlockIO{}
+      : SimBlock{}
       , multiplier_{1.0}
       , phase_{0.0}
    {
@@ -195,11 +191,11 @@ private:
    double phase_;
 };
 
-class Summator : public SimBlockIO
+class Summator : public SimBlock
 {
 public:
    Summator()
-      : SimBlockIO{}
+      : SimBlock{}
    {
    }
    ~Summator() override = default;
@@ -217,11 +213,11 @@ public:
 // ---------------------------------------------------------
 
 // Sinus generator, amplitude = 1
-class Frequency : public TimedSimBlockO
+class Frequency : public SimBlock
 {
 public:
    Frequency()
-      : TimedSimBlockO{}
+      : SimBlock{}
       , frequency_{1.0}
       , phase_{0.0}
    {
@@ -237,11 +233,11 @@ private:
    double phase_;
 };
 
-class Step : public TimedSimBlockO
+class Step : public SimBlock
 {
 public:
    Step()
-      : TimedSimBlockO{}
+      : SimBlock{}
       , off_{0.0}
       , on_{1.0}
       , t_on_{1.0}
@@ -251,7 +247,7 @@ public:
    virtual ~Step() = default;
 
    void config(const SimBlock::configData_t &config) override;
-   void next() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
+   void exe() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
 
 private:
    double off_;
@@ -259,11 +255,11 @@ private:
    double t_on_;
 };
 
-class Puls : public TimedSimBlockO
+class Puls : public SimBlock
 {
 public:
    Puls()
-      : TimedSimBlockO{}
+      : SimBlock{}
       , off_{0.0}
       , on_{1.0}
       , t_on_{1.0}
@@ -274,11 +270,9 @@ public:
    virtual ~Puls() = default;
 
    void config(const SimBlock::configData_t &config) override;
-   void next()
+   void exe()
    {
-      std::cerr << "Puls.next() start out = " << out_ << "\n";
       out_ = (SimTime::t >= t_on_ and SimTime::t < t_off_) ? on_ : off_;
-      std::cerr << "Puls.next() result out = " << out_ << "\n";
    }
 
 private:
@@ -289,11 +283,11 @@ private:
 };
 
 /// Every new instantiated Time object will reset the time to 0.
-class Time : public TimedSimBlockO
+class Time : public SimBlock
 {
 public:
    Time()
-      : TimedSimBlockO{}
+      : SimBlock{}
    {
       SimTime::reset();
       SimTime::delta_t = 1.0;
@@ -303,7 +297,8 @@ public:
 
    auto operator()() { return SimTime::t; }
    void config(const SimBlock::configData_t &config) override;
-   void next()
+
+   void exe()
    {
       SimTime::next();
       out_ = SimTime::t;
@@ -313,11 +308,11 @@ public:
 // Timed input output blocks
 // ---------------------------------------------------
 
-class Delay : public TimedSimBlockIO
+class Delay : public SimBlock
 {
 public:
    Delay()
-      : TimedSimBlockIO{}
+      : SimBlock{}
       , out_t0_{0.0}
       , delaytime_{1.0}
       , buffer_{}
@@ -340,11 +335,11 @@ private:
    std::queue<double> buffer_;
 };
 
-class FirstOrder : public TimedSimBlockIO
+class FirstOrder : public SimBlock
 {
 public:
    FirstOrder()
-      : TimedSimBlockIO{}
+      : SimBlock{}
       , timeConstant_{1.0}
    {
       blockType_ = "FIO";
@@ -363,11 +358,11 @@ private:
 
 /// \todo Implement setter for callback_
 template <typename T>
-class Function : public SimBlockIO
+class Function : public SimBlock
 {
 public:
    Function()
-      : SimBlockIO{}
+      : SimBlock{}
       , callback_{cos}
    {
       blockType_ = "FNC";
@@ -394,11 +389,11 @@ void dysysim::Function<T>::config(const SimBlock::configData_t &config)
 
 /// OnOff starts (t == 0) off.
 /// \todo Add hysteresis
-class OnOff : public SimBlockIO
+class OnOff : public SimBlock
 {
 public:
    OnOff()
-      : SimBlockIO{}
+      : SimBlock{}
       , off_{0.0}
       , on_{1.0}
       , onoff_{1.0}
@@ -417,11 +412,11 @@ private:
 };
 
 /// Trapezoidal integration
-class Integrator : public TimedSimBlockIO
+class Integrator : public SimBlock
 {
 public:
    Integrator()
-      : TimedSimBlockIO{}
+      : SimBlock{}
    {
       blockType_ = "INT";
    }
@@ -441,11 +436,11 @@ private:
 };
 
 /// Forward Euler integration
-class IntegratorEuler : public TimedSimBlockIO
+class IntegratorEuler : public SimBlock
 {
 public:
    IntegratorEuler()
-      : TimedSimBlockIO{}
+      : SimBlock{}
       , initial_out_{0.0}
    {
       blockType_ = "EUL";
@@ -461,11 +456,11 @@ private:
 };
 
 /// Trapezoidal integration.
-class IntegratorTrapezoidal : public TimedSimBlockIO
+class IntegratorTrapezoidal : public SimBlock
 {
 public:
    IntegratorTrapezoidal()
-      : TimedSimBlockIO{}
+      : SimBlock{}
       , initial_out_{0.0}
       , in_previous_{0}
    {
@@ -489,11 +484,11 @@ private:
 };
 
 // @TBD not tested
-class PI : public TimedSimBlockIO
+class PI : public SimBlock
 {
 public:
    PI()
-      : TimedSimBlockIO{}
+      : SimBlock{}
       , Kp_{1.0}
       , tau_I_{1.0}
       , z_{3, 0.0}
@@ -524,11 +519,11 @@ private:
 };
 
 // @TBD not tested
-class PID : public TimedSimBlockIO
+class PID : public SimBlock
 {
 public:
    PID()
-      : TimedSimBlockIO{}
+      : SimBlock{}
       , _Kp{1.0}
       , _tau_I{1.0}
       , _tau_D{1.0}
@@ -561,11 +556,11 @@ private:
    std::deque<double> _z;
 };
 
-class ZeroOrderHold : public TimedSimBlockIO
+class ZeroOrderHold : public SimBlock
 {
 public:
    ZeroOrderHold()
-      : TimedSimBlockIO{}
+      : SimBlock{}
       , nSamples_{1}
       , sample_{0}
    {
@@ -579,6 +574,37 @@ public:
 private:
    const int nSamples_;
    int sample_;
+};
+
+class Log : public SimBlock
+{
+public:
+   Log()
+      : SimBlock{}
+   {
+      blockType_ = "LOG";
+   }
+
+   void config(const SimBlock::configData_t &config) override
+   {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      if (SimBlock::allSimBlocks_s.find(id_) == end(SimBlock::allSimBlocks_s)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+   }
+
+   void exe() override
+   {
+      for (auto id : inputs_) {
+         auto pSB = SimBlock::getSimBlock(id);
+         std::cerr << " t = " << SimBlock::getSimBlock(1)->output() << "   ";
+         if (id != 1) {
+            std::cerr << id << " " << pSB->getBlockType() << " = "
+                      << pSB->output() << "\n";
+         }
+      }
+   }
 };
 
 } // namespace dysysim

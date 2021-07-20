@@ -88,7 +88,7 @@ SUITE(DySySim)
       time.config({1, {}, {delta_t}});
       CHECK_CLOSE(0.0, time.output(), EPS);
       for (int i = 1; i < 10; ++i) {
-         time.next();
+         time.exe();
          CHECK_CLOSE(i * delta_t, time.output(), EPS);
       }
    }
@@ -109,27 +109,27 @@ SUITE(DySySim)
       step.config({2, {}, {off, on, t_on}});
 
       CHECK_CLOSE(off, step.output(), EPS);
-      time.next();
-      step.next();
+      time.exe();
+      step.exe();
       CHECK_CLOSE(off, step.output(), EPS);
-      time.next();
-      step.next();
+      time.exe();
+      step.exe();
       CHECK_CLOSE(off, step.output(), EPS);
-      time.next();
-      step.next();
+      time.exe();
+      step.exe();
       CHECK_CLOSE(off, step.output(), EPS);
-      time.next();
-      step.next();
+      time.exe();
+      step.exe();
       CHECK_CLOSE(on, step.output(), EPS);
-      time.next();
-      step.next();
+      time.exe();
+      step.exe();
       CHECK_CLOSE(on, step.output(), EPS);
    }
 
    TEST(Puls)
    {
       dysysim::SimBlock::clearSimBlocks();
-      
+
       const double delta_t{0.1};
 
       dss::Time time;
@@ -145,23 +145,23 @@ SUITE(DySySim)
       puls.config({2, {}, {off, on, t_on, t_off}});
 
       dss::Log log;
-      log.config({3, {1, 2}, {}});
+      log.config({3, {2}, {}});
 
-      dysysim::SimBlock::exeSimBlocks();
+      // dysysim::SimBlock::exeSimBlocks();
 
       while (time() < t_on) {
          CHECK_CLOSE(off, puls.output(), EPS);
-         time.next();
+         dysysim::SimBlock::exeSimBlocks();
       }
 
       while (time() >= t_on and time() < t_off) {
          CHECK_CLOSE(on, puls.output(), EPS);
-         time.next();
+         dysysim::SimBlock::exeSimBlocks();
       }
 
       while (time() >= t_off + (5 * delta_t)) {
          CHECK_CLOSE(off, puls.output(), EPS);
-         time.next();
+         dysysim::SimBlock::exeSimBlocks();
       }
    }
 
@@ -191,8 +191,8 @@ SUITE(DySySim)
          } else {
             CHECK_CLOSE(1.0, delay.output(), EPS);
          }
-         time.next();
-         step.next();
+         time.exe();
+         step.exe();
       }
    }
 
@@ -227,8 +227,8 @@ SUITE(DySySim)
 
    //       CHECK_CLOSE(out1, out2, EPS);
 
-   //       time.next();
-   //       step.next();
+   //       time.exe();
+   //       step.exe();
    //    }
    // }
 
@@ -271,8 +271,8 @@ SUITE(DySySim)
 
    //          CHECK_CLOSE(out1, out2, EPS);
 
-   //          time.next();
-   //          step.next();
+   //          time.exe();
+   //          step.exe();
    //       }
    //    }
 }
