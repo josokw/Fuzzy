@@ -146,7 +146,8 @@ SUITE(DySySim)
 
       dss::Log log;
       log.config({3, {1, 2}, {}});
-      log.exe();
+
+      dysysim::SimBlock::exeSimBlocks();
 
       while (time() < t_on) {
          CHECK_CLOSE(off, puls.output(), EPS);

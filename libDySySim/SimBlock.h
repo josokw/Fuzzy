@@ -54,6 +54,11 @@ public:
    static void clearSimBlocks() { allSimBlocks_s.clear(); }
    static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
    static bool idIsUnique(int id);
+   static void exeSimBlocks()
+   {
+      for (auto sb : allSimBlocks_s)
+         sb.second->exe();
+   }
 
 protected:
    int id_;
