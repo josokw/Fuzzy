@@ -20,12 +20,15 @@ public:
    SimTime() = default;
    ~SimTime() = default;
 
-   double output() const { return t; }
+   static double delta_t;
+   static double end_t;
+   static double t;
 
+   static void set(double delta, double end);
+   static double output() { return t; }
    static void reset() { t = 0.0; }
    static void next() { t += delta_t; }
-   static double delta_t;
-   static double t;
+   static bool simulation_on();
 };
 
 /// Abstract Base Class for all simulation block derived classes.
@@ -67,6 +70,7 @@ public:
    {
       for (auto sb : allSimBlocks_s)
          sb.second->exe();
+      dysysim::SimTime::next();
    }
 
 protected:
@@ -75,7 +79,10 @@ protected:
    std::vector<int> inputs_;
    double out_;
 
-   virtual bool configDataIsOK() { return true; }
+   virtual bool configDataIsOK(const SimBlock::configData_t & /*config*/) const
+   {
+      return true;
+   }
 
    static SimTime sim_time;
    static std::map<int, SimBlock *> allSimBlocks_s;

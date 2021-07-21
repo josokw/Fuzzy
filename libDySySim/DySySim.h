@@ -9,11 +9,7 @@
 #include <iostream>
 #include <queue>
 
-// Dynamical Systems Simulator: DySySim ===================================
-
 namespace dysysim {
-
-// Output blocks ----------------------------------------------------------
 
 class Constant : public SimBlock
 {
@@ -21,9 +17,14 @@ public:
    Constant()
       : SimBlock{}
    {
+      blockType_ = "CON";
    }
    ~Constant() override = default;
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
+
+protected:
+   bool configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class AlgebraicDelay : public SimBlock
@@ -33,6 +34,7 @@ public:
       : SimBlock{}
       , out_previous_{0.0}
    {
+      blockType_ = "ADL";
    }
    virtual ~AlgebraicDelay() = default;
 
@@ -55,11 +57,16 @@ public:
       : SimBlock{}
       , attenuation_{1.0}
    {
+      blockType_ = "ATT";
    }
    virtual ~Attenuator() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in) { out_ = in / attenuation_; }
+
+protected:
+   bool configDataIsOK(const SimBlock::configData_t &config) const override;
 
 private:
    double attenuation_;
@@ -73,6 +80,7 @@ public:
       , multipier_{1.0}
       , phase_{0.0}
    {
+      blockType_ = "COS";
    }
    virtual ~Cos() = default;
 
@@ -90,6 +98,7 @@ public:
    Divider()
       : SimBlock{}
    {
+      blockType_ = "DIV";
    }
    virtual ~Divider() = default;
 
@@ -104,10 +113,12 @@ public:
       : SimBlock{}
       , gain_(1.0)
    {
+      blockType_ = "GAIN";
    }
    virtual ~Gain() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in) { out_ = in * gain_; }
 
 private:
@@ -122,10 +133,12 @@ public:
       , min_(-1.0)
       , max_(1.0)
    {
+      blockType_ = "LIM";
    }
    virtual ~Limit() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in) { out_ = std::min(std::max(min_, in), max_); }
 
 private:
@@ -139,10 +152,12 @@ public:
    Max()
       : SimBlock{}
    {
+      blockType_ = "MAX";
    }
    virtual ~Max() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
 };
 
@@ -152,10 +167,12 @@ public:
    Min()
       : SimBlock{}
    {
+      blockType_ = "MIN";
    }
    virtual ~Min() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
 };
 
@@ -165,10 +182,12 @@ public:
    Multiplier()
       : SimBlock{}
    {
+      blockType_ = "MUL";
    }
    virtual ~Multiplier() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in1, double in2) { out_ = in1 * in2; }
 };
 
@@ -180,10 +199,12 @@ public:
       , multiplier_{1.0}
       , phase_{0.0}
    {
+      blockType_ = "SIN";
    }
    virtual ~Sin() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
 
 private:
@@ -197,10 +218,12 @@ public:
    Summator()
       : SimBlock{}
    {
+      blockType_ = "SUM";
    }
    ~Summator() override = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in1, double in2) { out_ = in1 + in2; }
    void input(double in1, double in2, double in3) { out_ = in1 + in2 + in3; }
    void input(double in1, double in2, double in3, double in4)
@@ -226,6 +249,7 @@ public:
    virtual ~Frequency() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void next() { out_ = std::sin(2 * M_PI * frequency_ * SimTime::t + phase_); }
 
 private:
@@ -289,20 +313,13 @@ public:
    Time()
       : SimBlock{}
    {
-      SimTime::reset();
-      SimTime::delta_t = 1.0;
       blockType_ = "TIME";
    }
    ~Time() override = default;
 
-   auto operator()() { return SimTime::t; }
    void config(const SimBlock::configData_t &config) override;
-
-   void exe()
-   {
-      SimTime::next();
-      out_ = SimTime::t;
-   }
+   bool configDataIsOK(const SimBlock::configData_t &config) const override;
+   void exe() override { out_ = SimTime::t; }
 };
 
 // Timed input output blocks
@@ -322,6 +339,7 @@ public:
    virtual ~Delay() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in)
    {
       buffer_.push(in);
@@ -347,6 +365,7 @@ public:
    ~FirstOrder() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in)
    {
       out_ += SimTime::delta_t * (in - out_) / timeConstant_;
@@ -370,6 +389,8 @@ public:
    virtual ~Function() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
+
    void setFunction(std::function<double(T)> cbf) { callback_ = cbf; }
    void input(double in) { out_ = callback_(in); }
 
@@ -403,6 +424,7 @@ public:
    ~OnOff() override = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in) { out_ = (in < onoff_) ? off_ : on_; }
 
 private:
@@ -423,6 +445,7 @@ public:
    virtual ~Integrator() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in)
    {
       out_ += 0.5 * (in + in_previous) * SimTime::delta_t;
@@ -448,6 +471,7 @@ public:
    virtual ~IntegratorEuler() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in) { out_ += in * SimTime::delta_t; }
    void reset() { out_ = initial_out_; }
 
@@ -464,9 +488,11 @@ public:
       , initial_out_{0.0}
       , in_previous_{0}
    {
+      blockType_ = "TPZD";
    }
    virtual ~IntegratorTrapezoidal() = default;
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in)
    {
       out_ += 0.5 * (in + in_previous_) * SimTime::delta_t;
@@ -498,6 +524,7 @@ public:
    virtual ~PI() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in)
    {
       z_.push_back(in);
@@ -534,6 +561,7 @@ public:
    virtual ~PID() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in)
    {
       _z.push_back(in);
@@ -569,6 +597,7 @@ public:
    virtual ~ZeroOrderHold() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   void exe() override {}
    void input(double in) { out_ = (sample_++ % nSamples_ == 0) ? in : out_; }
 
 private:
@@ -596,14 +625,13 @@ public:
 
    void exe() override
    {
+      std::cerr << " t = " << SimTime::t << "   ";
       for (auto id : inputs_) {
          auto pSB = SimBlock::getSimBlock(id);
-         std::cerr << " t = " << SimBlock::getSimBlock(1)->output() << "   ";
-         if (id != 1) {
-            std::cerr << id << " " << pSB->getBlockType() << " = "
-                      << pSB->output() << "\n";
-         }
+         std::cerr << id << " " << pSB->getBlockType() << " = " << pSB->output()
+                   << "  ";
       }
+      std::cerr << "\n";
    }
 };
 

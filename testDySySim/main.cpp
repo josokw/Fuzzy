@@ -12,51 +12,84 @@ const double EPS{0.01};
 
 SUITE(DySySim)
 {
-   TEST(Attenuator)
-   {
-      cout << "-- Attenuator" << endl;
-
-      dss::Attenuator att;
-      att.config({1, {}, {10.0}});
-      att.input(1.0);
-      CHECK_CLOSE(0.1, att.output(), EPS);
-      att.input(-1.0);
-      CHECK_CLOSE(-0.1, att.output(), EPS);
-   }
-
    TEST(Constant)
    {
       cout << "-- Constant" << endl;
 
+      dss::SimTime::set(0.1, 0.3);
+
+      dss::Log log;
+      log.config({1, {2}, {}});
+
       dss::Constant con;
-      con.config({1, {}, {10.0}});
-      CHECK_CLOSE(10.0, con.output(), EPS);
+      double c = 3.0;
+      con.config({2, {}, {c}});
+      do {
+         CHECK_CLOSE(c, con.output(), EPS);
+      } while (dss::SimTime::simulation_on());
+   }
+
+   TEST(Attenuator)
+   {
+      cout << "-- Attenuator" << endl;
+
+      dss::SimTime::set(1.0, 3.0);
+
+      dss::Log log;
+      log.config({1, {2, 3}, {}});
+
+      dss::Attenuator att1;
+      att1.config({2, {}, {10.0}});
+      dss::Attenuator att2;
+      att2.config({3, {}, {-10.0}});
+
+      do {
+         att1.input(1.0);
+         CHECK_CLOSE(0.1, att1.output(), EPS);
+         att2.input(1.0);
+         CHECK_CLOSE(-0.1, att2.output(), EPS);
+      } while (dss::SimTime::simulation_on());
    }
 
    TEST(Gain)
    {
       cout << "-- Gain" << endl;
 
-      dss::Gain gain;
-      gain.config({1, {}, {10.0}});
-      gain.input(1.0);
-      CHECK_CLOSE(10.0, gain.output(), EPS);
-      gain.input(-1.0);
-      CHECK_CLOSE(-10.0, gain.output(), EPS);
+      dss::SimTime::set(1.0, 3.0);
+
+      dss::Gain gain1;
+      gain1.config({2, {}, {10.0}});
+      dss::Gain gain2;
+      gain2.config({3, {}, {-5}});
+
+      dss::Log log;
+      log.config({1, {2, 3}, {}});
+
+      do {
+         gain1.input(1.0);
+         CHECK_CLOSE(10.0, gain1.output(), EPS);
+         gain2.input(-1.0);
+         CHECK_CLOSE(5, gain2.output(), EPS);
+      } while (dss::SimTime::simulation_on());
    }
 
    TEST(Limit)
    {
       cout << "-- Limit" << endl;
 
+      dss::SimTime::set(1.0, 3.0);
+
       dss::Limit limit;
       limit.config({1, {}, {-10.0, 20.0}});
-      limit.input(0.0);
-      CHECK_CLOSE(0.0, limit.output(), EPS);
-      limit.input(-12.0);
-      CHECK_CLOSE(-10.0, limit.output(), EPS);
-      limit.input(22.0);
-      CHECK_CLOSE(20.0, limit.output(), EPS);
+
+      do {
+         limit.input(0.0);
+         CHECK_CLOSE(0.0, limit.output(), EPS);
+         limit.input(-12.0);
+         CHECK_CLOSE(-10.0, limit.output(), EPS);
+         limit.input(22.0);
+         CHECK_CLOSE(20.0, limit.output(), EPS);
+      } while (dss::SimTime::simulation_on());
    }
 
    TEST(OnOff)
@@ -84,13 +117,14 @@ SUITE(DySySim)
       cout << "-- Time" << endl;
       const double delta_t{0.1};
 
+      dss::SimTime::set(1.0, 3.0);
+
       dss::Time time;
       time.config({1, {}, {delta_t}});
-      CHECK_CLOSE(0.0, time.output(), EPS);
-      for (int i = 1; i < 10; ++i) {
-         time.exe();
-         CHECK_CLOSE(i * delta_t, time.output(), EPS);
-      }
+
+      do {
+         CHECK_CLOSE(dss::SimTime::t, time.output(), EPS);
+      } while (dss::SimTime::simulation_on());
    }
 
    TEST(Step)
@@ -128,12 +162,9 @@ SUITE(DySySim)
 
    TEST(Puls)
    {
-      dysysim::SimBlock::clearSimBlocks();
-
       const double delta_t{0.1};
 
-      dss::Time time;
-      time.config({1, {}, {delta_t}});
+      dss::SimTime::set(delta_t, 10 * delta_t);
 
       cout << "-- Puls" << endl;
 
@@ -147,19 +178,17 @@ SUITE(DySySim)
       dss::Log log;
       log.config({3, {2}, {}});
 
-      // dysysim::SimBlock::exeSimBlocks();
-
-      while (time() < t_on) {
+      while (dss::SimTime::t < t_on) {
          CHECK_CLOSE(off, puls.output(), EPS);
          dysysim::SimBlock::exeSimBlocks();
       }
 
-      while (time() >= t_on and time() < t_off) {
+      while (dss::SimTime::t >= t_on and dss::SimTime::t < t_off) {
          CHECK_CLOSE(on, puls.output(), EPS);
          dysysim::SimBlock::exeSimBlocks();
       }
 
-      while (time() >= t_off + (5 * delta_t)) {
+      while (dss::SimTime::t >= t_off + (5 * delta_t)) {
          CHECK_CLOSE(off, puls.output(), EPS);
          dysysim::SimBlock::exeSimBlocks();
       }
@@ -170,10 +199,13 @@ SUITE(DySySim)
       const double delta_t{0.1};
       const double delayTime{3 * delta_t};
 
-      dss::Time time;
-      time.config({1, {}, {delta_t}});
+      dss::SimTime::set(delta_t, 10 * delta_t);
 
       cout << "-- Delay" << endl;
+
+      dss::Log log;
+      log.config({1, {2, 3}, {}});
+
       double t_on = 2 * delta_t;
       dss::Step step;
       step.config({2, {}, {0.0, 1.0, t_on}});
@@ -183,17 +215,15 @@ SUITE(DySySim)
 
       CHECK_CLOSE(0.0, delay.output(), EPS);
 
-      for (int i = 0; i < 20; ++i) {
+      do {
          auto input = step.output();
          delay.input(input);
-         if (time() < t_on + delayTime) {
+         if (dss::SimTime::t < t_on + delayTime) {
             CHECK_CLOSE(0.0, delay.output(), EPS);
          } else {
             CHECK_CLOSE(1.0, delay.output(), EPS);
          }
-         time.exe();
-         step.exe();
-      }
+      } while (dss::SimTime::simulation_on());
    }
 
    // TEST(FirstOrder)

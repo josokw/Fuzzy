@@ -2,11 +2,25 @@
 
 void dysysim::Constant::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (configDataIsOK(config)) {
+      id_ = config.id;
+      if (SimBlock::idIsUnique(id_)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+      out_ = begin(config.parameters)[0];
    }
-   out_ = begin(config.parameters)[0];
+}
+
+bool dysysim::Constant::configDataIsOK(
+   const SimBlock::configData_t &config) const
+{
+   bool ok = (config.id > 0) and (config.inputs.size() == 0) and
+             (config.parameters.size() == 1);
+   if (not ok) {
+      std::cerr << "---- DySySim error " << config.id << blockType_
+                << " config() not correct\n";
+   }
+   return ok;
 }
 
 void dysysim::AlgebraicDelay::config(const SimBlock::configData_t &config)
@@ -20,12 +34,26 @@ void dysysim::AlgebraicDelay::config(const SimBlock::configData_t &config)
 
 void dysysim::Attenuator::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (configDataIsOK(config)) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      if (SimBlock::idIsUnique(id_)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+      attenuation_ = *begin(config.parameters);
    }
-   attenuation_ = *begin(config.parameters);
+}
+
+bool dysysim::Attenuator::configDataIsOK(
+   const SimBlock::configData_t &config) const
+{
+   bool ok = (config.id > 0) and (config.inputs.size() == 0) and
+             (config.parameters.size() == 1);
+   if (not ok) {
+      std::cerr << "---- DySySim error '" << config.id << " " << blockType_
+                << "' config() not correct\n";
+   }
+   return ok;
 }
 
 void dysysim::Cos::config(const SimBlock::configData_t &config)
@@ -114,9 +142,6 @@ void dysysim::Summator::config(const SimBlock::configData_t &config)
    }
 }
 
-// Timed output blocks
-// ---------------------------------------------------------
-
 // Sinus generator, amplitude = 1
 void dysysim::Frequency::config(const SimBlock::configData_t &config)
 {
@@ -157,7 +182,17 @@ void dysysim::Time::config(const SimBlock::configData_t &config)
    if (SimBlock::idIsUnique(id_)) {
       SimBlock::allSimBlocks_s[id_] = this;
    }
-   SimTime::delta_t = *begin(config.parameters);
+}
+
+bool dysysim::Time::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   bool ok = (config.id > 0) and (config.inputs.size() == 0) and
+             (config.parameters.size() == 0);
+   if (not ok) {
+      std::cerr << "---- DySySim error " << config.id << blockType_
+                << " config() not correct\n";
+   }
+   return ok;
 }
 
 void dysysim::Delay::config(const SimBlock::configData_t &config)
