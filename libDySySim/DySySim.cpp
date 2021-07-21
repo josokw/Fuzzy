@@ -153,14 +153,27 @@ void dysysim::Frequency::config(const SimBlock::configData_t &config)
 
 void dysysim::Step::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (configDataIsOK(config)) {
+      id_ = config.id;
+      if (SimBlock::idIsUnique(id_)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+      auto par = begin(config.parameters);
+      out_ = off_ = par[0];
+      on_ = par[1];
+      t_on_ = par[2];
    }
-   auto par = begin(config.parameters);
-   off_ = par[0];
-   on_ = par[1];
-   t_on_ = par[2];
+}
+
+bool dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   bool ok = (config.id > 0) and (config.inputs.size() == 0) and
+             (config.parameters.size() == 3);
+   if (not ok) {
+      std::cerr << "---- DySySim error " << config.id << blockType_
+                << " config() not correct\n";
+   }
+   return ok;
 }
 
 void dysysim::Puls::config(const SimBlock::configData_t &config)
@@ -170,7 +183,7 @@ void dysysim::Puls::config(const SimBlock::configData_t &config)
       SimBlock::allSimBlocks_s[id_] = this;
    }
    auto par = begin(config.parameters);
-   off_ = par[0];
+   out_ = off_ = par[0];
    on_ = par[1];
    t_on_ = par[2];
    t_off_ = par[3];

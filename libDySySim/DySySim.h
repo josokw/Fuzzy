@@ -271,6 +271,7 @@ public:
    virtual ~Step() = default;
 
    void config(const SimBlock::configData_t &config) override;
+   bool configDataIsOK(const SimBlock::configData_t &config) const override;
    void exe() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
 
 private:

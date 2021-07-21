@@ -120,7 +120,7 @@ SUITE(DySySim)
       dss::SimTime::set(1.0, 3.0);
 
       dss::Time time;
-      time.config({1, {}, {delta_t}});
+      time.config({1, {}, {}});
 
       do {
          CHECK_CLOSE(dss::SimTime::t, time.output(), EPS);
@@ -131,33 +131,24 @@ SUITE(DySySim)
    {
       const double delta_t{0.1};
 
-      dss::Time time;
-      time.config({1, {}, {delta_t}});
+      dss::SimTime::set(delta_t, 10 * delta_t);
 
       cout << "-- Step" << endl;
 
       dss::Step step;
-      double off = 0.0;
-      double on = 1.0;
+      double off = -22.0;
+      double on = 11.0;
       double t_on = 4 * delta_t;
-      step.config({2, {}, {off, on, t_on}});
+      step.config({1, {}, {off, on, t_on}});
 
-      CHECK_CLOSE(off, step.output(), EPS);
-      time.exe();
-      step.exe();
-      CHECK_CLOSE(off, step.output(), EPS);
-      time.exe();
-      step.exe();
-      CHECK_CLOSE(off, step.output(), EPS);
-      time.exe();
-      step.exe();
-      CHECK_CLOSE(off, step.output(), EPS);
-      time.exe();
-      step.exe();
-      CHECK_CLOSE(on, step.output(), EPS);
-      time.exe();
-      step.exe();
-      CHECK_CLOSE(on, step.output(), EPS);
+      do {
+         // std::cerr << dss::SimTime::t << "\n";
+         if (dss::SimTime::t <= 4 * delta_t) {
+            CHECK_CLOSE(off, step.output(), EPS);
+         } else {
+            CHECK_CLOSE(on, step.output(), EPS);
+         }
+      } while (dss::SimTime::simulation_on());
    }
 
    TEST(Puls)
