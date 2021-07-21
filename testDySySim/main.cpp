@@ -24,6 +24,8 @@ SUITE(DySySim)
       dss::Constant con;
       double c = 3.0;
       con.config({2, {}, {c}});
+
+      log.exe();
       do {
          CHECK_CLOSE(c, con.output(), EPS);
       } while (dss::SimTime::simulation_on());
@@ -43,6 +45,7 @@ SUITE(DySySim)
       dss::Attenuator att2;
       att2.config({3, {}, {-10.0}});
 
+      log.exe();
       do {
          att1.input(1.0);
          CHECK_CLOSE(0.1, att1.output(), EPS);
@@ -65,6 +68,7 @@ SUITE(DySySim)
       dss::Log log;
       log.config({1, {2, 3}, {}});
 
+      log.exe();
       do {
          gain1.input(1.0);
          CHECK_CLOSE(10.0, gain1.output(), EPS);
@@ -142,8 +146,7 @@ SUITE(DySySim)
       step.config({1, {}, {off, on, t_on}});
 
       do {
-         // std::cerr << dss::SimTime::t << "\n";
-         if (dss::SimTime::t <= 4 * delta_t) {
+         if (dss::SimTime::t < 4 * delta_t) {
             CHECK_CLOSE(off, step.output(), EPS);
          } else {
             CHECK_CLOSE(on, step.output(), EPS);
@@ -169,6 +172,7 @@ SUITE(DySySim)
       dss::Log log;
       log.config({3, {2}, {}});
 
+      log.exe();
       while (dss::SimTime::t < t_on) {
          CHECK_CLOSE(off, puls.output(), EPS);
          dysysim::SimBlock::exeSimBlocks();
@@ -206,6 +210,7 @@ SUITE(DySySim)
 
       CHECK_CLOSE(0.0, delay.output(), EPS);
 
+      log.exe();
       do {
          auto input = step.output();
          delay.input(input);
