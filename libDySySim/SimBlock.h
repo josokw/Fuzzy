@@ -68,9 +68,9 @@ public:
    static bool idIsUnique(int id);
    static void exeSimBlocks()
    {
+      dysysim::SimTime::next();
       for (auto sb : allSimBlocks_s)
          sb.second->exe();
-      dysysim::SimTime::next();
    }
 
 protected:
