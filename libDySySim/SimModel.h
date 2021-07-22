@@ -10,7 +10,7 @@ namespace dysysim {
 /// SimTime contains simulation time data.
 /// \todo Consider implementation as a struct?
 /// \todo Consider implementation t as std::chrono::...
-class SimTime
+class SimTime final
 {
 public:
    SimTime() = default;
@@ -28,7 +28,7 @@ public:
 };
 
 /// \todo Implement
-class SimLogger
+class SimLogger final
 {
 public:
    SimLogger(std::map<int, SimBlock *> &model): model_{model} {};
@@ -54,6 +54,9 @@ private:
 class SimModel final
 {
 public:
+   SimTime sim_time;
+   SimLogger sim_logger;
+
    SimModel() = default;
    ~SimModel() = default;
 
@@ -70,7 +73,7 @@ public:
    /// Sort for correct simulation order.
    /// \todo Implement
    void sort() {}
-   /// Excutes full model.
+   /// Executes full model 1 time step.
    void exe()
    {
       dysysim::SimTime::next();
@@ -78,11 +81,21 @@ public:
          sb.second->exe();
       }
    }
+   /// Executes all simulation steps
+   /// \todo Add logging
+   void start()
+   {
+      SimTime::reset();
+      init();
+      while (SimTime::simulation_on)
+      {
+         SimTime::next();
+         exe();
+      }
+   }
 
 private:
-   SimTime sim_time;
    std::map<int, SimBlock *> allSimBlocks_s;
-   SimLogger sim_logger;
 };
 
 } // namespace dysysim
