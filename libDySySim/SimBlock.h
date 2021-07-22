@@ -88,22 +88,6 @@ protected:
    static std::map<int, SimBlock *> allSimBlocks_s;
 };
 
-/// Contains simulation time data.
-class TimedSimBlock : public SimBlock
-{
-public:
-   TimedSimBlock()
-      : SimBlock{}
-   {
-      // blockType_ = "Timed" + blockType_;
-      // _allSimBlocks[id] = this;
-   }
-   ~TimedSimBlock() override = default;
-
-protected:
-   SimTime sim_time;
-};
-
 } // namespace dysysim
 
 #endif // SIMBLOCK_H
