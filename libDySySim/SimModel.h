@@ -85,11 +85,9 @@ public:
    /// \todo Add logging
    void start()
    {
-      SimTime::reset();
       init();
       while (SimTime::simulation_on)
       {
-         SimTime::next();
          exe();
       }
    }
