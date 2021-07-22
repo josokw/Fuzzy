@@ -9,8 +9,6 @@
 
 namespace dysysim {
 
-class SimBlock;
-
 /// SimTime contains simulation time data.
 /// \todo Consider implementation as a struct?
 /// \todo Consider implementation t as std::chrono::...
@@ -56,8 +54,14 @@ public:
 
    int getId() const { return id_; }
    const std::string &getBlockType() const { return blockType_; }
+
+   /// Calculate out_ for t = 0
+   virtual void init()
+   {
+      std::cerr << blockType_ << " --- init() NOT implemented\n";
+   }
    double output() const { return out_; }
-   /// Calculate out
+   /// Calculate out_ for t = t_n
    virtual void exe()
    {
       std::cerr << blockType_ << " --- exe() NOT implemented\n";
@@ -66,6 +70,11 @@ public:
    static void clearSimBlocks() { allSimBlocks_s.clear(); }
    static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
    static bool idIsUnique(int id);
+   static void initSimBlocks()
+   {
+      for (auto sb : allSimBlocks_s)
+         sb.second->init();
+   }
    static void exeSimBlocks()
    {
       dysysim::SimTime::next();
