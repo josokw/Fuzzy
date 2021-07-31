@@ -129,17 +129,15 @@ Defuzzification example 2 and 3:
 ## DySySim
 
 DySySim is a very basic [TUTSIM](http://tutsim.com/) look-a-like.
-TUTSIM was developed in the early 70's.
+TUTSIM was developed in the early 70's for script based simulation of
+time continuous systems.
 
-Example DySySim script *RC network*:
+Example DySySim script for simulating the response of a *RC network*:
 
-```
-// Pulse response RC-network
+    // Pulse response RC-network
 
-1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
-2 ATT 1,-3 att=10.0    // RC time constant = 10 sec
-3 INT 2    out_t0=0.0
-
-```
+    1 PLS      off=0.0 on=1.0 t_on=1.0 t_off=2.5
+    2 ATT 1,-3 att=10.0    // RC time constant = 10 sec
+    3 INT 2    out_t0=0.0
 
 Development is in progress.
