@@ -8,11 +8,10 @@ dysysim::Builder::Builder()
 void dysysim::Builder::operator()(std::ifstream &script)
 {
    std::string line;
-   while (getline(script, line)) {
+   while (std::getline(script, line)) {
       scriptLines_.push_back(line);
    }
-   for (const auto& line: scriptLines_)
-   {
+   for (auto &line : scriptLines_) {
       parser_(line);
    }
 }

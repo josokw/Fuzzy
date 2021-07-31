@@ -4,10 +4,30 @@
 
 namespace x3 = boost::spirit::x3;
 
-dysysim::Parser::result_t
-dysysim::Parser::operator()(const std::string &codeLine)
+void dysysim::Parser::trim(std ::string &str, const std::string &whitespace)
 {
-   result_t result{-1, "???", {}, {}};
+   const auto strBegin = str.find_first_not_of(whitespace);
+   if (strBegin == std::string::npos) {
+      str.clear();
+      return;
+   }
+   const auto strEnd = str.find_last_not_of(whitespace);
+   const auto strRange = strEnd - strBegin + 1;
+
+   str = str.substr(strBegin, strRange);
+}
+
+void dysysim::Parser::removeSingleLineComment(std::string &str)
+{
+   size_t pos{str.find("//")};
+   if (pos != std::string::npos) {
+      str.erase(pos);
+   }
+}
+
+dysysim::Parser::result_t dysysim::Parser::operator()(std::string &codeLine)
+{
+   result_t result{-1, "", {}, {}};
 
    auto set_id = [&result](auto &ctx) {
       // std::cout << "ID = " << x3::_attr(ctx) << "\n";
@@ -29,24 +49,32 @@ dysysim::Parser::operator()(const std::string &codeLine)
       std::get<3>(result).push_back(x3::_attr(ctx));
    };
 
-   auto iter = begin(codeLine);
-   auto iterEnd = end(codeLine);
+   Parser::removeSingleLineComment(codeLine);
+   Parser::trim(codeLine, " \t");
 
-   auto id = x3::uint_;
-   auto type = (+x3::char_("A-Z"));
-   auto value = x3::double_;
-   auto parameter_name = x3::alpha >> *(x3::alnum | x3::char_('_'));
-   auto inputs =
-      x3::int_[set_input] >> *(x3::char_(',') >> x3::int_[set_input]);
-   auto set_parameter = parameter_name >> '=' >> value[set_param];
+   if (!codeLine.empty()) {
+      auto iter = begin(codeLine);
+      auto iterEnd = end(codeLine);
 
-   auto codeline =
-      id[set_id] >> type[set_type] >> *(inputs) >> *(set_parameter);
+      auto id = x3::uint_;
+      auto type = (+x3::char_("A-Z"));
+      auto value = x3::double_;
+      auto parameter_name = x3::alpha >> *(x3::alnum | x3::char_('_'));
+      auto inputs =
+         x3::int_[set_input] >> *(x3::char_(',') >> x3::int_[set_input]);
+      auto set_parameter = parameter_name >> '=' >> value[set_param];
 
-   auto p = x3::phrase_parse(iter, iterEnd, codeline, x3::space);
+      auto codeline =
+         id[set_id] >> type[set_type] >> *(inputs) >> *(set_parameter);
 
-   std::cout << "'" << codeLine << "'"
-             << ((p and iter == iterEnd) ? "   OK  " : "   NOT OK  ") << "\n";
+      auto p = x3::phrase_parse(iter, iterEnd, codeline, x3::space);
+
+      std::cout << "'" << codeLine << "'"
+                << ((p and iter == iterEnd) ? "   OK  " : "   NOT OK  ")
+                << "\n";
+   } else {
+      std::cout << "''   OK\n";
+   }
 
    return result;
 }

@@ -41,9 +41,13 @@ public:
    Parser() = default;
    ~Parser() = default;
 
-   result_t operator()(const std::string &codeLine);
+   result_t operator()(std::string &codeLine);
 
 private:
+   /// Remove single-line comment (C++ style).
+   static void removeSingleLineComment(std::string &str);
+   /// Remove leading and trailing whitespace.
+   static void trim(std ::string &str, const std::string &whitespace);
 };
 
 } // namespace dysysim
