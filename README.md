@@ -134,9 +134,12 @@ TUTSIM was developed in the early 70's.
 Example DySySim script *RC network*:
 
 ```
+// Pulse response RC-network
+
 1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
-2 ATT 1,-3 att=10.0
+2 ATT 1,-3 att=10.0    // RC time constant = 10 sec
 3 INT 2    out_t0=0.0
+
 ```
 
 Development is in progress.
