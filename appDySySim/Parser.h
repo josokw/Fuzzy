@@ -43,11 +43,17 @@ public:
 
    result_t operator()(std::string &codeLine);
 
+   auto getSimParameters() const { return std::make_pair(delta_t_, t_end_); }
+
 private:
    /// Remove single-line comment (C++ style).
    static void removeSingleLineComment(std::string &str);
    /// Remove leading and trailing whitespace.
    static void trim(std ::string &str, const std::string &whitespace);
+
+   bool simParametersAreSet_ = false;
+   double delta_t_ = 0.0;
+   double t_end_ = 0.0;
 };
 
 } // namespace dysysim
