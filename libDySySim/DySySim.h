@@ -20,6 +20,8 @@ public:
       blockType_ = "CON";
    }
    ~Constant() override = default;
+
+   SimBlock *create() override { return new Constant; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
 
@@ -36,8 +38,9 @@ public:
    {
       blockType_ = "ADL";
    }
-   virtual ~AlgebraicDelay() = default;
-
+   ~AlgebraicDelay() override = default;
+   
+   SimBlock *create() override { return new AlgebraicDelay; }
    void config(const SimBlock::configData_t &config) override;
 
    void input(double in)
@@ -59,8 +62,9 @@ public:
    {
       blockType_ = "ATT";
    }
-   virtual ~Attenuator() = default;
+   ~Attenuator() override = default;
 
+   SimBlock *create() override { return new Attenuator; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in) { out_ = in / attenuation_; }
@@ -82,8 +86,9 @@ public:
    {
       blockType_ = "COS";
    }
-   virtual ~Cos() = default;
+   ~Cos() override = default;
 
+   SimBlock *create() override { return new Cos; }
    void config(const SimBlock::configData_t &config) override;
    void input(double in) { out_ = std::cos(in * multipier_ + phase_); }
 
@@ -100,8 +105,9 @@ public:
    {
       blockType_ = "DIV";
    }
-   virtual ~Divider() = default;
+   ~Divider() override = default;
 
+   SimBlock *create() override { return new Divider; }
    void config(const SimBlock::configData_t &config) override;
    void input(double in1, double in2) { out_ = in1 / in2; }
 };
@@ -115,8 +121,9 @@ public:
    {
       blockType_ = "GAIN";
    }
-   virtual ~Gain() = default;
+   ~Gain() override = default;
 
+   SimBlock *create() override { return new Gain; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in) { out_ = in * gain_; }
@@ -135,8 +142,9 @@ public:
    {
       blockType_ = "LIM";
    }
-   virtual ~Limit() = default;
+   ~Limit() override = default;
 
+   SimBlock *create() override { return new Limit; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in) { out_ = std::min(std::max(min_, in), max_); }
@@ -154,8 +162,9 @@ public:
    {
       blockType_ = "MAX";
    }
-   virtual ~Max() = default;
+   ~Max() override = default;
 
+   SimBlock *create() override { return new Max; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
@@ -169,8 +178,9 @@ public:
    {
       blockType_ = "MIN";
    }
-   virtual ~Min() = default;
+   ~Min() override = default;
 
+   SimBlock *create() override { return new Min; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
@@ -184,8 +194,9 @@ public:
    {
       blockType_ = "MUL";
    }
-   virtual ~Multiplier() = default;
+   ~Multiplier() override = default;
 
+   SimBlock *create() override { return new Multiplier; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in1, double in2) { out_ = in1 * in2; }
@@ -201,8 +212,9 @@ public:
    {
       blockType_ = "SIN";
    }
-   virtual ~Sin() = default;
+   ~Sin() override = default;
 
+   SimBlock *create() override { return new Sin; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
@@ -222,6 +234,7 @@ public:
    }
    ~Summator() override = default;
 
+   SimBlock *create() override { return new Summator; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in1, double in2) { out_ = in1 + in2; }
@@ -246,8 +259,9 @@ public:
    {
       blockType_ = "FRQ";
    }
-   virtual ~Frequency() = default;
+   ~Frequency() override = default;
 
+   SimBlock *create() override { return new Frequency; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void next() { out_ = std::sin(2 * M_PI * frequency_ * SimTime::t + phase_); }
@@ -268,8 +282,9 @@ public:
    {
       blockType_ = "STP";
    }
-   virtual ~Step() = default;
+   ~Step() override = default;
 
+   SimBlock *create() override { return new Step; }
    void config(const SimBlock::configData_t &config) override;
    bool configDataIsOK(const SimBlock::configData_t &config) const override;
    void exe() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
@@ -292,8 +307,9 @@ public:
    {
       blockType_ = "PLS";
    }
-   virtual ~Puls() = default;
+   ~Puls() override = default;
 
+   SimBlock *create() override { return new Puls; }
    void config(const SimBlock::configData_t &config) override;
    void exe()
    {
@@ -318,6 +334,7 @@ public:
    }
    ~Time() override = default;
 
+   SimBlock *create() override { return new Time; }
    void config(const SimBlock::configData_t &config) override;
    bool configDataIsOK(const SimBlock::configData_t &config) const override;
    void exe() override { out_ = SimTime::t; }
@@ -337,8 +354,9 @@ public:
    {
       blockType_ = "DLY";
    }
-   virtual ~Delay() = default;
+   ~Delay() override = default;
 
+   SimBlock *create() override { return new Delay; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in)
@@ -363,8 +381,9 @@ public:
    {
       blockType_ = "FIO";
    }
-   ~FirstOrder() = default;
+   ~FirstOrder() override = default;
 
+   SimBlock *create() override { return new FirstOrder; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in)
@@ -387,8 +406,9 @@ public:
    {
       blockType_ = "FNC";
    }
-   virtual ~Function() = default;
+   ~Function() override = default;
 
+   SimBlock *create() override { return new Function<T>; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
 
@@ -424,6 +444,7 @@ public:
    }
    ~OnOff() override = default;
 
+   SimBlock *create() override { return new OnOff; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in) { out_ = (in < onoff_) ? off_ : on_; }
@@ -443,8 +464,9 @@ public:
    {
       blockType_ = "INT";
    }
-   virtual ~Integrator() = default;
+   ~Integrator() override = default;
 
+   SimBlock *create() override { return new Integrator; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in)
@@ -469,8 +491,9 @@ public:
    {
       blockType_ = "EUL";
    }
-   virtual ~IntegratorEuler() = default;
+   ~IntegratorEuler() override = default;
 
+   SimBlock *create() override { return new IntegratorEuler; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in) { out_ += in * SimTime::delta_t; }
@@ -491,7 +514,9 @@ public:
    {
       blockType_ = "TPZD";
    }
-   virtual ~IntegratorTrapezoidal() = default;
+   ~IntegratorTrapezoidal() override = default;
+
+   SimBlock *create() override { return new IntegratorTrapezoidal; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in)
@@ -522,8 +547,9 @@ public:
    {
       blockType_ = "PI";
    }
-   virtual ~PI() = default;
+   ~PI() override = default;
 
+   SimBlock *create() override { return new PI; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in)
@@ -559,8 +585,9 @@ public:
    {
       blockType_ = "PID";
    }
-   virtual ~PID() = default;
+   ~PID() override = default;
 
+   SimBlock *create() override { return new PID; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in)
@@ -595,8 +622,9 @@ public:
    {
       blockType_ = "ZOH";
    }
-   virtual ~ZeroOrderHold() = default;
+   ~ZeroOrderHold() override = default;
 
+   SimBlock *create() override { return new ZeroOrderHold; }
    void config(const SimBlock::configData_t &config) override;
    void exe() override {}
    void input(double in) { out_ = (sample_++ % nSamples_ == 0) ? in : out_; }
@@ -614,7 +642,9 @@ public:
    {
       blockType_ = "LOG";
    }
+   ~Log() override = default;
 
+   SimBlock *create() override { return new Log; }
    void config(const SimBlock::configData_t &config) override
    {
       id_ = config.id;
