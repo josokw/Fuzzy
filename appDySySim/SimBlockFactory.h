@@ -20,6 +20,7 @@ public:
        return factory_.add(key, tbm);
    }
    auto size() const { return factory_.size(); }
+   // SimBlock *create(const std::string & key) const { return factory_.create(key); }
 
 private:
    GenericFactory<dysysim::SimBlock> factory_;
