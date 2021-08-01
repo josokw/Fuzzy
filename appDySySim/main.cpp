@@ -35,5 +35,7 @@ int main(int argc, char *argv[])
    }
    std::cout << "\n";
 
+   programFile.close();
+
    return 0;
 }
