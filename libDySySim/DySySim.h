@@ -39,7 +39,7 @@ public:
       blockType_ = "ADL";
    }
    ~AlgebraicDelay() override = default;
-   
+
    SimBlock *create() override { return new AlgebraicDelay; }
    void config(const SimBlock::configData_t &config) override;
 
@@ -236,6 +236,7 @@ public:
 
    SimBlock *create() override { return new Summator; }
    void config(const SimBlock::configData_t &config) override;
+   bool configDataIsOK(const SimBlock::configData_t &config) const override;
    void exe() override {}
    void input(double in1, double in2) { out_ = in1 + in2; }
    void input(double in1, double in2, double in3) { out_ = in1 + in2 + in3; }
@@ -385,6 +386,7 @@ public:
 
    SimBlock *create() override { return new FirstOrder; }
    void config(const SimBlock::configData_t &config) override;
+   bool configDataIsOK(const SimBlock::configData_t &config) const override;
    void exe() override {}
    void input(double in)
    {
@@ -446,6 +448,7 @@ public:
 
    SimBlock *create() override { return new OnOff; }
    void config(const SimBlock::configData_t &config) override;
+   bool configDataIsOK(const SimBlock::configData_t &config) const override;
    void exe() override {}
    void input(double in) { out_ = (in < onoff_) ? off_ : on_; }
 

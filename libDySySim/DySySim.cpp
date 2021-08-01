@@ -135,11 +135,25 @@ void dysysim::Sin::config(const SimBlock::configData_t &config)
 
 void dysysim::Summator::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (configDataIsOK(config)) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      if (SimBlock::idIsUnique(id_)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
    }
+}
+
+bool dysysim::Summator::configDataIsOK(
+   const SimBlock::configData_t &config) const
+{
+   bool ok = (config.id > 0) and (config.inputs.size() > 1) and
+             (config.parameters.size() == 0);
+   if (not ok) {
+      std::cerr << "---- DySySim error '" << config.id << " " << blockType_
+                << "' config() not correct\n";
+   }
+   return ok;
 }
 
 // Sinus generator, amplitude = 1
@@ -168,7 +182,7 @@ void dysysim::Step::config(const SimBlock::configData_t &config)
 bool dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
 {
    bool ok = (config.id > 0) and (config.inputs.size() == 0) and
-             (config.parameters.size() == 3);
+             (config.parameters.size() == 3) and (config.parameters[2] > 0);
    if (not ok) {
       std::cerr << "---- DySySim error " << config.id << blockType_
                 << " config() not correct\n";
@@ -226,25 +240,54 @@ void dysysim::Delay::config(const SimBlock::configData_t &config)
 
 void dysysim::FirstOrder::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (configDataIsOK(config)) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      if (SimBlock::idIsUnique(id_)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+      auto par = begin(config.parameters);
+      timeConstant_ = par[0];
+      out_ = par[1];
    }
-   timeConstant_ = *begin(config.parameters);
+}
+
+bool dysysim::FirstOrder::configDataIsOK(
+   const SimBlock::configData_t &config) const
+{
+   bool ok = (config.id > 0) and (config.inputs.size() > 0) and
+             (config.parameters.size() == 2);
+   if (not ok) {
+      std::cerr << "---- DySySim error '" << config.id << " " << blockType_
+                << "' config() not correct\n";
+   }
+   return ok;
 }
 
 void dysysim::OnOff::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (configDataIsOK(config)) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      if (SimBlock::idIsUnique(id_)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+      auto par = begin(config.parameters);
+      out_ = off_ = par[0];
+      on_ = par[1];
+      onoff_ = par[2];
    }
-   auto par = begin(config.parameters);
-   off_ = par[0];
-   on_ = par[1];
-   onoff_ = par[2];
+}
+
+bool dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   bool ok = (config.id > 0) and (config.inputs.size() == 1) and
+             (config.parameters.size() == 3);
+   if (not ok) {
+      std::cerr << "---- DySySim error '" << config.id << " " << blockType_
+                << "' config() not correct\n";
+   }
+   return ok;
 }
 
 void dysysim::Integrator::config(const SimBlock::configData_t &config)

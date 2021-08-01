@@ -82,6 +82,8 @@ public:
          sb.second->exe();
    }
 
+   static SimTime sim_time;
+
 protected:
    int id_;
    std::string blockType_;
@@ -93,7 +95,6 @@ protected:
       return true;
    }
 
-   static SimTime sim_time;
    static std::map<int, SimBlock *> allSimBlocks_s;
 };
 
