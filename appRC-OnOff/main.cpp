@@ -14,21 +14,23 @@ int main(int argc, char *argv[])
              << "-- uses " + dss::libName + " " << dss::libVersion << "\n\n";
 
    // Initial conditions
-   const double delta_t{0.025};
-   const double RCtime{0.47};
+   const double delta_t{0.01};
+   const double RCtime{0.5};
 
-   // Model
-   dss::Time time;
-   time.config({1, {}, {delta_t}});
+   dss::SimBlock::sim_time.delta_t = delta_t;
+   dss::SimBlock::sim_time.end_t = 5 * RCtime;
 
    dss::Step step;
-   step.config({2, {}, {0, 3000, 0.0}});
+   step.config({1, {}, {0, 3000, 0.1}});
+
    dss::Summator sum;
-   sum.config({3, {}, {}});
+   sum.config({2, {1, -4}, {}});
+
    dss::OnOff onoff;
-   onoff.config({4, {}, {0, 4000, 0}});
+   onoff.config({3, {2}, {0, 4000, 0}});
+
    dss::FirstOrder RCcircuit;
-   RCcircuit.config({5, {}, {RCtime, 0.0}});
+   RCcircuit.config({4, {3}, {RCtime, 2500.0}});
 
    double setpoint{0.0};
    double error{0.0};
@@ -39,9 +41,7 @@ int main(int argc, char *argv[])
       simdata.open(argv[1]);
    }
 
-   int tnMax{8 * int(RCtime / delta_t)};
-
-   for (int tn = 0; tn < tnMax; ++tn) {
+   do {
       setpoint = step.output();
 
       sum.input(setpoint, -RCcircuit.output());
@@ -50,25 +50,23 @@ int main(int argc, char *argv[])
       onoff.input(error);
       control = onoff.output();
 
-      std::cout << std::setw(4) << tn << "  t = " << std::setw(5)
-                << time.output() << "  Setpoint = " << std::setw(5) << setpoint
+      std::cout << "  t = " << std::setw(5) << dss::SimBlock::sim_time.t
+                << "  Setpoint = " << std::setw(5) << setpoint
                 << "  Control = " << std::setw(5) << control
                 << "  Measured Value = " << std::setw(8) << RCcircuit.output()
                 << std::endl;
 
       if (argc == 2) {
-         simdata << std::setw(4) << time.output() << " " << setpoint << " "
-                 << control << " " << RCcircuit.output() << std::endl;
+         simdata << std::setw(4) << dss::SimBlock::sim_time.t << " " << setpoint
+                 << " " << control << " " << RCcircuit.output() << std::endl;
       }
-
       RCcircuit.input(control);
-      time.next();
-      step.next();
 
-      if (argc == 1) {
-         getchar();
-      }
-   }
+      dss::SimBlock::sim_time.next();
+      step.exe();
+
+   } while (dss::SimTime::simulation_on());
+
    simdata.close();
 
    return 0;
