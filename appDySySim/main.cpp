@@ -24,14 +24,14 @@ int main(int argc, char *argv[])
    }
 
    if (argc == 1) {
-      programFile.open("../appDySySim/data/RCnetwork.dss");
+      programFile.open("../appDySySim/scripts/RCnetwork.dss");
    } else {
       programFile.open(argv[1]);
    }
 
    if (programFile.is_open()) {
-       std::cout << "\n-- Syntax check\n";
-     builder(programFile);
+      std::cout << "\n-- Syntax check\n";
+      builder(programFile);
    }
    std::cout << "\n";
 
