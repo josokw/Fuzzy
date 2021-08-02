@@ -104,7 +104,8 @@ SUITE(DySySim)
       double off = -2.0;
       double on = 2.0;
       double on_off = 1.0;
-      onoff.config({2, {}, {off, on, on_off}});
+      // OnOff has no input from other block (use id 0).
+      onoff.config({1, {0}, {off, on, on_off}});
 
       onoff.input(-1.0);
       CHECK_CLOSE(off, onoff.output(), EPS);
