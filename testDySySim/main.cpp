@@ -100,6 +100,8 @@ SUITE(DySySim)
    {
       cout << "-- OnOff" << endl;
 
+      dss::SimBlock::clearSimBlocks();
+
       dss::OnOff onoff;
       double off = -2.0;
       double on = 2.0;
@@ -120,9 +122,10 @@ SUITE(DySySim)
    TEST(Time)
    {
       cout << "-- Time" << endl;
+
       const double delta_t{0.1};
 
-      dss::SimTime::set(1.0, 3.0);
+      dss::SimTime::set(delta_t, 3.0);
 
       dss::Time time;
       time.config({1, {}, {}});
