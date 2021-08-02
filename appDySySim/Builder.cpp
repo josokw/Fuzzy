@@ -21,7 +21,7 @@ void dysysim::Builder::operator()(std::ifstream &script)
       // Check for id != -1 (is SimBlock)
       if (std::get<0>(result) != -1) {
          std::cout << std::get<0>(result) << " " << std::get<1>(result) << "\n";
-         // auto pSB = factory_.create(std::get<1>(result));
+         SimBlock* pSB = factory_.create(std::get<1>(result));
       }
    }
 }
