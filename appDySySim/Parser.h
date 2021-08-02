@@ -29,6 +29,15 @@ namespace dysysim {
 /// 2 ATT 1,-3 att=10.0
 /// 3 INT 2    out_t0=0.0
 /// ```
+/// In a DySySim script you can use single line comments like C++
+/// and empty lines.
+/// ```
+/// // DySySim script example
+///
+/// 1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
+/// 2 ATT 1,-3 att=10.0    // time constant
+/// 3 INT 2    out_t0=0.0
+/// ```
 class Parser final
 {
 public:
@@ -42,7 +51,6 @@ public:
    ~Parser() = default;
 
    result_t operator()(std::string &codeLine);
-
    auto getSimParameters() const { return std::make_pair(delta_t_, t_end_); }
 
 private:
