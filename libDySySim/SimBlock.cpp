@@ -23,6 +23,13 @@ bool dysysim::SimTime::simulation_on()
 }
 
 std::map<int, dysysim::SimBlock *> dysysim::SimBlock::allSimBlocks_s;
+std::vector<int> dysysim::SimBlock::exeSequence_s;
+
+void dysysim::SimBlock::initSimBlocks()
+{
+   for (auto sb : allSimBlocks_s)
+      sb.second->init();
+}
 
 bool dysysim::SimBlock::idIsUnique(int id)
 {
@@ -32,4 +39,25 @@ bool dysysim::SimBlock::idIsUnique(int id)
    std::cerr << "---- DYSYSIM simulation block id " << id
              << " already exists\n";
    return false;
+}
+
+void dysysim::SimBlock::setExeSequence()
+{
+   std::cerr << "---- DYSYSIM " << __func__ << "() not yet implemented\n";
+}
+
+void dysysim::SimBlock::setExeSequence(std::vector<int> &exeSequence)
+{
+   exeSequence_s = exeSequence;
+}
+
+void dysysim::SimBlock::exeSimBlocks()
+{
+   dysysim::SimTime::next();
+   for (auto id : exeSequence_s) {
+      auto pSB = getSimBlock(id);
+      if (pSB) {
+         pSB->exe();
+      }
+   }
 }

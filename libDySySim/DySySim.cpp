@@ -205,9 +205,12 @@ void dysysim::Puls::config(const SimBlock::configData_t &config)
 
 void dysysim::Time::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (configDataIsOK(config)) {
+      id_ = config.id;
+      if (SimBlock::idIsUnique(id_)) {
+         SimBlock::allSimBlocks_s[id_] = this;
+      }
+      out_ = 0.0;
    }
 }
 
@@ -216,7 +219,7 @@ bool dysysim::Time::configDataIsOK(const SimBlock::configData_t &config) const
    bool ok = (config.id > 0) and (config.inputs.size() == 0) and
              (config.parameters.size() == 0);
    if (not ok) {
-      std::cerr << "---- DySySim error " << config.id << blockType_
+      std::cerr << "---- DySySim error " << config.id << " " << blockType_
                 << " config() not correct\n";
    }
    return ok;

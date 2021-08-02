@@ -70,17 +70,10 @@ public:
    static void clearSimBlocks() { allSimBlocks_s.clear(); }
    static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
    static bool idIsUnique(int id);
-   static void initSimBlocks()
-   {
-      for (auto sb : allSimBlocks_s)
-         sb.second->init();
-   }
-   static void exeSimBlocks()
-   {
-      dysysim::SimTime::next();
-      for (auto sb : allSimBlocks_s)
-         sb.second->exe();
-   }
+   static void initSimBlocks();
+   static void setExeSequence();
+   static void setExeSequence(std::vector<int> &exeSequence);
+   static void exeSimBlocks();
 
    static SimTime sim_time;
 
@@ -96,6 +89,7 @@ protected:
    }
 
    static std::map<int, SimBlock *> allSimBlocks_s;
+   static std::vector<int> exeSequence_s;
 };
 
 } // namespace dysysim

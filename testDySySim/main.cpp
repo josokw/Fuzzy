@@ -1,5 +1,6 @@
 #include "DySySim.h"
 #include "LibInfoDySySim.h"
+#include "SimBlock.h"
 
 #include <UnitTest++/UnitTest++.h>
 
@@ -129,6 +130,9 @@ SUITE(DySySim)
 
       dss::Time time;
       time.config({1, {}, {}});
+
+      std::vector<int> exeSequence{{1}};
+      dss::SimBlock::setExeSequence(exeSequence);
 
       do {
          CHECK_CLOSE(dss::SimTime::t, time.output(), EPS);
