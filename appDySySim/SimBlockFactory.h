@@ -6,7 +6,6 @@
 
 namespace dysysim {
 
-/// \todo Implement SimBlockFactory
 class SimBlockFactory
 {
 public:
