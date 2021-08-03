@@ -33,15 +33,23 @@ public:
 class SimBlock
 {
 public:
+   using ioType_t = enum class ioType {
+      input0,      ///< SimBlock has no inputs
+      history,     ///< Simblock has state (history)
+      inputoutput, ///< Simblock has in- and output, no state
+      output0      ///< Simblock has no output only side effects
+   };
+
    using configData_t = struct ConFigData {
       int id;
       std::vector<int> inputs;
       std::vector<double> parameters;
    };
 
-   SimBlock()
-      : id_{-1}
-      , blockType_{""}
+   SimBlock(const std::string &blockType, const ioType_t ioType)
+      : blockType_{blockType}
+      , ioType_{ioType}
+      , id_{-1}
       , out_{0.0}
    {
    }
@@ -52,8 +60,9 @@ public:
    virtual SimBlock *create() { return nullptr; }
    virtual void config(const configData_t &config) = 0;
 
-   int getId() const { return id_; }
    const std::string &getBlockType() const { return blockType_; }
+   const ioType_t getIOType() const { return ioType_; }
+   int getId() const { return id_; }
 
    /// Calculate out_ for t = 0
    virtual void init()
@@ -78,8 +87,9 @@ public:
    static SimTime sim_time;
 
 protected:
+   const std::string blockType_;
+   const ioType_t ioType_;
    int id_;
-   std::string blockType_;
    std::vector<int> inputs_;
    double out_;
 

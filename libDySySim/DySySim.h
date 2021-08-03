@@ -15,9 +15,8 @@ class Constant : public SimBlock
 {
 public:
    Constant()
-      : SimBlock{}
+      : SimBlock{"CON", SimBlock::ioType_t::input0}
    {
-      blockType_ = "CON";
    }
    ~Constant() override = default;
 
@@ -33,10 +32,9 @@ class AlgebraicDelay : public SimBlock
 {
 public:
    AlgebraicDelay()
-      : SimBlock{}
+      : SimBlock{"ADL", SimBlock::ioType_t::history}
       , out_previous_{0.0}
    {
-      blockType_ = "ADL";
    }
    ~AlgebraicDelay() override = default;
 
@@ -57,10 +55,9 @@ class Attenuator : public SimBlock
 {
 public:
    Attenuator()
-      : SimBlock{}
+      : SimBlock{"ATT", SimBlock::ioType_t::inputoutput}
       , attenuation_{1.0}
    {
-      blockType_ = "ATT";
    }
    ~Attenuator() override = default;
 
@@ -80,11 +77,10 @@ class Cos : public SimBlock
 {
 public:
    Cos()
-      : SimBlock{}
+      : SimBlock{"COS", SimBlock::ioType_t::inputoutput}
       , multipier_{1.0}
       , phase_{0.0}
    {
-      blockType_ = "COS";
    }
    ~Cos() override = default;
 
@@ -101,9 +97,8 @@ class Divider : public SimBlock
 {
 public:
    Divider()
-      : SimBlock{}
+      : SimBlock{"DIV", SimBlock::ioType_t::inputoutput}
    {
-      blockType_ = "DIV";
    }
    ~Divider() override = default;
 
@@ -116,10 +111,9 @@ class Gain : public SimBlock
 {
 public:
    Gain()
-      : SimBlock{}
+      : SimBlock{"GAIN", SimBlock::ioType_t::inputoutput}
       , gain_(1.0)
    {
-      blockType_ = "GAIN";
    }
    ~Gain() override = default;
 
@@ -136,11 +130,10 @@ class Limit : public SimBlock
 {
 public:
    Limit()
-      : SimBlock{}
+      : SimBlock{"LIM", SimBlock::ioType_t::inputoutput}
       , min_(-1.0)
       , max_(1.0)
    {
-      blockType_ = "LIM";
    }
    ~Limit() override = default;
 
@@ -158,9 +151,8 @@ class Max : public SimBlock
 {
 public:
    Max()
-      : SimBlock{}
+      : SimBlock{"MAX", SimBlock::ioType_t::inputoutput}
    {
-      blockType_ = "MAX";
    }
    ~Max() override = default;
 
@@ -174,9 +166,8 @@ class Min : public SimBlock
 {
 public:
    Min()
-      : SimBlock{}
+      : SimBlock{"MIN", SimBlock::ioType_t::inputoutput}
    {
-      blockType_ = "MIN";
    }
    ~Min() override = default;
 
@@ -190,9 +181,8 @@ class Multiplier : public SimBlock
 {
 public:
    Multiplier()
-      : SimBlock{}
+      : SimBlock{"MUL", SimBlock::ioType_t::inputoutput}
    {
-      blockType_ = "MUL";
    }
    ~Multiplier() override = default;
 
@@ -206,11 +196,10 @@ class Sin : public SimBlock
 {
 public:
    Sin()
-      : SimBlock{}
+      : SimBlock{"SIN", SimBlock::ioType_t::inputoutput}
       , multiplier_{1.0}
       , phase_{0.0}
    {
-      blockType_ = "SIN";
    }
    ~Sin() override = default;
 
@@ -228,9 +217,8 @@ class Summator : public SimBlock
 {
 public:
    Summator()
-      : SimBlock{}
+      : SimBlock{"SUM", SimBlock::ioType_t::inputoutput}
    {
-      blockType_ = "SUM";
    }
    ~Summator() override = default;
 
@@ -246,19 +234,15 @@ public:
    }
 };
 
-// Timed output blocks
-// ---------------------------------------------------------
-
-// Sinus generator, amplitude = 1
+/// Sinus generator, amplitude = 1
 class Frequency : public SimBlock
 {
 public:
    Frequency()
-      : SimBlock{}
+      : SimBlock{"FRQ", SimBlock::ioType_t::input0}
       , frequency_{1.0}
       , phase_{0.0}
    {
-      blockType_ = "FRQ";
    }
    ~Frequency() override = default;
 
@@ -276,12 +260,11 @@ class Step : public SimBlock
 {
 public:
    Step()
-      : SimBlock{}
+      : SimBlock{"STP", SimBlock::ioType_t::input0}
       , off_{0.0}
       , on_{1.0}
       , t_on_{1.0}
    {
-      blockType_ = "STP";
    }
    ~Step() override = default;
 
@@ -300,13 +283,12 @@ class Puls : public SimBlock
 {
 public:
    Puls()
-      : SimBlock{}
+      : SimBlock{"PLS", SimBlock::ioType_t::input0}
       , off_{0.0}
       , on_{1.0}
       , t_on_{1.0}
       , t_off_{2.0}
    {
-      blockType_ = "PLS";
    }
    ~Puls() override = default;
 
@@ -329,9 +311,8 @@ class Time : public SimBlock
 {
 public:
    Time()
-      : SimBlock{}
+      : SimBlock{"TIME", SimBlock::ioType_t::input0}
    {
-      blockType_ = "TIME";
    }
    ~Time() override = default;
 
@@ -341,19 +322,15 @@ public:
    void exe() override { out_ = SimTime::t; }
 };
 
-// Timed input output blocks
-// ---------------------------------------------------
-
 class Delay : public SimBlock
 {
 public:
    Delay()
-      : SimBlock{}
+      : SimBlock{"DLY", SimBlock::ioType_t::history}
       , out_t0_{0.0}
       , delaytime_{1.0}
       , buffer_{}
    {
-      blockType_ = "DLY";
    }
    ~Delay() override = default;
 
@@ -377,10 +354,9 @@ class FirstOrder : public SimBlock
 {
 public:
    FirstOrder()
-      : SimBlock{}
+      : SimBlock{"FIO", SimBlock::ioType_t::history}
       , timeConstant_{1.0}
    {
-      blockType_ = "FIO";
    }
    ~FirstOrder() override = default;
 
@@ -403,10 +379,9 @@ class Function : public SimBlock
 {
 public:
    Function()
-      : SimBlock{}
+      : SimBlock{"FNC", SimBlock::ioType_t::inputoutput}
       , callback_{cos}
    {
-      blockType_ = "FNC";
    }
    ~Function() override = default;
 
@@ -437,12 +412,11 @@ class OnOff : public SimBlock
 {
 public:
    OnOff()
-      : SimBlock{}
+      : SimBlock{"ONOFF", SimBlock::ioType_t::inputoutput}
       , off_{0.0}
       , on_{1.0}
       , onoff_{1.0}
    {
-      blockType_ = "ONOFF";
    }
    ~OnOff() override = default;
 
@@ -463,9 +437,8 @@ class Integrator : public SimBlock
 {
 public:
    Integrator()
-      : SimBlock{}
+      : SimBlock{"INT", SimBlock::ioType_t::history}
    {
-      blockType_ = "INT";
    }
    ~Integrator() override = default;
 
@@ -489,10 +462,9 @@ class IntegratorEuler : public SimBlock
 {
 public:
    IntegratorEuler()
-      : SimBlock{}
+      : SimBlock{"EUL", SimBlock::ioType_t::history}
       , initial_out_{0.0}
    {
-      blockType_ = "EUL";
    }
    ~IntegratorEuler() override = default;
 
@@ -511,11 +483,10 @@ class IntegratorTrapezoidal : public SimBlock
 {
 public:
    IntegratorTrapezoidal()
-      : SimBlock{}
+      : SimBlock{"TPZD", SimBlock::ioType_t::history}
       , initial_out_{0.0}
       , in_previous_{0}
    {
-      blockType_ = "TPZD";
    }
    ~IntegratorTrapezoidal() override = default;
 
@@ -538,17 +509,17 @@ private:
    double in_previous_;
 };
 
-// @TBD not tested
+/// PI controller.
+/// \todo test
 class PI : public SimBlock
 {
 public:
    PI()
-      : SimBlock{}
+      : SimBlock{"PI", SimBlock::ioType_t::history}
       , Kp_{1.0}
       , tau_I_{1.0}
       , z_{3, 0.0}
    {
-      blockType_ = "PI";
    }
    ~PI() override = default;
 
@@ -575,18 +546,18 @@ private:
    std::deque<double> z_;
 };
 
-// @TBD not tested
+/// PID controller.
+/// \todo test
 class PID : public SimBlock
 {
 public:
    PID()
-      : SimBlock{}
+      : SimBlock{"PID", SimBlock::ioType_t::history}
       , _Kp{1.0}
       , _tau_I{1.0}
       , _tau_D{1.0}
       , _z{4, 0.0}
    {
-      blockType_ = "PID";
    }
    ~PID() override = default;
 
@@ -619,11 +590,10 @@ class ZeroOrderHold : public SimBlock
 {
 public:
    ZeroOrderHold()
-      : SimBlock{}
+      : SimBlock{"ZOH", SimBlock::ioType_t::history}
       , nSamples_{1}
       , sample_{0}
    {
-      blockType_ = "ZOH";
    }
    ~ZeroOrderHold() override = default;
 
@@ -637,13 +607,13 @@ private:
    int sample_;
 };
 
+/// Writes input data to stdout.
 class Log : public SimBlock
 {
 public:
    Log()
-      : SimBlock{}
+      : SimBlock{"LOG", SimBlock::ioType_t::output0}
    {
-      blockType_ = "LOG";
    }
    ~Log() override = default;
 
