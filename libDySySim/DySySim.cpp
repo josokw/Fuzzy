@@ -47,7 +47,7 @@ void dysysim::Attenuator::config(const SimBlock::configData_t &config)
 bool dysysim::Attenuator::configDataIsOK(
    const SimBlock::configData_t &config) const
 {
-   bool ok = (config.id > 0) and (config.inputs.size() == 0) and
+   bool ok = (config.id > 0) and (config.inputs.size() > 0) and
              (config.parameters.size() == 1);
    if (not ok) {
       std::cerr << "---- DySySim error '" << config.id << " " << blockType_

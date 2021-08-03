@@ -18,16 +18,24 @@ void dysysim::Builder::operator()(std::ifstream &script)
    for (auto &line : scriptLines_) {
       ++lineNumber_;
       auto result = parser_(line);
-      // Check for id != -1 (is SimBlock)
-      if (std::get<0>(result) != -1) {
-         std::cout << std::get<0>(result) << " " << std::get<1>(result) << "\n";
-         SimBlock* pSB = factory_.create(std::get<1>(result));
+      auto [id, type, inputs, params] = result;
+      SimBlock::configData_t cdata = {id, inputs, params};
+      if (id != -1) {
+         std::cout << id << " " << type << "\n";
+         SimBlock *pSB = factory_.create(type);
+         if (pSB) {
+            pSB->config(cdata);
+            SimBlock::addSimBlock(id, pSB);
+         } else {
+            std::cerr << "create() => pSB == nullptr\n";
+         }
       }
    }
 }
 
 void dysysim::Builder::execute()
 {
+   SimBlock::initSimBlocks();
    do {
       SimBlock::exeSimBlocks();
       SimTime::next();
