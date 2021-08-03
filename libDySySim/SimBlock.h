@@ -50,6 +50,7 @@ public:
       : blockType_{blockType}
       , ioType_{ioType}
       , id_{-1}
+      , inputs_{}
       , out_{0.0}
    {
    }
@@ -57,19 +58,13 @@ public:
    SimBlock &operator=(const SimBlock &other) = delete;
    virtual ~SimBlock() = default;
 
-   virtual SimBlock *create() { return nullptr; }
-   virtual void config(const configData_t &config) = 0;
-
    const std::string &getBlockType() const { return blockType_; }
-   const ioType_t getIOType() const { return ioType_; }
+   ioType_t getIOType() const { return ioType_; }
    int getId() const { return id_; }
-
-   /// Calculate out_ for t = 0
-   virtual void init()
-   {
-      std::cerr << blockType_ << " --- init() NOT implemented\n";
-   }
    double output() const { return out_; }
+
+   virtual SimBlock *create() = 0;
+   virtual void config(const configData_t &config) = 0;
    /// Calculate out_ for t = t_n
    virtual void exe()
    {
@@ -79,9 +74,11 @@ public:
    static void clearSimBlocks() { allSimBlocks_s.clear(); }
    static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
    static bool idIsUnique(int id);
-   static void initSimBlocks();
    static void setExeSequence();
    static void setExeSequence(std::vector<int> &exeSequence);
+   /// Calculate all SimBlock out_ for t = 0.
+   static void initSimBlocks();
+   /// Calculate all SimBlock out_ for t = t_n (n > 0).
    static void exeSimBlocks();
 
    static SimTime sim_time;

@@ -62,14 +62,14 @@ SUITE(DySySim)
       dss::SimTime::set(1.0, 3.0);
 
       dss::Gain gain1;
-      gain1.config({2, {}, {10.0}});
+      gain1.config({1, {}, {10.0}});
       dss::Gain gain2;
-      gain2.config({3, {}, {-5}});
+      gain2.config({2, {}, {-5}});
 
       dss::Log log;
-      log.config({1, {2, 3}, {}});
+      log.config({3, {1, 2}, {}});
 
-      log.exe();
+      dss::SimBlock::initSimBlocks();
       do {
          gain1.input(1.0);
          CHECK_CLOSE(10.0, gain1.output(), EPS);
@@ -134,6 +134,8 @@ SUITE(DySySim)
       std::vector<int> exeSequence{{1}};
       dss::SimBlock::setExeSequence(exeSequence);
 
+      dss::SimBlock::initSimBlocks();
+      CHECK_CLOSE(0.0, time.output(), EPS);
       do {
          CHECK_CLOSE(dss::SimTime::t, time.output(), EPS);
       } while (dss::SimTime::simulation_on());
@@ -156,6 +158,8 @@ SUITE(DySySim)
       std::vector<int> exeSequence{{1}};
       dss::SimBlock::setExeSequence(exeSequence);
 
+      dss::SimBlock::initSimBlocks();
+      CHECK_CLOSE(off, step.output(), EPS);
       do {
          if (dss::SimTime::t < 4 * delta_t) {
             CHECK_CLOSE(off, step.output(), EPS);
@@ -186,8 +190,8 @@ SUITE(DySySim)
       std::vector<int> exeSequence{{1, 2}};
       dss::SimBlock::setExeSequence(exeSequence);
 
+      dss::SimBlock::initSimBlocks();
       CHECK_CLOSE(0.0, puls.output(), EPS);
-      log.exe();
       do {
          if (dss::SimTime::t < t_on) {
             CHECK_CLOSE(off, puls.output(), EPS);
@@ -223,8 +227,8 @@ SUITE(DySySim)
       std::vector<int> exeSequence{{1, 2, 3}};
       dss::SimBlock::setExeSequence(exeSequence);
 
+      dss::SimBlock::initSimBlocks();
       CHECK_CLOSE(0.0, delay.output(), EPS);
-      log.exe();
       do {
          auto input = step.output();
          delay.input(input);
@@ -263,14 +267,14 @@ SUITE(DySySim)
       std::vector<int> exeSequence{{1, 2, 3}};
       dss::SimBlock::setExeSequence(exeSequence);
 
+      dss::SimBlock::initSimBlocks();
       CHECK_CLOSE(0.0, fio.output(), EPS);
-      log.exe();
       do {
          auto input = step.output();
          fio.input(input);
          auto out1 = fio.output();
          auto out2 = fio_response(dss::SimTime::t);
-         CHECK_CLOSE(out1, out2, EPS*8);
+         CHECK_CLOSE(out1, out2, EPS * 8);
       } while (dss::SimTime::simulation_on());
    }
 
