@@ -153,6 +153,9 @@ SUITE(DySySim)
       double t_on = 4 * delta_t;
       step.config({1, {}, {off, on, t_on}});
 
+      std::vector<int> exeSequence{{1}};
+      dss::SimBlock::setExeSequence(exeSequence);
+
       do {
          if (dss::SimTime::t < 4 * delta_t) {
             CHECK_CLOSE(off, step.output(), EPS);
@@ -175,26 +178,27 @@ SUITE(DySySim)
       double on = 1.0;
       double t_on = 5 * delta_t;
       double t_off = 10 * delta_t;
-      puls.config({2, {}, {off, on, t_on, t_off}});
+      puls.config({1, {}, {off, on, t_on, t_off}});
 
       dss::Log log;
-      log.config({3, {2}, {}});
+      log.config({2, {1}, {}});
 
+      std::vector<int> exeSequence{{1, 2}};
+      dss::SimBlock::setExeSequence(exeSequence);
+
+      CHECK_CLOSE(0.0, puls.output(), EPS);
       log.exe();
-      while (dss::SimTime::t < t_on) {
-         CHECK_CLOSE(off, puls.output(), EPS);
-         dysysim::SimBlock::exeSimBlocks();
-      }
-
-      while (dss::SimTime::t >= t_on and dss::SimTime::t < t_off) {
-         CHECK_CLOSE(on, puls.output(), EPS);
-         dysysim::SimBlock::exeSimBlocks();
-      }
-
-      while (dss::SimTime::t >= t_off + (5 * delta_t)) {
-         CHECK_CLOSE(off, puls.output(), EPS);
-         dysysim::SimBlock::exeSimBlocks();
-      }
+      do {
+         if (dss::SimTime::t < t_on) {
+            CHECK_CLOSE(off, puls.output(), EPS);
+         }
+         if (dss::SimTime::t >= t_on and dss::SimTime::t < t_off) {
+            CHECK_CLOSE(on, puls.output(), EPS);
+         }
+         if (dss::SimTime::t >= t_off + (5 * delta_t)) {
+            CHECK_CLOSE(off, puls.output(), EPS);
+         }
+      } while (dss::SimTime::simulation_on());
    }
 
    TEST(Delay)
@@ -216,8 +220,10 @@ SUITE(DySySim)
       dss::Delay delay;
       delay.config({3, {}, {0.0, delayTime}});
 
-      CHECK_CLOSE(0.0, delay.output(), EPS);
+      std::vector<int> exeSequence{{1, 2, 3}};
+      dss::SimBlock::setExeSequence(exeSequence);
 
+      CHECK_CLOSE(0.0, delay.output(), EPS);
       log.exe();
       do {
          auto input = step.output();
@@ -230,41 +236,43 @@ SUITE(DySySim)
       } while (dss::SimTime::simulation_on());
    }
 
-   // TEST(FirstOrder)
-   // {
-   //    const double delta_t{0.005};
-   //    const double tau{100 * delta_t};
-   //    const double stp{1.0};
-   //    const double stp_t{5 * delta_t};
+   TEST(FirstOrder)
+   {
+      const double delta_t{0.01};
+      const double tau{10 * delta_t};
+      const double stp{1.0};
+      const double stp_t{5 * delta_t};
 
-   //    dss::Time time;
-   //    time.config({1, {}, {delta_t}});
+      dss::SimTime::set(delta_t, 6 * tau);
 
-   //    auto fio_response = [tau, stp_t, stp](double t) {
-   //       return (t < stp_t) ? 0.0 : (stp * (1 - exp(-(t - stp_t) / tau)));
-   //    };
+      auto fio_response = [tau, stp_t, stp](double t) {
+         return (t < stp_t) ? 0.0 : (stp * (1 - exp(-(t - stp_t) / tau)));
+      };
 
-   //    cout << "-- FirstOrder" << endl;
+      cout << "-- FirstOrder" << endl;
 
-   //    dss::Step step;
-   //    step.config({2, {}, {0.0, stp, stp_t}});
+      dss::Step step;
+      step.config({1, {}, {0.0, stp, stp_t}});
 
-   //    dss::FirstOrder fio;
-   //    fio.config({3, {}, {tau, 0.0}});
+      dss::FirstOrder fio;
+      fio.config({2, {1}, {tau, 0.0}});
 
-   //    while (time.output() < stp_t + 10 * tau) {
-   //       auto input = step.output();
-   //       fio.input(input);
-   //       auto out1 = fio.output();
-   //       auto out2 = fio_response(time.output());
-   //       // std::cout << out1 << " == " << out2 << std::endl;
+      dss::Log log;
+      log.config({3, {1, 2}, {}});
 
-   //       CHECK_CLOSE(out1, out2, EPS);
+      std::vector<int> exeSequence{{1, 2, 3}};
+      dss::SimBlock::setExeSequence(exeSequence);
 
-   //       time.exe();
-   //       step.exe();
-   //    }
-   // }
+      CHECK_CLOSE(0.0, fio.output(), EPS);
+      log.exe();
+      do {
+         auto input = step.output();
+         fio.input(input);
+         auto out1 = fio.output();
+         auto out2 = fio_response(dss::SimTime::t);
+         CHECK_CLOSE(out1, out2, EPS*8);
+      } while (dss::SimTime::simulation_on());
+   }
 
    //    TEST(RC_FirstOrder)
    //    {
