@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
    }
 
    if (argc == 1) {
-      programFile.open("../appDySySim/scripts/RCnetwork.dss");
+      programFile.open("../appDySySim/scripts/RCnetworkLog.dss");
    } else {
       programFile.open(argv[1]);
    }
