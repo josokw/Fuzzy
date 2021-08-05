@@ -6,6 +6,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <queue>
 
@@ -63,7 +64,7 @@ public:
 
    SimBlock *create() override { return new Attenuator; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in) { out_ = in / attenuation_; }
 
 protected:
@@ -119,7 +120,7 @@ public:
 
    SimBlock *create() override { return new Gain; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in) { out_ = in * gain_; }
 
 private:
@@ -139,7 +140,7 @@ public:
 
    SimBlock *create() override { return new Limit; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in) { out_ = std::min(std::max(min_, in), max_); }
 
 private:
@@ -158,7 +159,11 @@ public:
 
    SimBlock *create() override { return new Max; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override
+   {
+      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
+            SimBlock::allSimBlocks_s[inputs_[1]]->output());
+   }
    void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
 };
 
@@ -173,7 +178,11 @@ public:
 
    SimBlock *create() override { return new Min; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override
+   {
+      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
+            SimBlock::allSimBlocks_s[inputs_[1]]->output());
+   }
    void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
 };
 
@@ -188,7 +197,11 @@ public:
 
    SimBlock *create() override { return new Multiplier; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override
+   {
+      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
+            SimBlock::allSimBlocks_s[inputs_[1]]->output());
+   }
    void input(double in1, double in2) { out_ = in1 * in2; }
 };
 
@@ -205,7 +218,7 @@ public:
 
    SimBlock *create() override { return new Sin; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
 
 private:
@@ -225,7 +238,7 @@ public:
    SimBlock *create() override { return new Summator; }
    void config(const SimBlock::configData_t &config) override;
    bool configDataIsOK(const SimBlock::configData_t &config) const override;
-   void exe() override {}
+   void exe() override { out_ = sumInputs(); }
    void input(double in1, double in2) { out_ = in1 + in2; }
    void input(double in1, double in2, double in3) { out_ = in1 + in2 + in3; }
    void input(double in1, double in2, double in3, double in4)
@@ -248,8 +261,10 @@ public:
 
    SimBlock *create() override { return new Frequency; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
-   void next() { out_ = std::sin(2 * M_PI * frequency_ * SimTime::t + phase_); }
+   void exe() override
+   {
+      out_ = std::sin(2 * M_PI * frequency_ * SimTime::t + phase_);
+   }
 
 private:
    double frequency_;
@@ -336,7 +351,7 @@ public:
 
    SimBlock *create() override { return new Delay; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in)
    {
       buffer_.push(in);
@@ -363,7 +378,7 @@ public:
    SimBlock *create() override { return new FirstOrder; }
    void config(const SimBlock::configData_t &config) override;
    bool configDataIsOK(const SimBlock::configData_t &config) const override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in)
    {
       out_ += SimTime::delta_t * (in - out_) / timeConstant_;
@@ -387,7 +402,7 @@ public:
 
    SimBlock *create() override { return new Function<T>; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
 
    void setFunction(std::function<double(T)> cbf) { callback_ = cbf; }
    void input(double in) { out_ = callback_(in); }
@@ -423,7 +438,7 @@ public:
    SimBlock *create() override { return new OnOff; }
    void config(const SimBlock::configData_t &config) override;
    bool configDataIsOK(const SimBlock::configData_t &config) const override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in) { out_ = (in < onoff_) ? off_ : on_; }
 
 private:
@@ -444,7 +459,7 @@ public:
 
    SimBlock *create() override { return new Integrator; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in)
    {
       out_ += 0.5 * (in + in_previous) * SimTime::delta_t;
@@ -470,7 +485,7 @@ public:
 
    SimBlock *create() override { return new IntegratorEuler; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in) { out_ += in * SimTime::delta_t; }
    void reset() { out_ = initial_out_; }
 
@@ -492,7 +507,7 @@ public:
 
    SimBlock *create() override { return new IntegratorTrapezoidal; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in)
    {
       out_ += 0.5 * (in + in_previous_) * SimTime::delta_t;
@@ -525,7 +540,7 @@ public:
 
    SimBlock *create() override { return new PI; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in)
    {
       z_.push_back(in);
@@ -563,7 +578,7 @@ public:
 
    SimBlock *create() override { return new PID; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in)
    {
       _z.push_back(in);
@@ -599,7 +614,7 @@ public:
 
    SimBlock *create() override { return new ZeroOrderHold; }
    void config(const SimBlock::configData_t &config) override;
-   void exe() override {}
+   void exe() override { input(sumInputs()); }
    void input(double in) { out_ = (sample_++ % nSamples_ == 0) ? in : out_; }
 
 private:
@@ -629,11 +644,12 @@ public:
 
    void exe() override
    {
-      std::cerr << " t = " << SimTime::t << "   ";
+      std::cerr << " t = " << std::fixed << std::setprecision(3) << SimTime::t
+                << "   ";
       for (auto id : inputs_) {
          auto pSB = SimBlock::getSimBlock(id);
          std::cerr << id << " " << pSB->getBlockType() << " = " << pSB->output()
-                   << "  ";
+                   << "   ";
       }
       std::cerr << "\n";
    }

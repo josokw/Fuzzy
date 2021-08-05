@@ -6,6 +6,16 @@ double dysysim::SimTime::delta_t = 1;
 double dysysim::SimTime::end_t = 0.0;
 double dysysim::SimTime::t = 0;
 
+double dysysim::SimBlock::sumInputs() const
+{
+   double sum = 0.0;
+   for (auto id : inputs_) {
+      auto sign = (id < 0) ? -1 : 1;
+      sum += sign * SimBlock::allSimBlocks_s[abs(id)]->out_;
+   }
+   return sum;
+}
+
 void dysysim::SimTime::set(double delta, double end)
 {
    dysysim::SimBlock::clearSimBlocks();

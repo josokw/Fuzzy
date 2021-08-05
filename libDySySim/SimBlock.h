@@ -61,6 +61,7 @@ public:
    const std::string &getBlockType() const { return blockType_; }
    ioType_t getIOType() const { return ioType_; }
    int getId() const { return id_; }
+   double sumInputs() const;
    double output() const { return out_; }
 
    virtual SimBlock *create() = 0;
