@@ -18,9 +18,9 @@ public:
    Builder();
    ~Builder() = default;
 
-   /// Reads script, parsers every line.
-   /// \todo Implement excutable result
+   /// Reads script, parses every line.
    void operator()(std::ifstream &script);
+   /// Executes simulation model.
    void execute();
 
 private:

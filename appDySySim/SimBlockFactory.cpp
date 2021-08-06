@@ -29,5 +29,6 @@ void dysysim::SimBlockFactory::init()
    add("TIME", new dysysim::Time);
    add("ZOH", new dysysim::ZeroOrderHold);
 
-   std::cout << "-- SimBlockFactory size = " << size() << "\n";
+   std::cout << "-- DySySim SimBlockFactory " << size()
+             << " SimBlock types available.\n";
 }

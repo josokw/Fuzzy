@@ -60,7 +60,6 @@ BASETYPE *GenericFactory<BASETYPE, KEYTYPE>::create(const KEYTYPE &key) const
    if (iterf != end(registry_)) {
       pB = iterf->second->create();
    }
-   std::cout << pB << std::endl;
 
    return pB; // client code is responsible for checking 0 value!
 }

@@ -11,9 +11,9 @@ namespace dss = dysysim;
 
 int main(int argc, char *argv[])
 {
-   std::cout << "-- " APPNAME_VERSION " " << std::string(50, '-') << std::endl
-             << "-- uses " + dss::libName + " v" << dss::libVersion << std::endl
-             << std::endl;
+   std::cout << "-- " APPNAME_VERSION " "
+             << "-- uses " + dss::libName + " v" << dss::libVersion << " "
+             << std::string(25, '-') << "\n";
 
    dss::Builder builder;
 
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
    }
 
    if (programFile.is_open()) {
-      std::cout << "\n-- Syntax check\n";
+      std::cout << "-- DySySim Builder syntax check:\n";
       builder(programFile);
    }
    std::cout << "\n";
