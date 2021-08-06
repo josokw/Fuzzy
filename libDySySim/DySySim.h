@@ -469,7 +469,7 @@ public:
 
 private:
    double initial_out_{0.0};
-   double in_previous = initial_out_;
+   double in_previous{initial_out_};
 };
 
 /// Forward Euler integration
@@ -491,37 +491,6 @@ public:
 
 private:
    double initial_out_;
-};
-
-/// Trapezoidal integration.
-class IntegratorTrapezoidal : public SimBlock
-{
-public:
-   IntegratorTrapezoidal()
-      : SimBlock{"TPZD", SimBlock::ioType_t::history}
-      , initial_out_{0.0}
-      , in_previous_{0}
-   {
-   }
-   ~IntegratorTrapezoidal() override = default;
-
-   SimBlock *create() override { return new IntegratorTrapezoidal; }
-   void config(const SimBlock::configData_t &config) override;
-   void exe() override { input(sumInputs()); }
-   void input(double in)
-   {
-      out_ += 0.5 * (in + in_previous_) * SimTime::delta_t;
-      in_previous_ = in;
-   }
-   void reset()
-   {
-      out_ = initial_out_;
-      in_previous_ = 0.0;
-   }
-
-private:
-   double initial_out_;
-   double in_previous_;
 };
 
 /// PI controller.

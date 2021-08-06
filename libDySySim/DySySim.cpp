@@ -311,16 +311,6 @@ void dysysim::IntegratorEuler::config(const SimBlock::configData_t &config)
    }
 }
 
-void dysysim::IntegratorTrapezoidal::config(
-   const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
-}
-
 void dysysim::PI::config(const SimBlock::configData_t &config)
 {
    id_ = config.id;
