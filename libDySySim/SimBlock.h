@@ -74,8 +74,8 @@ public:
 
    static void clearSimBlocks() { allSimBlocks_s.clear(); }
    static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
-   static void addSimBlock(int id, SimBlock* pSB) { allSimBlocks_s[id] = pSB; }
    static bool idIsUnique(int id);
+   static void addSimBlock(int id, SimBlock *pSB);
    static void setExeSequence();
    static void setExeSequence(std::vector<int> &exeSequence);
    /// Calculate all SimBlock out_ for t = 0.
@@ -96,6 +96,7 @@ protected:
    {
       return true;
    }
+   bool allInputsInExeSequence();
 
    static std::map<int, SimBlock *> allSimBlocks_s;
    static std::vector<int> exeSequence_s;

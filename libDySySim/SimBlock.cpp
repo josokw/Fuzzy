@@ -1,5 +1,6 @@
 #include "SimBlock.h"
 
+#include <algorithm>
 #include <iostream>
 
 double dysysim::SimTime::delta_t = 1;
@@ -37,17 +38,48 @@ std::vector<int> dysysim::SimBlock::exeSequence_s;
 
 bool dysysim::SimBlock::idIsUnique(int id)
 {
-   if (allSimBlocks_s.find(id) == end(allSimBlocks_s)) {
-      return true;
+   return allSimBlocks_s.find(id) == end(allSimBlocks_s);
+}
+
+void dysysim::SimBlock::addSimBlock(int id, SimBlock *pSB)
+{
+   if (idIsUnique(id)) {
+      allSimBlocks_s[id] = pSB;
+   } else {
+      std::cerr << "---- DySySim ERROR simulation block id " << id
+                << " already exists\n";
    }
-   std::cerr << "---- DYSYSIM simulation block id " << id
-             << " already exists\n";
-   return false;
 }
 
 void dysysim::SimBlock::setExeSequence()
 {
-   std::cerr << "---- DYSYSIM " << __func__ << "() not yet implemented\n";
+   exeSequence_s.clear();
+
+   // First select all input0 SimBlocks
+   for (auto [id, pSB] : allSimBlocks_s) {
+      if (pSB->getIOType() == SimBlock::ioType::input0) {
+         exeSequence_s.push_back(id);
+      }
+   }
+
+   auto size_previous = exeSequence_s.size();
+   auto size = exeSequence_s.size();
+   do {
+      size_previous = exeSequence_s.size();
+      for (auto [id, pSB] : allSimBlocks_s) {
+         if (std::find(begin(exeSequence_s), end(exeSequence_s), id) ==
+             end(exeSequence_s)) {
+            if (pSB->allInputsInExeSequence()) {
+               exeSequence_s.push_back(id);
+            }
+         }
+      }
+      size = exeSequence_s.size();
+   } while (size != size_previous);
+
+   if (exeSequence_s.size() != dysysim::SimBlock::allSimBlocks_s.size()) {
+      std::cerr << "---- DySySim ERROR simulation model contains id errors\n";
+   }
 }
 
 void dysysim::SimBlock::setExeSequence(std::vector<int> &exeSequence)
@@ -75,4 +107,19 @@ void dysysim::SimBlock::exeSimBlocks()
          pSB->exe();
       }
    }
+}
+
+bool dysysim::SimBlock::allInputsInExeSequence()
+{
+   bool result{true};
+   for (auto id : inputs_) {
+      if ((dysysim::SimBlock::allSimBlocks_s.find(abs(id)) ==
+           end(dysysim::SimBlock::allSimBlocks_s)) and
+          (dysysim::SimBlock::allSimBlocks_s[abs(id)]->getIOType() !=
+           SimBlock::ioType::history)) {
+         result = false;
+         break;
+      }
+   }
+   return result;
 }
