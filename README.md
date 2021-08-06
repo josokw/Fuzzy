@@ -130,16 +130,82 @@ Defuzzification example 2 and 3:
 
 DySySim is a very basic [TUTSIM](http://tutsim.com/) look-a-like.
 TUTSIM was developed in the early 70's for script based simulation of
-time continuous systems.
+time continuous systems represented in simulation blocks.
 
 Example DySySim script for simulating the response of a *RC network*:
 
-    // Pulse response RC-network
+```
+// Pulse response RC-network
 
-    delta_t = 0.01    t_end = 1.0
+delta_t = 0.01    t_end = 1.0
 
-    1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
-    2 ATT 1,-3 att=10.0    // RC time constant = 10 sec
-    3 INT 2    out_t0=0.0
+1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
+2 ATT 1,-3 att=10.0    // RC time constant = 10 sec
+3 INT 2    out_t0=0.0
+```
 
-Development is in progress.
+Second script example for simulating a *Mass-Spring-Damper system*:
+
+```
+// Mass-Spring-Damper system
+
+delta_t = 0.02   t_end = 5.00
+
+1 PLS           off=0.0 on=25.0 t_on=0.1 t_off=1.1   // F = 25 N for 1 second
+2 ATT 1,-5, -6  att=10                               // m = 10 kg
+3 INT 2         out_t0=0.0                           // x'(0) = 0 m/s
+4 INT 3         out_t0=0.0                           // x(0) = 0 m
+5 GAIN 3        gain=30                              // r = 30N s/m
+6 GAIN 4        gain=375                             // k = 375 N/m
+7 LOG 1,4
+```
+
+Output:
+
+```
+-- DySySim v0.3.0 -- uses libDySySim v0.14.0 -------------------------
+-- DySySim SimBlockFactory 25 SimBlock types available.
+-- DySySim Builder syntax check:
+''   OK
+''   OK
+'delta_t = 0.02   t_end = 9.75'   OK  
+''   OK
+'1 PLS           off=0.0 on=25.0 t_on=0.1 t_off=1.1'   OK  
+'2 ATT 1,-5, -6  att=10'   OK  
+'3 INT 2         out_t0=0.0'   OK  
+'4 INT 3         out_t0=0.0'   OK  
+'5 GAIN 3        gain=30'   OK  
+'6 GAIN 4        gain=375'   OK  
+'7 LOG 1,4'   OK  
+
+---- DySySim simulation starts
+ t = 0.000   1 PLS = 0.000   4 INT = 0.000   
+ t = 0.020   1 PLS = 0.000   4 INT = 0.000   
+ t = 0.040   1 PLS = 0.000   4 INT = 0.000   
+ t = 0.060   1 PLS = 0.000   4 INT = 0.000   
+ t = 0.080   1 PLS = 0.000   4 INT = 0.000   
+ t = 0.100   1 PLS = 25.000   4 INT = 0.000   
+ t = 0.120   1 PLS = 25.000   4 INT = 0.001   
+ t = 0.140   1 PLS = 25.000   4 INT = 0.003   
+ t = 0.160   1 PLS = 25.000   4 INT = 0.006   
+ t = 0.180   1 PLS = 25.000   4 INT = 0.010   
+ t = 0.200   1 PLS = 25.000   4 INT = 0.014   
+ t = 0.220   1 PLS = 25.000   4 INT = 0.019   
+ t = 0.240   1 PLS = 25.000   4 INT = 0.024   
+ t = 0.260   1 PLS = 25.000   4 INT = 0.030   
+ t = 0.280   1 PLS = 25.000   4 INT = 0.037   
+ t = 0.300   1 PLS = 25.000   4 INT = 0.043   
+ t = 0.320   1 PLS = 25.000   4 INT = 0.049   
+ t = 0.340   1 PLS = 25.000   4 INT = 0.056   
+ t = 0.360   1 PLS = 25.000   4 INT = 0.062   
+ t = 0.380   1 PLS = 25.000   4 INT = 0.068   
+ t = 0.400   1 PLS = 25.000   4 INT = 0.074   
+ t = 0.420   1 PLS = 25.000   4 INT = 0.079   
+ t = 0.440   1 PLS = 25.000   4 INT = 0.084   
+ t = 0.460   1 PLS = 25.000   4 INT = 0.089   
+ t = 0.480   1 PLS = 25.000   4 INT = 0.092   
+ t = 0.500   1 PLS = 25.000   4 INT = 0.096   
+ ...
+ ```
+
+Development, testing and debugging are in progress.
