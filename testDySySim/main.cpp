@@ -155,9 +155,10 @@ SUITE(DySySim)
       double t_on = 4 * delta_t;
       step.config({1, {}, {off, on, t_on}});
 
-      std::vector<int> exeSequence{{1}};
-      dss::SimBlock::setExeSequence(exeSequence);
+      dss::Log log;
+      log.config({2, {1}, {}});
 
+      dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       CHECK_CLOSE(off, step.output(), EPS);
       do {
@@ -187,9 +188,7 @@ SUITE(DySySim)
       dss::Log log;
       log.config({2, {1}, {}});
 
-      std::vector<int> exeSequence{{1, 2}};
-      dss::SimBlock::setExeSequence(exeSequence);
-
+      dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       CHECK_CLOSE(0.0, puls.output(), EPS);
       do {
@@ -222,16 +221,12 @@ SUITE(DySySim)
       step.config({2, {}, {0.0, 1.0, t_on}});
 
       dss::Delay delay;
-      delay.config({3, {}, {0.0, delayTime}});
+      delay.config({3, {2}, {0.0, delayTime}});
 
-      std::vector<int> exeSequence{{1, 2, 3}};
-      dss::SimBlock::setExeSequence(exeSequence);
-
+      dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       CHECK_CLOSE(0.0, delay.output(), EPS);
       do {
-         auto input = step.output();
-         delay.input(input);
          if (dss::SimTime::t < t_on + delayTime) {
             CHECK_CLOSE(0.0, delay.output(), EPS);
          } else {
@@ -264,17 +259,11 @@ SUITE(DySySim)
       dss::Log log;
       log.config({3, {1, 2}, {}});
 
-      std::vector<int> exeSequence{{1, 2, 3}};
-      dss::SimBlock::setExeSequence(exeSequence);
-
+      dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       CHECK_CLOSE(0.0, fio.output(), EPS);
       do {
-         auto input = step.output();
-         fio.input(input);
-         auto out1 = fio.output();
-         auto out2 = fio_response(dss::SimTime::t);
-         CHECK_CLOSE(out1, out2, EPS * 8);
+         CHECK_CLOSE(fio.output(), fio_response(dss::SimTime::t), EPS * 8);
       } while (dss::SimTime::simulation_on());
    }
 
