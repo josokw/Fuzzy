@@ -11,9 +11,8 @@ namespace dss = dysysim;
 
 int main(int argc, char *argv[])
 {
-   std::cout << "-- " APPNAME_VERSION " " << std::string(50, '-') << std::endl
-             << "-- uses " + dss::libName + " " << dss::libVersion << std::endl
-             << std::endl;
+   std::cout << "-- " APPNAME_VERSION " "
+             << "-- uses " + dss::libName + " " << dss::libVersion << "\n\n";
 
    const double Tsample{0.005}; // 5 msec
    double Tsimulation{Tsample};
