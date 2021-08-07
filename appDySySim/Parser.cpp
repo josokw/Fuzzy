@@ -1,4 +1,5 @@
 #include "Parser.h"
+#include "Exceptions.h"
 
 #include <boost/spirit/home/x3.hpp>
 
@@ -25,7 +26,8 @@ void dysysim::Parser::removeSingleLineComment(std::string &str)
    }
 }
 
-dysysim::Parser::result_t dysysim::Parser::operator()(std::string &codeLine)
+dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
+                                                      std::string &codeLine)
 {
    result_t result{-1, "", {}, {}};
 
@@ -49,13 +51,9 @@ dysysim::Parser::result_t dysysim::Parser::operator()(std::string &codeLine)
       std::get<3>(result).push_back(x3::_attr(ctx));
    };
 
-   auto set_t_end = [this](auto &ctx) {
-      t_end_ = x3::_attr(ctx);
-   };
+   auto set_t_end = [this](auto &ctx) { t_end_ = x3::_attr(ctx); };
 
-   auto set_delta_t = [this](auto &ctx) {
-      delta_t_ = x3::_attr(ctx);
-   };
+   auto set_delta_t = [this](auto &ctx) { delta_t_ = x3::_attr(ctx); };
 
    Parser::removeSingleLineComment(codeLine);
    Parser::trim(codeLine, " \t");
@@ -71,20 +69,29 @@ dysysim::Parser::result_t dysysim::Parser::operator()(std::string &codeLine)
       auto inputs =
          x3::int_[set_input] >> *(x3::char_(',') >> x3::int_[set_input]);
       auto set_parameter = parameter_name >> '=' >> value[set_param];
-      auto set_sim_parameters =
-         x3::lit("delta_t") >> '=' >> value[set_delta_t] >> x3::lit("t_end") >> '=' >> value[set_t_end];
+      auto set_sim_parameters = x3::lit("delta_t") >> '=' >>
+                                value[set_delta_t] >> x3::lit("t_end") >> '=' >>
+                                value[set_t_end];
       auto set_simblock_parameters =
          id[set_id] >> type[set_type] >> *(inputs) >> *(set_parameter);
 
       if (simParametersAreSet_) {
          auto codeline = set_simblock_parameters;
          auto p = x3::phrase_parse(iter, iterEnd, codeline, x3::space);
+
+         if (not(p and iter == iterEnd)) {
+            throw dysysim::SyntaxError(lineNumber, codeLine);
+         }
          std::cout << "'" << codeLine << "'"
                    << ((p and iter == iterEnd) ? "   OK  " : "   NOT OK  ")
                    << "\n";
       } else {
          auto codeline = set_sim_parameters;
          auto p = x3::phrase_parse(iter, iterEnd, codeline, x3::space);
+         
+         if (not(p and iter == iterEnd)) {
+            throw dysysim::SyntaxError(lineNumber, codeLine);
+         }
          std::cout << "'" << codeLine << "'"
                    << ((p and iter == iterEnd) ? "   OK  " : "   NOT OK  ")
                    << "\n";

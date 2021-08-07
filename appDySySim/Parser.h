@@ -50,7 +50,7 @@ public:
    Parser() = default;
    ~Parser() = default;
 
-   result_t operator()(std::string &codeLine);
+   result_t operator()(int lineNumber, std::string &codeLine);
    auto getSimParameters() const { return std::make_pair(delta_t_, t_end_); }
 
 private:

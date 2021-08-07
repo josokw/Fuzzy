@@ -1,5 +1,6 @@
 #include "AppInfo.h"
 #include "Builder.h"
+#include "Exceptions.h"
 #include "LibInfoDySySim.h"
 
 #include <fstream>
@@ -15,27 +16,39 @@ int main(int argc, char *argv[])
              << "-- uses " + dss::libName + " v" << dss::libVersion << " "
              << std::string(25, '-') << "\n";
 
-   dss::Builder builder;
+   try {
+      dss::Builder builder;
 
-   std::ifstream programFile;
+      std::ifstream programFile;
 
-   if (argc > 2) {
-      return 1;
+      if (argc > 2) {
+         return 1;
+      }
+
+      if (argc == 1) {
+         programFile.open("../appDySySim/scripts/RCnetworkLog.dss");
+      } else {
+         programFile.open(argv[1]);
+      }
+
+      if (programFile.is_open()) {
+         builder(programFile);
+      }
+      programFile.close();
    }
-
-   if (argc == 1) {
-      programFile.open("../appDySySim/scripts/RCnetworkLog.dss");
-   } else {
-      programFile.open(argv[1]);
+   catch (dss::FactoryInitError &e) {
+      std::cerr << e.what() << ": " << e.getKey() << " is not unique\n";
    }
-
-   if (programFile.is_open()) {
-      std::cout << "-- DySySim Builder syntax check:\n";
-      builder(programFile);
+   catch (dss::SyntaxError &e) {
+      std::cerr << e.what() << ": line [" << e.getLineNumber() << "] '"
+                << e.getCodeLine() << "'\n";
    }
-   std::cout << "\n";
-
-   programFile.close();
+   catch (const std::exception &e) {
+      std::cerr << e.what() << "\n";
+   }
+   catch (...) {
+      std::cerr << "UNKNOWN ERROR\n";
+   }
 
    return 0;
 }

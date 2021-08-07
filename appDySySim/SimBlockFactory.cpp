@@ -1,5 +1,13 @@
 #include "SimBlockFactory.h"
 #include "DySySim.h"
+#include "Exceptions.h"
+
+void dysysim::SimBlockFactory::add(const std::string &key, SimBlock *tbm)
+{
+   if (not factory_.add(key, tbm)) {
+      throw dysysim::FactoryInitError(key);
+   }
+}
 
 void dysysim::SimBlockFactory::init()
 {
@@ -28,7 +36,4 @@ void dysysim::SimBlockFactory::init()
    add("SUM", new dysysim::Summator);
    add("TIME", new dysysim::Time);
    add("ZOH", new dysysim::ZeroOrderHold);
-
-   std::cout << "-- DySySim SimBlockFactory " << size()
-             << " SimBlock types available.\n";
 }

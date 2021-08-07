@@ -29,7 +29,7 @@ private:
    std::vector<std::string> scriptLines_;
    int lineNumber_ = 0;
 
-   void init();
+   void initFactory();
 };
 
 } // namespace dysysim

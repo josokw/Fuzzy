@@ -6,17 +6,16 @@
 
 namespace dysysim {
 
+/// Creates dynamically SimBlock objects based on a unique std::string key
+/// value.
 class SimBlockFactory
 {
 public:
    SimBlockFactory() = default;
    ~SimBlockFactory() = default;
 
+   void add(const std::string &key, SimBlock *tbm);
    void init();
-   bool add(const std::string &key, SimBlock *tbm)
-   {
-      return factory_.add(key, tbm);
-   }
    auto size() const { return factory_.size(); }
    SimBlock *create(const std::string &key) const
    {
