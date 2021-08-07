@@ -10,7 +10,7 @@ namespace dss = dysysim;
 
 int main(int argc, char *argv[])
 {
-   std::cout << "-- " APPNAME_VERSION " " << std::string(50, '-') << "\n"
+   std::cout << "-- " APPNAME_VERSION " "
              << "-- uses " + dss::libName + " " << dss::libVersion << "\n\n";
 
    // Initial conditions
