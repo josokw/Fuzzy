@@ -19,7 +19,7 @@ void dysysim::Builder::operator()(std::ifstream &script)
       while (std::getline(script, line)) {
          scriptLines_.push_back(line);
       }
-      std::cout << "-- DySySim Builder syntax check:\n";
+      
       for (auto &line : scriptLines_) {
          ++lineNumber_;
          auto result = parser_(lineNumber_, line);

@@ -82,24 +82,15 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
          if (not(p and iter == iterEnd)) {
             throw dysysim::SyntaxError(lineNumber, codeLine);
          }
-         std::cout << "'" << codeLine << "'"
-                   << ((p and iter == iterEnd) ? "   OK  " : "   NOT OK  ")
-                   << "\n";
       } else {
          auto codeline = set_sim_parameters;
          auto p = x3::phrase_parse(iter, iterEnd, codeline, x3::space);
-         
+
          if (not(p and iter == iterEnd)) {
             throw dysysim::SyntaxError(lineNumber, codeLine);
          }
-         std::cout << "'" << codeLine << "'"
-                   << ((p and iter == iterEnd) ? "   OK  " : "   NOT OK  ")
-                   << "\n";
          simParametersAreSet_ = true;
       }
-
-   } else {
-      std::cout << "''   OK\n";
    }
 
    return result;
