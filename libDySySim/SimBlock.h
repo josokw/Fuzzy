@@ -1,10 +1,13 @@
 #ifndef SIMBLOCK_H
 #define SIMBLOCK_H
 
+#include "ErrorCodes.h"
+
 #include <fstream>
 #include <initializer_list>
 #include <iostream>
 #include <map>
+#include <system_error>
 #include <vector>
 
 namespace dysysim {
@@ -65,7 +68,7 @@ public:
    double output() const { return out_; }
 
    virtual SimBlock *create() = 0;
-   virtual void config(const configData_t &config) = 0;
+   virtual std::vector<std::error_code> config(const configData_t &config) = 0;
    /// Calculate out_ for t = t_n
    virtual void exe()
    {
@@ -75,8 +78,8 @@ public:
    static void clearSimBlocks() { allSimBlocks_s.clear(); }
    static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
    static bool idIsUnique(int id);
-   static void addSimBlock(int id, SimBlock *pSB);
-   static void setExeSequence();
+   static std::error_code addSimBlock(int id, SimBlock *pSB);
+   static std::error_code setExeSequence();
    static void setExeSequence(std::vector<int> &exeSequence);
    /// Calculate all SimBlock out_ for t = 0.
    static void initSimBlocks();
@@ -92,11 +95,10 @@ protected:
    std::vector<int> inputs_;
    double out_;
 
-   virtual bool configDataIsOK(const SimBlock::configData_t & /*config*/) const
-   {
-      return true;
-   }
-   bool allInputsInExeSequence();
+   /// Checks all config data, returns a vector of all errors.
+   virtual std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const;
+   std::error_code allInputsInExeSequence();
 
    static std::map<int, SimBlock *> allSimBlocks_s;
    static std::vector<int> exeSequence_s;

@@ -1,6 +1,7 @@
 #ifndef DYSYSIM_H
 #define DYSYSIM_H
 
+#include "ErrorCodes.h"
 #include "SimBlock.h"
 
 #define _USE_MATH_DEFINES
@@ -9,6 +10,7 @@
 #include <iomanip>
 #include <iostream>
 #include <queue>
+#include <vector>
 
 namespace dysysim {
 
@@ -22,11 +24,13 @@ public:
    ~Constant() override = default;
 
    SimBlock *create() override { return new Constant; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override {}
 
 protected:
-   bool configDataIsOK(const SimBlock::configData_t &config) const override;
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class AlgebraicDelay : public SimBlock
@@ -40,7 +44,8 @@ public:
    ~AlgebraicDelay() override = default;
 
    SimBlock *create() override { return new AlgebraicDelay; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
 
    void input(double in)
    {
@@ -50,6 +55,8 @@ public:
 
 private:
    double out_previous_;
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Attenuator : public SimBlock
@@ -63,12 +70,14 @@ public:
    ~Attenuator() override = default;
 
    SimBlock *create() override { return new Attenuator; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in) { out_ = in / attenuation_; }
 
 protected:
-   bool configDataIsOK(const SimBlock::configData_t &config) const override;
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 
 private:
    double attenuation_;
@@ -86,12 +95,15 @@ public:
    ~Cos() override = default;
 
    SimBlock *create() override { return new Cos; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void input(double in) { out_ = std::cos(in * multipier_ + phase_); }
 
 private:
    double multipier_;
    double phase_;
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Divider : public SimBlock
@@ -104,8 +116,13 @@ public:
    ~Divider() override = default;
 
    SimBlock *create() override { return new Divider; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void input(double in1, double in2) { out_ = in1 / in2; }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Gain : public SimBlock
@@ -119,12 +136,16 @@ public:
    ~Gain() override = default;
 
    SimBlock *create() override { return new Gain; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in) { out_ = in * gain_; }
 
 private:
    double gain_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Limit : public SimBlock
@@ -139,13 +160,17 @@ public:
    ~Limit() override = default;
 
    SimBlock *create() override { return new Limit; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in) { out_ = std::min(std::max(min_, in), max_); }
 
 private:
    double min_;
    double max_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Max : public SimBlock
@@ -158,13 +183,18 @@ public:
    ~Max() override = default;
 
    SimBlock *create() override { return new Max; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override
    {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
             SimBlock::allSimBlocks_s[inputs_[1]]->output());
    }
    void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Min : public SimBlock
@@ -177,13 +207,18 @@ public:
    ~Min() override = default;
 
    SimBlock *create() override { return new Min; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override
    {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
             SimBlock::allSimBlocks_s[inputs_[1]]->output());
    }
    void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Multiplier : public SimBlock
@@ -196,13 +231,18 @@ public:
    ~Multiplier() override = default;
 
    SimBlock *create() override { return new Multiplier; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override
    {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
             SimBlock::allSimBlocks_s[inputs_[1]]->output());
    }
    void input(double in1, double in2) { out_ = in1 * in2; }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Sin : public SimBlock
@@ -217,13 +257,17 @@ public:
    ~Sin() override = default;
 
    SimBlock *create() override { return new Sin; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
 
 private:
    double multiplier_;
    double phase_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Summator : public SimBlock
@@ -236,8 +280,8 @@ public:
    ~Summator() override = default;
 
    SimBlock *create() override { return new Summator; }
-   void config(const SimBlock::configData_t &config) override;
-   bool configDataIsOK(const SimBlock::configData_t &config) const override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { out_ = sumInputs(); }
    void input(double in1, double in2) { out_ = in1 + in2; }
    void input(double in1, double in2, double in3) { out_ = in1 + in2 + in3; }
@@ -245,6 +289,10 @@ public:
    {
       out_ = in1 + in2 + in3 + in4;
    }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 /// Sinus generator, amplitude = 1
@@ -260,7 +308,8 @@ public:
    ~Frequency() override = default;
 
    SimBlock *create() override { return new Frequency; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override
    {
       out_ = std::sin(2 * M_PI * frequency_ * SimTime::t + phase_);
@@ -269,6 +318,9 @@ public:
 private:
    double frequency_;
    double phase_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Step : public SimBlock
@@ -284,14 +336,17 @@ public:
    ~Step() override = default;
 
    SimBlock *create() override { return new Step; }
-   void config(const SimBlock::configData_t &config) override;
-   bool configDataIsOK(const SimBlock::configData_t &config) const override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
 
 private:
    double off_;
    double on_;
    double t_on_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Puls : public SimBlock
@@ -308,7 +363,8 @@ public:
    ~Puls() override = default;
 
    SimBlock *create() override { return new Puls; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe()
    {
       out_ = (SimTime::t >= t_on_ and SimTime::t < t_off_) ? on_ : off_;
@@ -319,6 +375,9 @@ private:
    double on_;
    double t_on_;
    double t_off_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 /// Every new instantiated Time object will reset the time to 0.
@@ -332,9 +391,13 @@ public:
    ~Time() override = default;
 
    SimBlock *create() override { return new Time; }
-   void config(const SimBlock::configData_t &config) override;
-   bool configDataIsOK(const SimBlock::configData_t &config) const override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { out_ = SimTime::t; }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Delay : public SimBlock
@@ -350,7 +413,8 @@ public:
    ~Delay() override = default;
 
    SimBlock *create() override { return new Delay; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in)
    {
@@ -363,6 +427,9 @@ private:
    double out_t0_;
    double delaytime_;
    std::queue<double> buffer_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class FirstOrder : public SimBlock
@@ -376,8 +443,8 @@ public:
    ~FirstOrder() override = default;
 
    SimBlock *create() override { return new FirstOrder; }
-   void config(const SimBlock::configData_t &config) override;
-   bool configDataIsOK(const SimBlock::configData_t &config) const override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in)
    {
@@ -386,6 +453,9 @@ public:
 
 private:
    double timeConstant_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 /// \todo Implement setter for callback_
@@ -401,7 +471,8 @@ public:
    ~Function() override = default;
 
    SimBlock *create() override { return new Function<T>; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
 
    void setFunction(std::function<double(T)> cbf) { callback_ = cbf; }
@@ -409,16 +480,21 @@ public:
 
 private:
    std::function<double(T)> callback_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 template <typename T>
-void dysysim::Function<T>::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::Function<T>::config(const SimBlock::configData_t &config)
 {
    id_ = config.id;
    inputs_ = config.inputs;
    if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
       SimBlock::allSimBlocks_s[id_] = this;
    }
+   return {};
 }
 
 /// OnOff starts (t == 0) off.
@@ -436,8 +512,8 @@ public:
    ~OnOff() override = default;
 
    SimBlock *create() override { return new OnOff; }
-   void config(const SimBlock::configData_t &config) override;
-   bool configDataIsOK(const SimBlock::configData_t &config) const override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in) { out_ = (in < onoff_) ? off_ : on_; }
 
@@ -445,6 +521,9 @@ private:
    double off_;
    double on_;
    double onoff_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 /// Trapezoidal integration
@@ -458,7 +537,8 @@ public:
    ~Integrator() override = default;
 
    SimBlock *create() override { return new Integrator; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in)
    {
@@ -484,7 +564,8 @@ public:
    ~IntegratorEuler() override = default;
 
    SimBlock *create() override { return new IntegratorEuler; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in) { out_ += in * SimTime::delta_t; }
    void reset() { out_ = initial_out_; }
@@ -508,7 +589,8 @@ public:
    ~PI() override = default;
 
    SimBlock *create() override { return new PI; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in)
    {
@@ -546,7 +628,8 @@ public:
    ~PID() override = default;
 
    SimBlock *create() override { return new PID; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in)
    {
@@ -582,7 +665,8 @@ public:
    ~ZeroOrderHold() override = default;
 
    SimBlock *create() override { return new ZeroOrderHold; }
-   void config(const SimBlock::configData_t &config) override;
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
    void input(double in) { out_ = (sample_++ % nSamples_ == 0) ? in : out_; }
 
@@ -602,13 +686,15 @@ public:
    ~Log() override = default;
 
    SimBlock *create() override { return new Log; }
-   void config(const SimBlock::configData_t &config) override
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override
    {
       id_ = config.id;
       inputs_ = config.inputs;
       if (SimBlock::allSimBlocks_s.find(id_) == end(SimBlock::allSimBlocks_s)) {
          SimBlock::allSimBlocks_s[id_] = this;
       }
+      return {};
    }
 
    void exe() override

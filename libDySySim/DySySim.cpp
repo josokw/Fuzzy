@@ -1,308 +1,661 @@
 #include "DySySim.h"
 
-void dysysim::Constant::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::Constant::config(const SimBlock::configData_t &config)
 {
-   if (configDataIsOK(config)) {
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
       id_ = config.id;
-      if (SimBlock::idIsUnique(id_)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
+      SimBlock::allSimBlocks_s[id_] = this;
       out_ = begin(config.parameters)[0];
    }
+   return errs;
 }
 
-bool dysysim::Constant::configDataIsOK(
-   const SimBlock::configData_t &config) const
+std::vector<std::error_code>
+dysysim::Constant::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   bool ok = (config.id > 0) and (config.inputs.size() == 0) and
-             (config.parameters.size() == 1);
-   if (not ok) {
-      std::cerr << "---- DySySim error " << config.id << blockType_
-                << " config() not correct\n";
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
    }
-   return ok;
-}
-
-void dysysim::AlgebraicDelay::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
    }
+   if (config.inputs.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should not have inputs\n";
+   }
+   if (config.parameters.size() != 1) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 1 parameter\n";
+   }
+   return errs;
 }
 
-void dysysim::Attenuator::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::AlgebraicDelay::config(const SimBlock::configData_t &config)
 {
-   if (configDataIsOK(config)) {
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
       id_ = config.id;
       inputs_ = config.inputs;
-      if (SimBlock::idIsUnique(id_)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
+      SimBlock::allSimBlocks_s[id_] = this;
+   }
+   return errs;
+}
+
+std::vector<std::error_code> dysysim::AlgebraicDelay::configDataIsOK(
+   const SimBlock::configData_t &config) const
+{
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+   }
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   if (config.inputs.size() != 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should not have parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Attenuator::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
       attenuation_ = *begin(config.parameters);
    }
+   return errs;
 }
 
-bool dysysim::Attenuator::configDataIsOK(
-   const SimBlock::configData_t &config) const
+std::vector<std::error_code>
+dysysim::Attenuator::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   bool ok = (config.id > 0) and (config.inputs.size() > 0) and
-             (config.parameters.size() == 1);
-   if (not ok) {
-      std::cerr << "---- DySySim error '" << config.id << " " << blockType_
-                << "' config() not correct\n";
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
    }
-   return ok;
-}
-
-void dysysim::Cos::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
    }
-}
-
-void dysysim::Divider::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
    }
-}
-
-void dysysim::Gain::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
+   if (config.parameters.size() != 1) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 1 parameter\n";
    }
-   auto par = begin(config.parameters);
-   gain_ = par[0];
+   return errs;
 }
 
-void dysysim::Limit::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::Cos::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
-   auto par = begin(config.parameters);
-   min_ = par[0];
-   max_ = par[1];
-}
-
-void dysysim::Max::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
-}
-
-void dysysim::Min::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
-}
-
-void dysysim::Multiplier::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
-}
-
-void dysysim::Sin::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
-}
-
-void dysysim::Summator::config(const SimBlock::configData_t &config)
-{
-   if (configDataIsOK(config)) {
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
       id_ = config.id;
       inputs_ = config.inputs;
-      if (SimBlock::idIsUnique(id_)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
+      SimBlock::allSimBlocks_s[id_] = this;
    }
+   return errs;
 }
 
-bool dysysim::Summator::configDataIsOK(
-   const SimBlock::configData_t &config) const
+std::vector<std::error_code>
+dysysim::Cos::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   bool ok = (config.id > 0) and (config.inputs.size() > 1) and
-             (config.parameters.size() == 0);
-   if (not ok) {
-      std::cerr << "---- DySySim error '" << config.id << " " << blockType_
-                << "' config() not correct\n";
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
    }
-   return ok;
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have no parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Divider::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Divider::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+   }
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   if (config.inputs.size() != 2) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have 2 inputs\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have no parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Gain::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+      auto par = begin(config.parameters);
+      gain_ = par[0];
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Gain::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+   }
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 1) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 1 parameter\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Limit::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+      auto par = begin(config.parameters);
+      min_ = par[0];
+      max_ = par[1];
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Limit::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+   }
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 2) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 2 parameters\n";
+   } else {
+      if (config.parameters[0] >= config.parameters[1]) {
+         errs.push_back(SimBlockErrc::ConfigParameterError);
+         std::cerr << "---- DySySim error: parameter_1 is not < parameter_2\n";
+      }
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Max::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Max::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+   }
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have no parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Min::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Min::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+   }
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have no parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Multiplier::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Multiplier::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+   }
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have no parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Sin::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Sin::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+   }
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have no parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Summator::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Summator::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have no parameters\n";
+   }
+   return errs;
 }
 
 // Sinus generator, amplitude = 1
-void dysysim::Frequency::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::Frequency::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   if (SimBlock::idIsUnique(id_)) {
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
       SimBlock::allSimBlocks_s[id_] = this;
    }
+   return errs;
 }
 
-void dysysim::Step::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::Frequency::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   if (configDataIsOK(config)) {
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have no inputs\n";
+   }
+   if (config.parameters.size() != 2) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 2 parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Step::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
       id_ = config.id;
-      if (SimBlock::idIsUnique(id_)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
       auto par = begin(config.parameters);
       out_ = off_ = par[0];
       on_ = par[1];
       t_on_ = par[2];
    }
+   return errs;
 }
 
-bool dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
+std::vector<std::error_code>
+dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   bool ok = (config.id > 0) and (config.inputs.size() == 0) and
-             (config.parameters.size() == 3) and (config.parameters[2] > 0);
-   if (not ok) {
-      std::cerr << "---- DySySim error " << config.id << blockType_
-                << " config() not correct\n";
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() != 3) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have 3 inputs\n";
    }
-   return ok;
-}
-
-void dysysim::Puls::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
-   auto par = begin(config.parameters);
-   out_ = off_ = par[0];
-   on_ = par[1];
-   t_on_ = par[2];
-   t_off_ = par[3];
-}
-
-void dysysim::Time::config(const SimBlock::configData_t &config)
-{
-   if (configDataIsOK(config)) {
-      id_ = config.id;
-      if (SimBlock::idIsUnique(id_)) {
-         SimBlock::allSimBlocks_s[id_] = this;
+   if (config.parameters.size() != 3) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 2 parameters\n";
+   } else {
+      if (config.parameters[2] <= 0) {
+         errs.push_back(SimBlockErrc::ConfigParameterError);
+         std::cerr << "---- DySySim error: parameter 3 should be > 0\n";
       }
-      out_ = 0.0;
    }
+   return errs;
 }
 
-bool dysysim::Time::configDataIsOK(const SimBlock::configData_t &config) const
+std::vector<std::error_code>
+dysysim::Puls::config(const SimBlock::configData_t &config)
 {
-   bool ok = (config.id > 0) and (config.inputs.size() == 0) and
-             (config.parameters.size() == 0);
-   if (not ok) {
-      std::cerr << "---- DySySim error " << config.id << " " << blockType_
-                << " config() not correct\n";
-   }
-   return ok;
-}
-
-void dysysim::Delay::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
-   auto par = begin(config.parameters);
-   out_t0_ = par[0];
-   delaytime_ = par[1];
-   for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
-      buffer_.push(out_t0_);
-   }
-   std::cout << "Delay buffer = " << buffer_.size() << "\n";
-}
-
-void dysysim::FirstOrder::config(const SimBlock::configData_t &config)
-{
-   if (configDataIsOK(config)) {
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
       id_ = config.id;
       inputs_ = config.inputs;
-      if (SimBlock::idIsUnique(id_)) {
-         SimBlock::allSimBlocks_s[id_] = this;
+      SimBlock::allSimBlocks_s[id_] = this;
+      auto par = begin(config.parameters);
+      out_ = off_ = par[0];
+      on_ = par[1];
+      t_on_ = par[2];
+      t_off_ = par[3];
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Puls::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have no parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Time::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+      out_ = 0.0;
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Time::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have no inputs\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have no parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Delay::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
+      out_ = 0.0;
+      auto par = begin(config.parameters);
+      out_t0_ = par[0];
+      delaytime_ = par[1];
+      for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
+         buffer_.push(out_t0_);
       }
+      std::cout << "Delay buffer = " << buffer_.size() << "\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Delay::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
+   }
+   if (config.parameters.size() != 2) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 2 parameters\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::FirstOrder::config(const SimBlock::configData_t &config)
+{
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
+      SimBlock::allSimBlocks_s[id_] = this;
       auto par = begin(config.parameters);
       timeConstant_ = par[0];
       out_ = par[1];
    }
+   return errs;
 }
 
-bool dysysim::FirstOrder::configDataIsOK(
-   const SimBlock::configData_t &config) const
+std::vector<std::error_code>
+dysysim::FirstOrder::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   bool ok = (config.id > 0) and (config.inputs.size() > 0) and
-             (config.parameters.size() == 2);
-   if (not ok) {
-      std::cerr << "---- DySySim error '" << config.id << " " << blockType_
-                << "' config() not correct\n";
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() < 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have >= 1 input\n";
    }
-   return ok;
+   if (config.parameters.size() != 2) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 2 parameters\n";
+   }
+   return errs;
 }
 
-void dysysim::OnOff::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::OnOff::config(const SimBlock::configData_t &config)
 {
-   if (configDataIsOK(config)) {
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
       id_ = config.id;
       inputs_ = config.inputs;
-      if (SimBlock::idIsUnique(id_)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
+      SimBlock::allSimBlocks_s[id_] = this;
       auto par = begin(config.parameters);
       out_ = off_ = par[0];
       on_ = par[1];
       onoff_ = par[2];
    }
+   return errs;
 }
 
-bool dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
+std::vector<std::error_code>
+dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   bool ok = (config.id > 0) and (config.inputs.size() == 1) and
-             (config.parameters.size() == 3);
-   if (not ok) {
-      std::cerr << "---- DySySim error '" << config.id << " " << blockType_
-                << "' config() not correct\n";
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() != 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have 1 input\n";
    }
-   return ok;
+   if (config.parameters.size() != 3) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 3 parameters\n";
+   }
+   return errs;
 }
 
-void dysysim::Integrator::config(const SimBlock::configData_t &config)
-{
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::idIsUnique(id_)) {
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
-}
-
-void dysysim::IntegratorEuler::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::Integrator::config(const SimBlock::configData_t &config)
 {
    id_ = config.id;
    inputs_ = config.inputs;
@@ -311,7 +664,8 @@ void dysysim::IntegratorEuler::config(const SimBlock::configData_t &config)
    }
 }
 
-void dysysim::PI::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::IntegratorEuler::config(const SimBlock::configData_t &config)
 {
    id_ = config.id;
    inputs_ = config.inputs;
@@ -320,7 +674,8 @@ void dysysim::PI::config(const SimBlock::configData_t &config)
    }
 }
 
-void dysysim::PID::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::PI::config(const SimBlock::configData_t &config)
 {
    id_ = config.id;
    inputs_ = config.inputs;
@@ -329,7 +684,18 @@ void dysysim::PID::config(const SimBlock::configData_t &config)
    }
 }
 
-void dysysim::ZeroOrderHold::config(const SimBlock::configData_t &config)
+std::vector<std::error_code>
+dysysim::PID::config(const SimBlock::configData_t &config)
+{
+   id_ = config.id;
+   inputs_ = config.inputs;
+   if (SimBlock::idIsUnique(id_)) {
+      SimBlock::allSimBlocks_s[id_] = this;
+   }
+}
+
+std::vector<std::error_code>
+dysysim::ZeroOrderHold::config(const SimBlock::configData_t &config)
 {
    id_ = config.id;
    inputs_ = config.inputs;

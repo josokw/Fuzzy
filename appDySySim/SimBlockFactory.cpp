@@ -5,7 +5,7 @@
 void dysysim::SimBlockFactory::add(const std::string &key, SimBlock *tbm)
 {
    if (not factory_.add(key, tbm)) {
-      throw dysysim::FactoryInitError(key);
+      throw dysysim::FactoryAddError(key);
    }
 }
 

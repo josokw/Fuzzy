@@ -1,4 +1,5 @@
 #include "SimBlock.h"
+#include "ErrorCodes.h"
 
 #include <algorithm>
 #include <iostream>
@@ -41,17 +42,16 @@ bool dysysim::SimBlock::idIsUnique(int id)
    return allSimBlocks_s.find(id) == end(allSimBlocks_s);
 }
 
-void dysysim::SimBlock::addSimBlock(int id, SimBlock *pSB)
+std::error_code dysysim::SimBlock::addSimBlock(int id, SimBlock *pSB)
 {
    if (idIsUnique(id)) {
       allSimBlocks_s[id] = pSB;
-   } else {
-      std::cerr << "---- DySySim ERROR simulation block id " << id
-                << " already exists\n";
+      return SimBlockErrc::IdIsNotUniqueError;
    }
+   return SimBlockErrc{};
 }
 
-void dysysim::SimBlock::setExeSequence()
+std::error_code dysysim::SimBlock::setExeSequence()
 {
    exeSequence_s.clear();
 
@@ -69,17 +69,20 @@ void dysysim::SimBlock::setExeSequence()
       for (auto [id, pSB] : allSimBlocks_s) {
          if (std::find(begin(exeSequence_s), end(exeSequence_s), id) ==
              end(exeSequence_s)) {
-            if (pSB->allInputsInExeSequence()) {
+            if (pSB->allInputsInExeSequence() == SimBlockErrc{}) {
                exeSequence_s.push_back(id);
+            } else {
+               return SimBlockErrc::ModelIsInconsistentError;
             }
          }
       }
       size = exeSequence_s.size();
    } while (size != size_previous);
 
-   if (exeSequence_s.size() != dysysim::SimBlock::allSimBlocks_s.size()) {
-      std::cerr << "---- DySySim ERROR simulation model contains id errors\n";
-   }
+   // if (exeSequence_s.size() != dysysim::SimBlock::allSimBlocks_s.size()) {
+   //    return SimBlockErrc::ModelIsInconsistent;
+   // }
+   return SimBlockErrc{};
 }
 
 void dysysim::SimBlock::setExeSequence(std::vector<int> &exeSequence)
@@ -109,17 +112,31 @@ void dysysim::SimBlock::exeSimBlocks()
    }
 }
 
-bool dysysim::SimBlock::allInputsInExeSequence()
+std::vector<std::error_code>
+dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   bool result{true};
+   std::vector<std::error_code> errs;
+   if (config.id <= 0) {
+      errs.push_back(SimBlockErrc::ConfigIdError);
+      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+   }
+   if (not SimBlock::idIsUnique(config.id)) {
+      errs.push_back(SimBlockErrc::IdIsNotUniqueError);
+      std::cerr << "---- DySySim error: id = " << config.id
+                << " is not unique\n";
+   }
+   return errs;
+}
+
+std::error_code dysysim::SimBlock::allInputsInExeSequence()
+{
    for (auto id : inputs_) {
       if ((dysysim::SimBlock::allSimBlocks_s.find(abs(id)) ==
            end(dysysim::SimBlock::allSimBlocks_s)) and
           (dysysim::SimBlock::allSimBlocks_s[abs(id)]->getIOType() !=
            SimBlock::ioType::history)) {
-         result = false;
-         break;
+         return SimBlockErrc::ModelIsInconsistentError;
       }
    }
-   return result;
+   return SimBlockErrc{};
 }
