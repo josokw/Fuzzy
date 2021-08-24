@@ -19,4 +19,27 @@ struct is_error_code_enum<SimBlockErrc> : true_type {
 
 std::error_code make_error_code(SimBlockErrc ec);
 
+struct SimBlockErrCategory : std::error_category {
+   const char *name() const noexcept override { return "dysysim"; }
+   std::string message(int ev) const override
+   {
+      switch (static_cast<SimBlockErrc>(ev)) {
+         case SimBlockErrc::IdIsNotUniqueError:
+            return "id is not unique";
+         case SimBlockErrc::ConfigIdError:
+            return "config id value < 0";
+         case SimBlockErrc::ConfigInputIdError:
+            return "input id error";
+         case SimBlockErrc::ConfigParameterError:
+            return "parameter error";
+         case SimBlockErrc::ModelIsInconsistentError:
+            return "model is inconsistent";
+         default:
+            return "unknown error";
+      }
+   }
+};
+
+inline const SimBlockErrCategory simblockErrCategory;
+
 #endif

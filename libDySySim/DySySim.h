@@ -550,6 +550,9 @@ public:
 private:
    double initial_out_{0.0};
    double in_previous{initial_out_};
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 /// Forward Euler integration
@@ -572,6 +575,9 @@ public:
 
 private:
    double initial_out_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 /// PI controller.
@@ -610,6 +616,9 @@ private:
    double K1_{Kp_ * (1 + (1 / tau_I_))};
    double K2_{Kp_};
    std::deque<double> z_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 /// PID controller.
@@ -651,6 +660,9 @@ private:
    const double _K2{_Kp * (1 - 2 * _tau_D)};
    const double _K3{_Kp * _tau_D};
    std::deque<double> _z;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class ZeroOrderHold : public SimBlock
@@ -673,6 +685,9 @@ public:
 private:
    const int nSamples_;
    int sample_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 /// Writes input data to stdout.
@@ -687,15 +702,7 @@ public:
 
    SimBlock *create() override { return new Log; }
    std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override
-   {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      if (SimBlock::allSimBlocks_s.find(id_) == end(SimBlock::allSimBlocks_s)) {
-         SimBlock::allSimBlocks_s[id_] = this;
-      }
-      return {};
-   }
+   config(const SimBlock::configData_t &config) override;
 
    void exe() override
    {
@@ -708,6 +715,10 @@ public:
       }
       std::cerr << "\n";
    }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 } // namespace dysysim
