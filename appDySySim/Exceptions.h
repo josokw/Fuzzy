@@ -6,16 +6,16 @@
 
 namespace dysysim {
 
-class FactoryInitError : public std::exception
+class FactoryAddError : public std::exception
 {
 public:
-   explicit FactoryInitError(const std::string &key)
+   explicit FactoryAddError(const std::string &key)
       : key_{key}
    {
    }
    const char *what() const throw() override
    {
-      return "SimBlockFactory init() error";
+      return "SimBlockFactory add() error";
    }
    const auto &getKey() const { return key_; }
 

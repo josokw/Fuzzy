@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
       }
       programFile.close();
    }
-   catch (dss::FactoryInitError &e) {
+   catch (dss::FactoryAddError &e) {
       std::cerr << e.what() << ": " << e.getKey() << " is not unique\n";
    }
    catch (dss::SyntaxError &e) {
