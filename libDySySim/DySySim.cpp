@@ -389,7 +389,7 @@ dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
    }
    if (config.parameters.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 2 parameters\n";
+      std::cerr << "---- DySySim error: should have 3 parameters\n";
    } else {
       if (config.parameters[2] <= 0) {
          errs.push_back(SimBlockErrc::ConfigParameterError);
@@ -474,7 +474,7 @@ dysysim::Delay::config(const SimBlock::configData_t &config)
       for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
          buffer_.push(out_t0_);
       }
-      std::cout << "Delay buffer = " << buffer_.size() << "\n";
+      std::cout << "---- Delay buffer = " << buffer_.size() << "\n";
    }
    return errs;
 }
