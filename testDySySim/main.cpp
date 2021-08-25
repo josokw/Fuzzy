@@ -17,7 +17,7 @@ SUITE(DySySim)
    {
       cout << "-- Constant" << endl;
 
-      dss::SimTime::set(0.1, 0.3);
+      dss::SimTime::set(1.0, 4.0);
 
       dss::Log log;
       log.config({1, {2}, {}});
@@ -26,7 +26,8 @@ SUITE(DySySim)
       double c = 3.0;
       con.config({2, {}, {c}});
 
-      log.exe();
+      dss::SimBlock::setExeSequence();
+      dss::SimBlock::initSimBlocks();
       do {
          CHECK_CLOSE(c, con.output(), EPS);
       } while (dss::SimTime::simulation_on());
@@ -36,21 +37,24 @@ SUITE(DySySim)
    {
       cout << "-- Attenuator" << endl;
 
-      dss::SimTime::set(1.0, 3.0);
+      dss::SimTime::set(1.0, 4.0);
 
       dss::Log log;
-      log.config({1, {2, 3}, {}});
+      log.config({1, {2, 3, 4}, {}});
+
+      dss::Constant con;
+      double c = 1.0;
+      con.config({2, {}, {c}});
 
       dss::Attenuator att1;
-      att1.config({2, {}, {10.0}});
+      att1.config({3, {2}, {10.0}});
       dss::Attenuator att2;
-      att2.config({3, {}, {-10.0}});
+      att2.config({4, {2}, {-10.0}});
 
-      log.exe();
+      dss::SimBlock::setExeSequence();
+      dss::SimBlock::initSimBlocks();
       do {
-         att1.input(1.0);
          CHECK_CLOSE(0.1, att1.output(), EPS);
-         att2.input(1.0);
          CHECK_CLOSE(-0.1, att2.output(), EPS);
       } while (dss::SimTime::simulation_on());
    }
@@ -59,22 +63,70 @@ SUITE(DySySim)
    {
       cout << "-- Gain" << endl;
 
-      dss::SimTime::set(1.0, 3.0);
+      dss::SimTime::set(1.0, 4.0);
+
+      dss::Constant con;
+      double c = 1.0;
+      con.config({1, {}, {c}});
 
       dss::Gain gain1;
-      gain1.config({1, {}, {10.0}});
+      gain1.config({2, {1}, {10.0}});
       dss::Gain gain2;
-      gain2.config({2, {}, {-5}});
+      gain2.config({3, {1}, {-5}});
+
+      dss::Log log;
+      log.config({4, {1, 2, 3}, {}});
+
+      dss::SimBlock::setExeSequence();
+      dss::SimBlock::initSimBlocks();
+      do {
+         CHECK_CLOSE(10.0, gain1.output(), EPS);
+         CHECK_CLOSE(-5, gain2.output(), EPS);
+      } while (dss::SimTime::simulation_on());
+   }
+
+   TEST(Time)
+   {
+      cout << "-- Time" << endl;
+
+      const double delta_t{0.1};
+
+      dss::SimTime::set(delta_t, 1.0);
+
+      dss::Time time;
+      time.config({1, {}, {}});
+
+      dss::Log log;
+      log.config({2, {1}, {}});
+
+      dss::SimBlock::setExeSequence();
+      dss::SimBlock::initSimBlocks();
+      CHECK_CLOSE(0.0, time.output(), EPS);
+      do {
+         CHECK_CLOSE(dss::SimTime::t, time.output(), EPS);
+      } while (dss::SimTime::simulation_on());
+   }
+
+   TEST(Integrator)
+   {
+      cout << "-- Integrator" << endl;
+
+      dss::SimTime::set(0.01, 1.0);
+
+      dss::Constant con;
+      double c = 1.0;
+      con.config({1, {}, {c}});
+
+      dss::Integrator integrator;
+      integrator.config({2, {1}, {0.0}});
 
       dss::Log log;
       log.config({3, {1, 2}, {}});
 
+      dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       do {
-         gain1.input(1.0);
-         CHECK_CLOSE(10.0, gain1.output(), EPS);
-         gain2.input(-1.0);
-         CHECK_CLOSE(5, gain2.output(), EPS);
+         CHECK_CLOSE(dss::SimTime::t * con.output(), integrator.output(), EPS);
       } while (dss::SimTime::simulation_on());
    }
 
@@ -84,9 +136,15 @@ SUITE(DySySim)
 
       dss::SimTime::set(1.0, 3.0);
 
-      dss::Limit limit;
-      limit.config({1, {}, {-10.0, 20.0}});
+      dss::Constant con;
+      double c = 1.0;
+      con.config({1, {}, {c}});
 
+      dss::Limit limit;
+      limit.config({2, {1}, {-10.0, 20.0}});
+
+      dss::SimBlock::setExeSequence();
+      dss::SimBlock::initSimBlocks();
       do {
          limit.input(0.0);
          CHECK_CLOSE(0.0, limit.output(), EPS);
@@ -118,27 +176,6 @@ SUITE(DySySim)
       CHECK_CLOSE(on, onoff.output(), EPS);
       onoff.input(10.0);
       CHECK_CLOSE(on, onoff.output(), EPS);
-   }
-
-   TEST(Time)
-   {
-      cout << "-- Time" << endl;
-
-      const double delta_t{0.1};
-
-      dss::SimTime::set(delta_t, 3.0);
-
-      dss::Time time;
-      time.config({1, {}, {}});
-
-      std::vector<int> exeSequence{{1}};
-      dss::SimBlock::setExeSequence(exeSequence);
-
-      dss::SimBlock::initSimBlocks();
-      CHECK_CLOSE(0.0, time.output(), EPS);
-      do {
-         CHECK_CLOSE(dss::SimTime::t, time.output(), EPS);
-      } while (dss::SimTime::simulation_on());
    }
 
    TEST(Step)
