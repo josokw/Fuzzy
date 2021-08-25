@@ -383,9 +383,9 @@ std::vector<std::error_code>
 dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
-   if (config.inputs.size() != 3) {
+   if (config.inputs.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have 3 inputs\n";
+      std::cerr << "---- DySySim error: should have no inputs\n";
    }
    if (config.parameters.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
@@ -474,7 +474,7 @@ dysysim::Delay::config(const SimBlock::configData_t &config)
       for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
          buffer_.push(out_t0_);
       }
-      std::cout << "---- Delay buffer = " << buffer_.size() << "\n";
+      std::cout << "---- Delay buffer size = " << buffer_.size() << "\n";
    }
    return errs;
 }
@@ -548,9 +548,9 @@ dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- DySySim error: should have 1 input\n";
    }
-   if (config.parameters.size() != 1) {
+   if (config.parameters.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 1 parameter\n";
+      std::cerr << "---- DySySim error: should have 3 parameters\n";
    }
    return errs;
 }
