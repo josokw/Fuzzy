@@ -29,10 +29,6 @@ int main(int argc, char *argv[])
    dss::FirstOrder RCcircuit;
    RCcircuit.config({4, {3}, {RCtime, 2500.0}});
 
-   double setpoint{0.0};
-   double error{0.0};
-   double control{0.0};
-
    std::ofstream simdata;
    if (argc == 2) {
       simdata.open(argv[1]);
@@ -40,7 +36,6 @@ int main(int argc, char *argv[])
 
    dss::SimBlock::setExeSequence();
    dss::SimBlock::initSimBlocks();
-
    do {
       std::cout << "  t = " << std::setw(5) << dss::SimBlock::sim_time.t
                 << "  Setpoint = " << std::setw(5) << step.output()
