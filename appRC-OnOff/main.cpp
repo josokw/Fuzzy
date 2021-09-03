@@ -1,3 +1,4 @@
+
 #include "AppInfo.h"
 #include "DySySim.h"
 #include "LibInfoDySySim.h"
@@ -14,21 +15,17 @@ int main(int argc, char *argv[])
              << "-- uses " + dss::libName + " " << dss::libVersion << "\n\n";
 
    // Initial conditions
-   const double delta_t{0.01};
+   const double delta_t{0.005};
    const double RCtime{0.5};
 
-   dss::SimBlock::sim_time.delta_t = delta_t;
-   dss::SimBlock::sim_time.end_t = 5 * RCtime;
+   dss::SimTime::set(delta_t, 5 * RCtime);
 
    dss::Step step;
    step.config({1, {}, {0, 3000, 0.1}});
-
    dss::Summator sum;
    sum.config({2, {1, -4}, {}});
-
    dss::OnOff onoff;
    onoff.config({3, {2}, {0, 4000, 0}});
-
    dss::FirstOrder RCcircuit;
    RCcircuit.config({4, {3}, {RCtime, 2500.0}});
 
@@ -41,30 +38,21 @@ int main(int argc, char *argv[])
       simdata.open(argv[1]);
    }
 
+   dss::SimBlock::setExeSequence();
+   dss::SimBlock::initSimBlocks();
+
    do {
-      setpoint = step.output();
-
-      sum.input(setpoint, -RCcircuit.output());
-      error = sum.output();
-
-      onoff.input(error);
-      control = onoff.output();
-
       std::cout << "  t = " << std::setw(5) << dss::SimBlock::sim_time.t
-                << "  Setpoint = " << std::setw(5) << setpoint
-                << "  Control = " << std::setw(5) << control
+                << "  Setpoint = " << std::setw(5) << step.output()
+                << "  Control = " << std::setw(5) << onoff.output()
                 << "  Measured Value = " << std::setw(8) << RCcircuit.output()
                 << std::endl;
 
       if (argc == 2) {
-         simdata << std::setw(4) << dss::SimBlock::sim_time.t << " " << setpoint
-                 << " " << control << " " << RCcircuit.output() << std::endl;
+         simdata << std::setw(4) << dss::SimBlock::sim_time.t << " "
+                 << step.output() << " " << onoff.output() << " "
+                 << RCcircuit.output() << std::endl;
       }
-      RCcircuit.input(control);
-
-      dss::SimBlock::sim_time.next();
-      step.exe();
-
    } while (dss::SimTime::simulation_on());
 
    simdata.close();
