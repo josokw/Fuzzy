@@ -1,79 +1,57 @@
 #include "AppInfo.h"
-#include "Connecting.h"
+#include "DySySim.h"
 #include "FuzzyController.h"
 #include "LibInfoDySySim.h"
-#include "Model.h"
 
 #include <iomanip>
 #include <iostream>
 
 namespace dss = dysysim;
 
+/// Under construction ....
 int main(int argc, char *argv[])
 {
    std::cout << "-- " APPNAME_VERSION " "
              << "-- uses " + dss::libName + " " << dss::libVersion << "\n\n";
 
-   const double Tsample{0.005}; // 5 msec
-   double Tsimulation{Tsample};
-   //  const double stepTime = 10 * Tsimulation;
-   const double RCtime{0.47}; // tau 0.47 sec
+   const double RCtime{0.47}; // FOP tau 0.47 sec
+   dss::SimTime::set(0.005, 20.0);
 
    // Model
-   dss::Time time;
-   time.config({1, {}, {Tsimulation}});
    dss::Step step;
-   step.config({2, {}, {0, 2048, 0}});
+   step.config({1, {}, {0, 2055, 0.01}});
    dss::Summator sum;
-   sum.config({3, {}, {}});
+   sum.config({2, {1, -4}, {}});
 
    FuzzyController fuzzyController;
    dss::Function<double> fuzzyC;
    fuzzyC.setFunction([&fuzzyController](double in) {
       return fuzzyController.inferControl(in);
    });
-   fuzzyC.config({4, {}, {}});
+   fuzzyC.config({3, {2}, {}});
 
    dss::FirstOrder RCcircuit;
-   RCcircuit.config({5, {}, {RCtime}});
-
-   double setpoint{0.0};
-   double error{0.0};
-   double control{0.0};
+   RCcircuit.config({4, {3}, {RCtime, 0}});
 
    std::ofstream simdata;
    if (argc == 2) {
       simdata.open(argv[1]);
    }
 
-   for (int tn = 0; tn < 1000; ++tn) {
-      setpoint = step.output();
-
-      sum.input(setpoint, -RCcircuit.output());
-      error = sum.output();
-
-      fuzzyC.input(error);
-      control = fuzzyC.output();
-
-      std::cout << "t = " << std::setw(5) << time.output()
-                << "  Setpoint = " << std::setw(6) << setpoint
-                << "  Control = " << std::setw(6) << control
+   dss::SimBlock::setExeSequence();
+   dss::SimBlock::initSimBlocks();
+   do {
+      std::cout << "t = " << std::setw(5) << dss::SimBlock::sim_time.t
+                << "  Setpoint = " << std::setw(6) << step.output()
+                << "  Control = " << std::setw(6) << fuzzyC.output()
                 << "  Measured Value = " << std::setw(10) << RCcircuit.output()
                 << std::endl;
-
       if (argc == 2) {
-         simdata << std::setw(4) << time.output() << " " << setpoint << " "
-                 << control << " " << RCcircuit.output() << std::endl;
+         simdata << dss::SimBlock::sim_time.t << " " << step.output() << " "
+                 << fuzzyC.output() << " " << RCcircuit.output() << std::endl;
       }
+   } while (dss::SimTime::simulation_on());
 
-      RCcircuit.input(control);
-      time.next();
-      step.next();
-
-      if (argc == 1) {
-         getchar();
-      }
-   }
    simdata.close();
 
    return 0;
