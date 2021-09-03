@@ -5,10 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "appControllerFOProcess",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/ControllerFOProcess",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/appControllerFOProcess",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "name": "appDySySim",
             "type": "cppdbg",
             "request": "launch",
-            "program":  "${workspaceFolder}/bin/dss",
+            "program": "${workspaceFolder}/bin/dss",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/appDySySim",

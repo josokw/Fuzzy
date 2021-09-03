@@ -9,7 +9,7 @@
 namespace dss = dysysim;
 using namespace std;
 
-const double EPS{0.01};
+const double EPS{0.02};
 
 SUITE(DySySim)
 {
@@ -30,6 +30,32 @@ SUITE(DySySim)
       dss::SimBlock::initSimBlocks();
       do {
          CHECK_CLOSE(c, con.output(), EPS);
+      } while (dss::SimTime::simulation_on());
+   }
+
+   TEST(Summator)
+   {
+      cout << "-- Summator" << endl;
+
+      dss::SimTime::set(1.0, 4.0);
+
+      dss::Log log;
+      log.config({1, {2, 3, 4, 5}, {}});
+
+      dss::Constant con1;
+      con1.config({2, {}, {1.0}});
+      dss::Constant con2;
+      con2.config({3, {}, {-2.0}});
+      dss::Constant con3;
+      con3.config({4, {}, {-2.0}});
+
+      dss::Summator sum;
+      sum.config({5, {2, 3, -4}, {}});
+
+      dss::SimBlock::setExeSequence();
+      dss::SimBlock::initSimBlocks();
+      do {
+         CHECK_CLOSE(1.0, sum.output(), EPS);
       } while (dss::SimTime::simulation_on());
    }
 
@@ -274,7 +300,7 @@ SUITE(DySySim)
 
    TEST(FirstOrder)
    {
-      const double delta_t{0.01};
+      const double delta_t{0.005};
       const double tau{10 * delta_t};
       const double stp{1.0};
       const double stp_t{5 * delta_t};
@@ -303,50 +329,6 @@ SUITE(DySySim)
          CHECK_CLOSE(fio.output(), fio_response(dss::SimTime::t), EPS * 8);
       } while (dss::SimTime::simulation_on());
    }
-
-   //    TEST(RC_FirstOrder)
-   //    {
-   //       const double delta_t{0.005};
-   //       const double tau{100 * delta_t};
-   //       const double stp{1.0};
-   //       const double stp_t{5 * delta_t};
-
-   //       cout << "-- compare RC filter and FirstOrder" << endl;
-
-   //       dss::Time time;
-   //       time.config({0, {}, {delta_t}});
-
-   //       dss::Step step;
-   //       step.config({1, {}, {0.0, stp, stp_t}});
-
-   //       dss::Attenuator att;
-   //       att.config({2, {}, {tau}});
-
-   //       dss::Integrator intgt;
-   //       intgt.config({3, {}, {0.0}});
-
-   //       dss::FirstOrder fio;
-   //       fio.config({4, {}, {tau, 0.0}});
-
-   //       while (time.output() < stp_t + 10 * tau) {
-   //          auto input = step.output();
-
-   //          att.input(input);
-   //          att.input(step.output() - intgt.output());
-   //          intgt.input(att.output());
-
-   //          fio.input(input);
-
-   //          auto out1 = intgt.output();
-   //          auto out2 = fio.output();
-   //          // std::cout << out1 << " == " << out2 << std::endl;
-
-   //          CHECK_CLOSE(out1, out2, EPS);
-
-   //          time.exe();
-   //          step.exe();
-   //       }
-   //    }
 }
 
 int main()

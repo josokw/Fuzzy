@@ -67,12 +67,13 @@ std::error_code dysysim::SimBlock::setExeSequence()
    do {
       size_previous = exeSequence_s.size();
       for (auto [id, pSB] : allSimBlocks_s) {
-         if (std::find(begin(exeSequence_s), end(exeSequence_s), id) ==
-             end(exeSequence_s)) {
-            if (pSB->allInputsInExeSequence() == SimBlockErrc{}) {
+         if (not pSB->IdInExeSequence(id)) {
+            auto error = pSB->allInputsAvailable();
+            if (error != SimBlockErrc{}) {
+               return error;
+            }
+            if (pSB->allInputsInExeSequence()) {
                exeSequence_s.push_back(id);
-            } else {
-               return SimBlockErrc::ModelIsInconsistentError;
             }
          }
       }
@@ -128,15 +129,33 @@ dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
    return errs;
 }
 
-std::error_code dysysim::SimBlock::allInputsInExeSequence()
+std::error_code dysysim::SimBlock::allInputsAvailable()
 {
    for (auto id : inputs_) {
       if ((dysysim::SimBlock::allSimBlocks_s.find(abs(id)) ==
-           end(dysysim::SimBlock::allSimBlocks_s)) and
-          (dysysim::SimBlock::allSimBlocks_s[abs(id)]->getIOType() !=
-           SimBlock::ioType::history)) {
+           end(dysysim::SimBlock::allSimBlocks_s))) {
          return SimBlockErrc::ModelIsInconsistentError;
       }
    }
    return SimBlockErrc{};
+}
+
+bool dysysim::SimBlock::allInputsInExeSequence()
+{
+   for (auto id : inputs_) {
+      if (std::find(begin(dysysim::SimBlock::exeSequence_s),
+                    end(dysysim::SimBlock::exeSequence_s),
+                    abs(id)) == end(dysysim::SimBlock::exeSequence_s) and
+          (dysysim::SimBlock::allSimBlocks_s[abs(id)]->getIOType() !=
+           SimBlock::ioType::history)) {
+         return false;
+      }
+   }
+   return true;
+}
+
+bool dysysim::SimBlock::IdInExeSequence(int id)
+{
+   return (std::find(begin(exeSequence_s), end(exeSequence_s), id) !=
+           end(exeSequence_s));
 }

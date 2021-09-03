@@ -482,19 +482,28 @@ private:
    std::function<double(T)> callback_;
 
    std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
+   configDataIsOK(const SimBlock::configData_t &config) const override
+   {
+      auto errs = SimBlock::configDataIsOK(config);
+      if (config.inputs.size() < 1) {
+         errs.push_back(SimBlockErrc::ConfigInputIdError);
+         std::cerr << "---- DySySim error: should have >= 1 input\n";
+      }
+      return errs;
+   }
 };
 
 template <typename T>
 std::vector<std::error_code>
 dysysim::Function<T>::config(const SimBlock::configData_t &config)
 {
-   id_ = config.id;
-   inputs_ = config.inputs;
-   if (SimBlock::allSimBlocks_s.find(id_) != end(SimBlock::allSimBlocks_s)) {
+   auto errs = configDataIsOK(config);
+   if (errs.empty()) {
+      id_ = config.id;
+      inputs_ = config.inputs;
       SimBlock::allSimBlocks_s[id_] = this;
    }
-   return {};
+   return errs;
 }
 
 /// OnOff starts (t == 0) off.

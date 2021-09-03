@@ -7,7 +7,7 @@ namespace dysysim {
 
 const std::string libName{"libDySySim"};
 const std::string libMajorVersion{"0"};
-const std::string libMinorVersion{"17"};
+const std::string libMinorVersion{"19"};
 const std::string libRevisionVersion{"0"};
 const std::string libVersion{libMajorVersion + "." + libMinorVersion + "." +
                              libRevisionVersion};

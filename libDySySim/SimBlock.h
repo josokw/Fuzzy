@@ -98,7 +98,9 @@ protected:
    /// Checks all config data, returns a vector of all errors.
    virtual std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const;
-   std::error_code allInputsInExeSequence();
+   std::error_code allInputsAvailable();
+   bool allInputsInExeSequence();
+   bool IdInExeSequence(int id);
 
    static std::map<int, SimBlock *> allSimBlocks_s;
    static std::vector<int> exeSequence_s;
