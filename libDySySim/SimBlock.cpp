@@ -34,7 +34,8 @@ bool dysysim::SimTime::simulation_on()
    return t <= end_t;
 }
 
-std::map<int, dysysim::SimBlock *> dysysim::SimBlock::allSimBlocks_s;
+std::map<int, std::shared_ptr<dysysim::SimBlock>>
+   dysysim::SimBlock::allSimBlocks_s;
 std::vector<int> dysysim::SimBlock::exeSequence_s;
 
 bool dysysim::SimBlock::idIsUnique(int id)
@@ -42,10 +43,11 @@ bool dysysim::SimBlock::idIsUnique(int id)
    return allSimBlocks_s.find(id) == end(allSimBlocks_s);
 }
 
-std::error_code dysysim::SimBlock::addSimBlock(int id, SimBlock *pSB)
+std::error_code dysysim::SimBlock::addSimBlock(int id,
+                                               std::shared_ptr<SimBlock> pSB)
 {
    if (idIsUnique(id)) {
-      allSimBlocks_s[id] = pSB;
+      allSimBlocks_s[id] = std::move(pSB);
       return SimBlockErrc::IdIsNotUniqueError;
    }
    return SimBlockErrc{};
@@ -56,7 +58,7 @@ std::error_code dysysim::SimBlock::setExeSequence()
    exeSequence_s.clear();
 
    // First select all input0 SimBlocks
-   for (auto [id, pSB] : allSimBlocks_s) {
+   for (const auto &[id, pSB] : allSimBlocks_s) {
       if (pSB->getIOType() == SimBlock::ioType::input0) {
          exeSequence_s.push_back(id);
       }
@@ -66,7 +68,7 @@ std::error_code dysysim::SimBlock::setExeSequence()
    auto size = exeSequence_s.size();
    do {
       size_previous = exeSequence_s.size();
-      for (auto [id, pSB] : allSimBlocks_s) {
+      for (const auto &[id, pSB] : allSimBlocks_s) {
          if (not pSB->IdInExeSequence(id)) {
             auto error = pSB->allInputsAvailable();
             if (error != SimBlockErrc{}) {

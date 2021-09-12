@@ -27,21 +27,14 @@ void dysysim::Builder::operator()(std::ifstream &script)
          auto [id, type, inputs, params] = result;
          SimBlock::configData_t cdata = {id, inputs, params};
          if (id != -1) {
-            std::cerr << "[" << lineNumber_ << "]  " << id << " " << type <<
-            "\n";
-            SimBlock *pSB = factory_.create(type);
-            if (pSB) {
-               auto errors = pSB->config(cdata);
-               if (errors.size()) {
-                  for (auto er : errors) {
-                     std::cerr << "[" << lineNumber_ << "] '" << line << "' "
-                        << simblockErrCategory.message(er.value()) << "\n";
-                  }
+            std::cerr << "[" << lineNumber_ << "]  " << id << " " << type
+                      << "\n";
+            auto erssnew = factory_.configCheck(type, cdata);
+            if (erssnew.size()) {
+               for (auto er : erssnew) {
+                  std::cerr << "[" << lineNumber_ << "] '" << line << "' "
+                            << simblockErrCategory.message(er.value()) << "\n";
                }
-            } else {
-               std::cerr
-                  << "---- DySySim ERROR simulation id create() => pSB == "
-                     "nullptr\n";
             }
          }
       }
@@ -53,6 +46,9 @@ void dysysim::Builder::operator()(std::ifstream &script)
    }
    catch (dysysim::FactoryAddError &e) {
       std::cerr << e.what() << ": " << e.getKey() << " is not unique\n";
+   }
+   catch (dysysim::FactoryUnknownTypeError &e) {
+      std::cerr << e.what() << ": " << e.getType() << " is unknown\n";
    }
 }
 

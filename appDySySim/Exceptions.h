@@ -23,6 +23,23 @@ private:
    const std::string key_;
 };
 
+class FactoryUnknownTypeError : public std::exception
+{
+public:
+   explicit FactoryUnknownTypeError(const std::string &type)
+      : type_{type}
+   {
+   }
+   const char *what() const throw() override
+   {
+      return "SimBlockFactory unknown type error";
+   }
+   const auto &getType() const { return type_; }
+
+private:
+   const std::string type_;
+};
+
 class SyntaxError : public std::exception
 {
 public:

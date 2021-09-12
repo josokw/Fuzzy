@@ -28,6 +28,7 @@ private:
    Parser parser_;
    std::vector<std::string> scriptLines_;
    int lineNumber_ = 0;
+   std::shared_ptr<SimBlock> pSimBlok_;
 
    void initFactory();
 };

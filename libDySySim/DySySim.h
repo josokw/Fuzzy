@@ -23,7 +23,10 @@ public:
    }
    ~Constant() override = default;
 
-   SimBlock *create() override { return new Constant; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Constant>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override {}
@@ -43,7 +46,10 @@ public:
    }
    ~AlgebraicDelay() override = default;
 
-   SimBlock *create() override { return new AlgebraicDelay; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<AlgebraicDelay>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -69,7 +75,10 @@ public:
    }
    ~Attenuator() override = default;
 
-   SimBlock *create() override { return new Attenuator; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Attenuator>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -94,7 +103,10 @@ public:
    }
    ~Cos() override = default;
 
-   SimBlock *create() override { return new Cos; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Cos>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void input(double in) { out_ = std::cos(in * multipier_ + phase_); }
@@ -115,7 +127,10 @@ public:
    }
    ~Divider() override = default;
 
-   SimBlock *create() override { return new Divider; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Divider>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void input(double in1, double in2) { out_ = in1 / in2; }
@@ -135,7 +150,10 @@ public:
    }
    ~Gain() override = default;
 
-   SimBlock *create() override { return new Gain; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Gain>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -159,7 +177,10 @@ public:
    }
    ~Limit() override = default;
 
-   SimBlock *create() override { return new Limit; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Limit>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -182,7 +203,10 @@ public:
    }
    ~Max() override = default;
 
-   SimBlock *create() override { return new Max; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Max>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override
@@ -206,7 +230,10 @@ public:
    }
    ~Min() override = default;
 
-   SimBlock *create() override { return new Min; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Min>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override
@@ -230,7 +257,10 @@ public:
    }
    ~Multiplier() override = default;
 
-   SimBlock *create() override { return new Multiplier; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Multiplier>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override
@@ -256,7 +286,10 @@ public:
    }
    ~Sin() override = default;
 
-   SimBlock *create() override { return new Sin; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Sin>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -279,7 +312,10 @@ public:
    }
    ~Summator() override = default;
 
-   SimBlock *create() override { return new Summator; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Summator>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { out_ = sumInputs(); }
@@ -307,7 +343,10 @@ public:
    }
    ~Frequency() override = default;
 
-   SimBlock *create() override { return new Frequency; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Frequency>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override
@@ -335,7 +374,10 @@ public:
    }
    ~Step() override = default;
 
-   SimBlock *create() override { return new Step; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Step>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
@@ -362,10 +404,14 @@ public:
    }
    ~Puls() override = default;
 
-   SimBlock *create() override { return new Puls; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      auto p = std::make_shared<Puls>();
+      return p;
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   void exe()
+   void exe() override
    {
       out_ = (SimTime::t >= t_on_ and SimTime::t < t_off_) ? on_ : off_;
    }
@@ -390,7 +436,10 @@ public:
    }
    ~Time() override = default;
 
-   SimBlock *create() override { return new Time; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Time>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { out_ = SimTime::t; }
@@ -412,7 +461,10 @@ public:
    }
    ~Delay() override = default;
 
-   SimBlock *create() override { return new Delay; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Delay>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -442,7 +494,10 @@ public:
    }
    ~FirstOrder() override = default;
 
-   SimBlock *create() override { return new FirstOrder; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<FirstOrder>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -470,7 +525,10 @@ public:
    }
    ~Function() override = default;
 
-   SimBlock *create() override { return new Function<T>; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Function<T>>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -520,7 +578,10 @@ public:
    }
    ~OnOff() override = default;
 
-   SimBlock *create() override { return new OnOff; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<OnOff>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -545,7 +606,10 @@ public:
    }
    ~Integrator() override = default;
 
-   SimBlock *create() override { return new Integrator; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Integrator>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -575,7 +639,10 @@ public:
    }
    ~IntegratorEuler() override = default;
 
-   SimBlock *create() override { return new IntegratorEuler; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<IntegratorEuler>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -603,7 +670,10 @@ public:
    }
    ~PI() override = default;
 
-   SimBlock *create() override { return new PI; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<PI>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -645,7 +715,10 @@ public:
    }
    ~PID() override = default;
 
-   SimBlock *create() override { return new PID; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<PID>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -685,7 +758,10 @@ public:
    }
    ~ZeroOrderHold() override = default;
 
-   SimBlock *create() override { return new ZeroOrderHold; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<ZeroOrderHold>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { input(sumInputs()); }
@@ -709,7 +785,10 @@ public:
    }
    ~Log() override = default;
 
-   SimBlock *create() override { return new Log; }
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Log>();
+   }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 

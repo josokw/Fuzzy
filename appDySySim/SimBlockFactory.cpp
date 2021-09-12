@@ -1,8 +1,11 @@
 #include "SimBlockFactory.h"
 #include "DySySim.h"
+#include "ErrorCodes.h"
 #include "Exceptions.h"
+#include "SimBlock.h"
 
-void dysysim::SimBlockFactory::add(const std::string &key, SimBlock *tbm)
+void dysysim::SimBlockFactory::add(const std::string &key,
+                                   std::shared_ptr<SimBlock> tbm)
 {
    if (not factory_.add(key, tbm)) {
       throw dysysim::FactoryAddError(key);
@@ -11,29 +14,50 @@ void dysysim::SimBlockFactory::add(const std::string &key, SimBlock *tbm)
 
 void dysysim::SimBlockFactory::init()
 {
-   add("ADL", new dysysim::AlgebraicDelay);
-   add("ATT", new dysysim::Attenuator);
-   add("CON", new dysysim::Constant);
-   add("COS", new dysysim::Cos);
-   add("DIV", new dysysim::Divider);
-   add("DLY", new dysysim::Delay);
-   add("EUL", new dysysim::IntegratorEuler);
-   add("FIO", new dysysim::FirstOrder);
-   add("FRQ", new dysysim::Frequency);
-   add("GAIN", new dysysim::Gain);
-   add("INT", new dysysim::Integrator);
-   add("LIM", new dysysim::Limit);
-   add("LOG", new dysysim::Log);
-   add("MAX", new dysysim::Max);
-   add("MIN", new dysysim::Min);
-   add("MUL", new dysysim::Multiplier);
-   add("ONOFF", new dysysim::OnOff);
-   add("PI", new dysysim::PI);
-   add("PID", new dysysim::PID);
-   add("PLS", new dysysim::Puls);
-   add("SIN", new dysysim::Sin);
-   add("STP", new dysysim::Step);
-   add("SUM", new dysysim::Summator);
-   add("TIME", new dysysim::Time);
-   add("ZOH", new dysysim::ZeroOrderHold);
+   add("ADL", std::make_shared<dysysim::AlgebraicDelay>());
+   add("ATT", std::make_shared<dysysim::Attenuator>());
+   add("CON", std::make_shared<dysysim::Constant>());
+   add("COS", std::make_shared<dysysim::Cos>());
+   add("DIV", std::make_shared<dysysim::Divider>());
+   add("DLY", std::make_shared<dysysim::Delay>());
+   add("EUL", std::make_shared<dysysim::IntegratorEuler>());
+   add("FIO", std::make_shared<dysysim::FirstOrder>());
+   add("FRQ", std::make_shared<dysysim::Frequency>());
+   add("GAIN", std::make_shared<dysysim::Gain>());
+   add("INT", std::make_shared<dysysim::Integrator>());
+   add("LIM", std::make_shared<dysysim::Limit>());
+   add("LOG", std::make_shared<dysysim::Log>());
+   add("MAX", std::make_shared<dysysim::Max>());
+   add("MIN", std::make_shared<dysysim::Min>());
+   add("MUL", std::make_shared<dysysim::Multiplier>());
+   add("ONOFF", std::make_shared<dysysim::OnOff>());
+   add("PI", std::make_shared<dysysim::PI>());
+   add("PID", std::make_shared<dysysim::PID>());
+   add("PLS", std::make_shared<dysysim::Puls>());
+   add("SIN", std::make_shared<dysysim::Sin>());
+   add("STP", std::make_shared<dysysim::Step>());
+   add("SUM", std::make_shared<dysysim::Summator>());
+   add("TIME", std::make_shared<dysysim::Time>());
+   add("ZOH", std::make_shared<dysysim::ZeroOrderHold>());
+}
+
+std::vector<std::error_code>
+dysysim::SimBlockFactory::configCheck(const std::string &key,
+                                      const SimBlock::configData_t &cdata) const
+{
+   std::vector<std::error_code> errs;
+
+   if (factory_.isAvailable(key)) {
+      auto pSBfactory = factory_.get(key);
+      errs = pSBfactory->configDataIsOK(cdata);
+      if (errs.empty()) {
+         auto pSB = pSBfactory->create();
+         pSB->config(cdata);
+         SimBlock::allSimBlocks_s[pSB->getId()] = pSB;
+      }
+   } else {
+      throw dysysim::FactoryUnknownTypeError(key);
+   }
+
+   return errs;
 }

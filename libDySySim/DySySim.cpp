@@ -3,12 +3,11 @@
 std::vector<std::error_code>
 dysysim::Constant::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      SimBlock::allSimBlocks_s[id_] = this;
-      out_ = begin(config.parameters)[0];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   out_ = begin(config.parameters)[0];
+
    return errs;
 }
 
@@ -30,12 +29,11 @@ dysysim::Constant::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::AlgebraicDelay::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -57,13 +55,12 @@ std::vector<std::error_code> dysysim::AlgebraicDelay::configDataIsOK(
 std::vector<std::error_code>
 dysysim::Attenuator::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      attenuation_ = *begin(config.parameters);
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   attenuation_ = *begin(config.parameters);
+
    return errs;
 }
 
@@ -85,12 +82,11 @@ dysysim::Attenuator::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Cos::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -112,12 +108,11 @@ dysysim::Cos::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Divider::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -139,14 +134,13 @@ dysysim::Divider::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Gain::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      gain_ = par[0];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   gain_ = par[0];
+
    return errs;
 }
 
@@ -168,15 +162,14 @@ dysysim::Gain::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Limit::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      min_ = par[0];
-      max_ = par[1];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   min_ = par[0];
+   max_ = par[1];
+
    return errs;
 }
 
@@ -203,12 +196,11 @@ dysysim::Limit::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Max::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -230,12 +222,11 @@ dysysim::Max::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Min::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -257,12 +248,11 @@ dysysim::Min::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Multiplier::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -284,12 +274,11 @@ dysysim::Multiplier::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Sin::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -311,12 +300,11 @@ dysysim::Sin::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Summator::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -339,12 +327,11 @@ dysysim::Summator::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Frequency::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -366,16 +353,15 @@ dysysim::Frequency::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Step::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      out_ = off_ = par[0];
-      on_ = par[1];
-      t_on_ = par[2];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   out_ = off_ = par[0];
+   on_ = par[1];
+   t_on_ = par[2];
+
    return errs;
 }
 
@@ -402,17 +388,16 @@ dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Puls::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      out_ = off_ = par[0];
-      on_ = par[1];
-      t_on_ = par[2];
-      t_off_ = par[3];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   out_ = off_ = par[0];
+   on_ = par[1];
+   t_on_ = par[2];
+   t_off_ = par[3];
+
    return errs;
 }
 
@@ -434,13 +419,12 @@ dysysim::Puls::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Time::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      out_ = 0.0;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   out_ = 0.0;
+
    return errs;
 }
 
@@ -462,20 +446,19 @@ dysysim::Time::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Delay::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      out_ = 0.0;
-      auto par = begin(config.parameters);
-      out_t0_ = par[0];
-      delaytime_ = par[1];
-      for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
-         buffer_.push(out_t0_);
-      }
-      std::cout << "---- Delay buffer size = " << buffer_.size() << "\n";
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   out_ = 0.0;
+   auto par = begin(config.parameters);
+   out_t0_ = par[0];
+   delaytime_ = par[1];
+   for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
+      buffer_.push(out_t0_);
    }
+   std::cout << "---- Delay buffer size = " << buffer_.size() << "\n";
+
    return errs;
 }
 
@@ -497,15 +480,14 @@ dysysim::Delay::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::FirstOrder::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      timeConstant_ = par[0];
-      out_ = par[1];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   timeConstant_ = par[0];
+   out_ = par[1];
+
    return errs;
 }
 
@@ -527,16 +509,15 @@ dysysim::FirstOrder::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::OnOff::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      out_ = off_ = par[0];
-      on_ = par[1];
-      onoff_ = par[2];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   out_ = off_ = par[0];
+   on_ = par[1];
+   onoff_ = par[2];
+
    return errs;
 }
 
@@ -558,14 +539,13 @@ dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::Integrator::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      out_ = par[0];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   out_ = par[0];
+
    return errs;
 }
 
@@ -587,14 +567,13 @@ dysysim::Integrator::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::IntegratorEuler::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      out_ = par[0];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   out_ = par[0];
+
    return errs;
 }
 
@@ -616,14 +595,13 @@ std::vector<std::error_code> dysysim::IntegratorEuler::configDataIsOK(
 std::vector<std::error_code>
 dysysim::PI::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      out_ = par[0];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   out_ = par[0];
+
    return errs;
 }
 
@@ -645,14 +623,13 @@ dysysim::PI::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::PID::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      auto par = begin(config.parameters);
-      out_ = par[0];
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   out_ = par[0];
+
    return errs;
 }
 
@@ -674,12 +651,11 @@ dysysim::PID::configDataIsOK(const SimBlock::configData_t &config) const
 std::vector<std::error_code>
 dysysim::ZeroOrderHold::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 
@@ -701,13 +677,11 @@ std::vector<std::error_code> dysysim::ZeroOrderHold::configDataIsOK(
 std::vector<std::error_code>
 dysysim::Log::config(const SimBlock::configData_t &config)
 {
-   auto errs = configDataIsOK(config);
-   if (errs.empty()) {
-      id_ = config.id;
-      inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
-      inputs_ = config.inputs;
-   }
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
    return errs;
 }
 

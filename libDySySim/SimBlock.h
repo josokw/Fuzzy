@@ -7,6 +7,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <system_error>
 #include <vector>
 
@@ -67,7 +68,10 @@ public:
    double sumInputs() const;
    double output() const { return out_; }
 
-   virtual SimBlock *create() = 0;
+   virtual std::shared_ptr<SimBlock> create() = 0;
+   /// Checks all config data, returns a vector of all errors.
+   virtual std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const;
    virtual std::vector<std::error_code> config(const configData_t &config) = 0;
    /// Calculate out_ for t = t_n
    virtual void exe()
@@ -76,16 +80,21 @@ public:
    }
 
    static void clearSimBlocks() { allSimBlocks_s.clear(); }
-   static SimBlock *getSimBlock(int id) { return allSimBlocks_s.at(id); }
+   static auto getSimBlock(int id)
+   {
+      auto p = allSimBlocks_s.at(id);
+      return p;
+   }
    static bool idIsUnique(int id);
-   static std::error_code addSimBlock(int id, SimBlock *pSB);
+   static std::error_code addSimBlock(int id, std::shared_ptr<SimBlock> pSB);
    static std::error_code setExeSequence();
    static void setExeSequence(std::vector<int> &exeSequence);
-   /// Calculate all SimBlock out_ for t = 0.
+   /// Calculates all SimBlock out_ for t = 0.
    static void initSimBlocks();
-   /// Calculate all SimBlock out_ for t = t_n (n > 0).
+   /// Calculates all SimBlock out_ for t = t_n (n > 0).
    static void exeSimBlocks();
 
+   static std::map<int, std::shared_ptr<SimBlock>> allSimBlocks_s;
    static SimTime sim_time;
 
 protected:
@@ -95,14 +104,10 @@ protected:
    std::vector<int> inputs_;
    double out_;
 
-   /// Checks all config data, returns a vector of all errors.
-   virtual std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const;
    std::error_code allInputsAvailable();
    bool allInputsInExeSequence();
    bool IdInExeSequence(int id);
 
-   static std::map<int, SimBlock *> allSimBlocks_s;
    static std::vector<int> exeSequence_s;
 };
 

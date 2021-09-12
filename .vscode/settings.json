@@ -78,6 +78,7 @@
         "version": "cpp",
         "*.inc": "cpp",
         "*.def": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "shared_mutex": "cpp"
     }
 }
