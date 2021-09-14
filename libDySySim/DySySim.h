@@ -559,7 +559,6 @@ dysysim::Function<T>::config(const SimBlock::configData_t &config)
    if (errs.empty()) {
       id_ = config.id;
       inputs_ = config.inputs;
-      SimBlock::allSimBlocks_s[id_] = this;
    }
    return errs;
 }
