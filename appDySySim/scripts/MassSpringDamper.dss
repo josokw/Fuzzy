@@ -1,6 +1,6 @@
 // Mass-Spring-Damper system
 
-delta_t = 0.02   t_end = 5.00
+delta_t = 0.02  t_end = 5.00  width_t = 4  precision_t = 2
 
 1 PLS           off=0.0 on=25.0 t_on=0.1 t_off=1.1   // F = 25 N for 1 second
 2 ATT 1,-5, -6  att=10                               // m = 10 kg

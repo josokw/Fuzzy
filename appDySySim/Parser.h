@@ -44,6 +44,8 @@ public:
    using id_t = int;
    using type_t = std::string;
    using value_t = double;
+   using width_t = int;
+   using precision_t = int;
    using result_t =
       std::tuple<id_t, type_t, std::vector<id_t>, std::vector<value_t>>;
 
@@ -51,7 +53,7 @@ public:
    ~Parser() = default;
 
    result_t operator()(int lineNumber, std::string &codeLine);
-   auto getSimParameters() const { return std::make_pair(delta_t_, t_end_); }
+   auto getSimParameters() const { return std::make_tuple(delta_t_, t_end_, width_t_, precision_t_); }
 
 private:
    /// Remove single-line comment (C++ style).
@@ -62,6 +64,8 @@ private:
    bool simParametersAreSet_ = false;
    double delta_t_ = 0.0;
    double t_end_ = 0.0;
+   width_t width_t_ = 10;
+   precision_t precision_t_ = 3;
 };
 
 } // namespace dysysim

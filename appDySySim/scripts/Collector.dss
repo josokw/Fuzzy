@@ -1,0 +1,31 @@
+// Solar Thermal Collector
+delta_t = 3600  t_end = 86400  width_t = 6  precision_t = 0
+
+1 FRQ f=1.15741E-05 phase=0     // Day rithm: sine 1/(24*60*60) [Hz]
+2 GAIN 1 A=10                   // degree Celsius
+3 LIM 2 4  Tmin=-5.0 Tmax=8.0   // degree Celsius
+4 CON c=2.0                     // degree Celsius
+5 CON c=0.0                     // phi sun minimum 
+6 MAX 1 5
+7 GAIN 6 C=27.8                 // [kJ/sec]
+8 GAIN 7 k=0
+
+// Heated water tank
+9 GAIN 8 Rc=7.92                // [Ksec/kJ]
+10 ATT 3 8 RcRct=8.4            // 7.92 + 0.48 [Ksec/kJ]
+11 MAX 10 12
+12 CON minPhi=0.0               // minimum Phi through Rc and Rct
+13 ATT 11 Ct=7.942E+03          // [kJ/K]
+14 INT 13 out_t0=5              // [degree Celsius]
+15 ATT -14, 3  Rt=76.2          // [Ksec/kJ]
+
+// House
+16 ATT 14 -19 Rth=0.4           // [Ksec/kJ]
+17 MAX 18 16
+18 CON minPhi=0.0
+19 RELAY 21 17 18 Tref=20.0     // [degree Celsius]
+20 ATT 19 22 Ch=48000           // [kJ/K]
+21 INT 20 out_t0=10.0           // [degree Celsius]
+22 ATT -21 3 Rh=3.6             // [Ksec/kJ]
+
+100 LOG 3 8 21

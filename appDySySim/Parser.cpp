@@ -1,6 +1,8 @@
 #include "Parser.h"
 #include "Exceptions.h"
 
+#include <iostream>
+
 #include <boost/spirit/home/x3.hpp>
 
 namespace x3 = boost::spirit::x3;
@@ -55,6 +57,10 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
 
    auto set_delta_t = [this](auto &ctx) { delta_t_ = x3::_attr(ctx); };
 
+   auto set_width_t = [this](auto &ctx) { width_t_ = x3::_attr(ctx); };
+
+   auto set_precision_t = [this](auto &ctx) { precision_t_ = x3::_attr(ctx); };
+
    Parser::removeSingleLineComment(codeLine);
    Parser::trim(codeLine, " \t");
 
@@ -69,9 +75,13 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
       auto inputs =
          x3::int_[set_input] >> *(x3::char_(',') >> x3::int_[set_input]);
       auto set_parameter = parameter_name >> '=' >> value[set_param];
+
       auto set_sim_parameters = x3::lit("delta_t") >> '=' >>
                                 value[set_delta_t] >> x3::lit("t_end") >> '=' >>
-                                value[set_t_end];
+                                value[set_t_end] >> x3::lit("width_t") >> '=' >>
+                                value[set_width_t] >> x3::lit("precision_t") >>
+                                '=' >> value[set_precision_t];
+
       auto set_simblock_parameters =
          id[set_id] >> type[set_type] >> *(inputs) >> *(set_parameter);
 

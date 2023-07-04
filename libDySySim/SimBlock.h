@@ -24,6 +24,8 @@ public:
 
    static double delta_t;
    static double end_t;
+   static int width_t;
+   static int precision_t;
    static double t;
 
    static void set(double delta, double end);

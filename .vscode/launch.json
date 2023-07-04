@@ -28,7 +28,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/dss",
-            "args": [],
+            "args": ["../appDySySim/scripts/Collector.dss"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/appDySySim",
             "environment": [],

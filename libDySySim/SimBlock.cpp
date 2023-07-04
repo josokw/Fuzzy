@@ -6,6 +6,8 @@
 
 double dysysim::SimTime::delta_t = 1;
 double dysysim::SimTime::end_t = 0.0;
+int dysysim::SimTime::width_t = 8;
+int dysysim::SimTime::precision_t = 3;
 double dysysim::SimTime::t = 0;
 
 double dysysim::SimBlock::sumInputs() const
@@ -28,10 +30,10 @@ void dysysim::SimTime::set(double delta, double end)
 
 bool dysysim::SimTime::simulation_on()
 {
-   if (t <= end_t) {
+   if (t < end_t) {
       dysysim::SimBlock::exeSimBlocks();
    }
-   return t <= end_t;
+   return t < end_t;
 }
 
 std::map<int, std::shared_ptr<dysysim::SimBlock>>

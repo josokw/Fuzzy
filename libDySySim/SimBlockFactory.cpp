@@ -39,6 +39,7 @@ void dysysim::SimBlockFactory::init()
    add("SUM", std::make_shared<dysysim::Summator>());
    add("TIME", std::make_shared<dysysim::Time>());
    add("ZOH", std::make_shared<dysysim::ZeroOrderHold>());
+   add("RELAY", std::make_shared<dysysim::Relay>());
 }
 
 std::vector<std::error_code>

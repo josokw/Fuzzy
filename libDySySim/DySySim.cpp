@@ -331,6 +331,9 @@ dysysim::Frequency::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   frequency_ = par[0];
+   phase_ = par[1];
 
    return errs;
 }
@@ -699,3 +702,32 @@ dysysim::Log::configDataIsOK(const SimBlock::configData_t &config) const
    }
    return errs;
 }
+
+std::vector<std::error_code>
+dysysim::Relay::config(const SimBlock::configData_t &config)
+{
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   ref_ = par[0];
+
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Relay::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() != 3) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- DySySim error: should have 3 inputs\n";
+   }
+   if (config.parameters.size() != 1) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- DySySim error: should have 1 parameter\n";
+   }
+   return errs;
+}
+

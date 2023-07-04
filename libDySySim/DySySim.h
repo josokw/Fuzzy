@@ -793,15 +793,47 @@ public:
 
    void exe() override
    {
-      std::cerr << " t = " << std::fixed << std::setprecision(3) << SimTime::t
-                << "   ";
+      std::cerr << std::fixed << std::right
+                << std::setw(SimBlock::sim_time.width_t)
+                << std::setprecision(SimBlock::sim_time.precision_t)
+                << SimTime::t << "  ";
       for (auto id : inputs_) {
          auto pSB = SimBlock::getSimBlock(id);
-         std::cerr << id << " " << pSB->getBlockType() << " = " << pSB->output()
-                   << "   ";
+         std::cerr << std::setw(2) << id << " " << std::setw(4)
+                   << pSB->getBlockType() << " = " << std::setprecision(3)
+                   << pSB->output() << "  ";
       }
       std::cerr << "\n";
    }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
+// Relay
+class Relay : public SimBlock
+{
+public:
+   Relay()
+      : SimBlock{"REL", SimBlock::ioType_t::inputoutput}
+      , ref_{0.0}
+   {
+   }
+   ~Relay() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Relay>();
+   }
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { input(inputs_[0]); }
+   void input(double in) { out_ = (in <= ref_) ? inputs_[1] : inputs_[2]; }
+
+private:
+   double ref_;
 
 private:
    std::vector<std::error_code>
