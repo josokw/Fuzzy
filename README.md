@@ -128,28 +128,28 @@ Defuzzification example 2 and 3:
 
 ## DySySim
 
-DySySim is a very basic [TUTSIM](http://tutsim.com/) look-a-like.
-TUTSIM was developed in the early 70's for script based simulation of
-time continuous systems represented in simulation blocks.
+DySySim is a very basic [TUTSIM](http://tutsim.com/) look-a-like. TUTSIM was developed in the early 70's for script based simulation of time continuous systems represented in simulation blocks. 
 
-Example DySySim script for simulating the response of a *RC network*:
+Fuzzy is not (yet) implemented in DySySim.
+
+### Simulating the response of a *RC network*
 
 ```
 // Pulse response RC-network
 
-delta_t = 0.01    t_end = 1.0
+delta_t = 0.005  t_end = 1.2  width_t = 5  precision_t = 1
 
 1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
 2 ATT 1,-3 att=10.0    // RC time constant = 10 sec
 3 INT 2    out_t0=0.0
 ```
 
-Second script example for simulating a *Mass-Spring-Damper system*:
+### Simulating a *Mass-Spring-Damper system*
 
 ```
 // Mass-Spring-Damper system
 
-delta_t = 0.02   t_end = 5.00
+delta_t = 0.02  t_end = 5.00  width_t = 4  precision_t = 2
 
 1 PLS           off=0.0 on=25.0 t_on=0.1 t_off=1.1   // F = 25 N for 1 second
 2 ATT 1,-5, -6  att=10                               // m = 10 kg

@@ -1,4 +1,4 @@
-// Solar Thermal Collector
+// Solar Thermal Collector (under construction)
 delta_t = 3600  t_end = 86400  width_t = 6  precision_t = 0
 
 1 FRQ f=1.15741E-05 phase=0     // Day rithm: sine 1/(24*60*60) [Hz]
