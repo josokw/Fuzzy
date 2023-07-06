@@ -12,9 +12,9 @@ namespace dss = dysysim;
 
 int main(int argc, char *argv[])
 {
-   std::cout << "-- " APPNAME_VERSION " "
-             << "-- uses " + dss::libName + " v" << dss::libVersion << " "
-             << std::string(25, '-') << "\n";
+   // std::cout << "-- " APPNAME_VERSION " "
+   //           << "-- uses " + dss::libName + " v" << dss::libVersion << " "
+   //           << std::string(25, '-') << "\n";
 
    try {
       dss::Builder builder;

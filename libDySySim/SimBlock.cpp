@@ -58,6 +58,7 @@ std::error_code dysysim::SimBlock::addSimBlock(int id,
 std::error_code dysysim::SimBlock::setExeSequence()
 {
    exeSequence_s.clear();
+   auto const size = allSimBlocks_s.size();
 
    // First select all input0 SimBlocks
    for (const auto &[id, pSB] : allSimBlocks_s) {
@@ -66,27 +67,29 @@ std::error_code dysysim::SimBlock::setExeSequence()
       }
    }
 
-   auto size_previous = exeSequence_s.size();
-   auto size = exeSequence_s.size();
-   do {
-      size_previous = exeSequence_s.size();
+   auto size_exeSeq = exeSequence_s.size();
+   int max_count = 50;
+   int c = 0;
+   while (size_exeSeq < size && c < max_count) {
+      ++c;
       for (const auto &[id, pSB] : allSimBlocks_s) {
          if (not pSB->IdInExeSequence(id)) {
             auto error = pSB->allInputsAvailable();
             if (error != SimBlockErrc{}) {
                return error;
             }
-            if (pSB->allInputsInExeSequence()) {
+            else {
                exeSequence_s.push_back(id);
+               size_exeSeq = exeSequence_s.size();
             }
          }
       }
-      size = exeSequence_s.size();
-   } while (size != size_previous);
+   }
 
-   // if (exeSequence_s.size() != dysysim::SimBlock::allSimBlocks_s.size()) {
-   //    return SimBlockErrc::ModelIsInconsistent;
-   // }
+   if (exeSequence_s.size() != dysysim::SimBlock::allSimBlocks_s.size()) {
+      return SimBlockErrc::ModelIsInconsistentError;
+   }
+
    return SimBlockErrc{};
 }
 

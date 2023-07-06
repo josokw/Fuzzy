@@ -793,15 +793,26 @@ public:
 
    void exe() override
    {
+      if (write_columns_) {
+         std::cerr << std::right << "t"
+                   << std::string(SimBlock::sim_time.width_t + 1, ' ');
+         for (auto id : inputs_) {
+            auto pSB = SimBlock::getSimBlock(id);
+            std::cerr << std::setw(2) << id << " " << std::setw(4)
+                      << pSB->getBlockType() << "  ";
+         }
+         std::cerr << "\n";
+         write_columns_ = false;
+      }
       std::cerr << std::fixed << std::right
                 << std::setw(SimBlock::sim_time.width_t)
                 << std::setprecision(SimBlock::sim_time.precision_t)
                 << SimTime::t << "  ";
+      // std::cerr << std::endl;
       for (auto id : inputs_) {
          auto pSB = SimBlock::getSimBlock(id);
-         std::cerr << std::setw(2) << id << " " << std::setw(4)
-                   << pSB->getBlockType() << " = " << std::setprecision(3)
-                   << pSB->output() << "  ";
+         std::cerr << std::setw(8) << std::setprecision(3) << pSB->output()
+                   << "  ";
       }
       std::cerr << "\n";
    }
@@ -809,6 +820,9 @@ public:
 private:
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
+
+private:
+   bool write_columns_ = true;
 };
 
 // Relay
@@ -816,7 +830,7 @@ class Relay : public SimBlock
 {
 public:
    Relay()
-      : SimBlock{"REL", SimBlock::ioType_t::inputoutput}
+      : SimBlock{"RELAY", SimBlock::ioType_t::inputoutput}
       , ref_{0.0}
    {
    }
@@ -829,8 +843,16 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { input(inputs_[0]); }
-   void input(double in) { out_ = (in <= ref_) ? inputs_[1] : inputs_[2]; }
+   void exe() override
+   {  
+      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
+            SimBlock::allSimBlocks_s[inputs_[1]]->output(),
+            SimBlock::allSimBlocks_s[inputs_[2]]->output());
+   }
+   void input(double in1, double in2, double in3)
+   {
+      out_ = (in1 <= ref_) ? in2 : in3;
+   }
 
 private:
    double ref_;

@@ -6,8 +6,6 @@
 dysysim::Builder::Builder()
 {
    initFactory();
-   std::cout << "-- SimBlockFactory " << factory_.size()
-             << " SimBlock types available.\n";
 }
 
 void dysysim::Builder::operator()(std::ifstream &script)
@@ -27,8 +25,6 @@ void dysysim::Builder::operator()(std::ifstream &script)
          auto [id, type, inputs, params] = result;
          SimBlock::configData_t cdata = {id, inputs, params};
          if (id != -1) {
-            std::cerr << "[" << lineNumber_ << "]  " << id << " " << type
-                      << "\n";
             auto erssnew = factory_.configCheck(type, cdata);
             if (erssnew.size()) {
                for (auto er : erssnew) {
@@ -39,10 +35,7 @@ void dysysim::Builder::operator()(std::ifstream &script)
          }
       }
       SimBlock::setExeSequence();
-
-      std::cout << "\n---- DySySim simulation starts\n";
       execute();
-      std::cout << "\n";
    }
    catch (dysysim::FactoryAddError &e) {
       std::cerr << e.what() << ": " << e.getKey() << " is not unique\n";

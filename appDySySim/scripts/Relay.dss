@@ -1,0 +1,10 @@
+// Relay test
+delta_t = 0.05  t_end = 2  width_t = 6  precision_t = 2
+
+1 FRQ f=1.0 phase=0     // 1 [Hz]
+2 CON c=-11.0
+3 CON c=22.0
+10 RELAY 1,2,3 ref=0
+
+20 LOG 1,2,3,10
+
