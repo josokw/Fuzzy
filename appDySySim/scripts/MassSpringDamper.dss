@@ -8,4 +8,5 @@ delta_t = 0.02  t_end = 5.00  width_t = 4  precision_t = 2
 4 INT 3         out_t0=0.0                           // x(0) = 0 m
 5 GAIN 3        gain=30                              // r = 30N s/m
 6 GAIN 4        gain=375                             // k = 375 N/m
-7 LOG 1,4
+
+7 LOG 1,4  w=6 p=3  w=6 p=3

@@ -3,7 +3,7 @@
 #include "Exceptions.h"
 #include "SimBlock.h"
 
-dysysim::Builder::Builder()
+dysysim::Builder::Builder(): parser_(*this)
 {
    initFactory();
 }

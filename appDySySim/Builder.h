@@ -11,7 +11,8 @@
 
 namespace dysysim {
 
-/// Builder parsers text input stream and creates executable model.
+/// Builder parsers text input stream, creates an executable model and executes
+/// this builded model.
 class Builder final
 {
 public:
@@ -29,7 +30,8 @@ private:
    std::vector<std::string> scriptLines_;
    int lineNumber_ = 0;
    std::shared_ptr<SimBlock> pSimBlok_;
-
+   
+private:
    void initFactory();
 };
 

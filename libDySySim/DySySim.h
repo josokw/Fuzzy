@@ -809,10 +809,12 @@ public:
                 << std::setprecision(SimBlock::sim_time.precision_t)
                 << SimTime::t << "  ";
       // std::cerr << std::endl;
-      for (auto id : inputs_) {
+      for (auto index = 0; auto id : inputs_) {
          auto pSB = SimBlock::getSimBlock(id);
-         std::cerr << std::setw(8) << std::setprecision(3) << pSB->output()
-                   << "  ";
+         std::cerr << std::setw(parameters_[index])
+                   << std::setprecision(parameters_[index + 1])
+                   << pSB->output() << "  ";
+         index += 2;
       }
       std::cerr << "\n";
    }
@@ -823,6 +825,7 @@ private:
 
 private:
    bool write_columns_ = true;
+   std::vector<int> parameters_;
 };
 
 // Relay
@@ -844,7 +847,7 @@ public:
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
-   {  
+   {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
             SimBlock::allSimBlocks_s[inputs_[1]]->output(),
             SimBlock::allSimBlocks_s[inputs_[2]]->output());

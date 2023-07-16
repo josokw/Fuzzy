@@ -96,11 +96,12 @@ public:
    /// Calculates all SimBlock out_ for t = t_n (n > 0).
    static void exeSimBlocks();
 
+public:
+   const std::string blockType_;
    static std::map<int, std::shared_ptr<SimBlock>> allSimBlocks_s;
    static SimTime sim_time;
 
 protected:
-   const std::string blockType_;
    const ioType_t ioType_;
    int id_;
    std::vector<int> inputs_;

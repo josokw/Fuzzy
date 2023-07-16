@@ -17,11 +17,11 @@ dysysim::Constant::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should not have inputs\n";
+      std::cerr << "---- " << blockType_ << " error: should not have inputs\n";
    }
    if (config.parameters.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 1 parameter\n";
+      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
    }
    return errs;
 }
@@ -43,11 +43,12 @@ std::vector<std::error_code> dysysim::AlgebraicDelay::configDataIsOK(
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have 1 input\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should not have parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should not have parameters\n";
    }
    return errs;
 }
@@ -70,11 +71,11 @@ dysysim::Attenuator::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 1 parameter\n";
+      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
    }
    return errs;
 }
@@ -96,11 +97,12 @@ dysysim::Cos::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -122,11 +124,12 @@ dysysim::Divider::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() != 2) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have 2 inputs\n";
+      std::cerr << "---- " << blockType_ << " error: should have 2 inputs\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -150,11 +153,11 @@ dysysim::Gain::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 1 parameter\n";
+      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
    }
    return errs;
 }
@@ -179,15 +182,17 @@ dysysim::Limit::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 2) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 2 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 2 parameters\n";
    } else {
       if (config.parameters[0] >= config.parameters[1]) {
          errs.push_back(SimBlockErrc::ConfigParameterError);
-         std::cerr << "---- DySySim error: parameter_1 is not < parameter_2\n";
+         std::cerr << "---- " << blockType_
+                   << " error: parameter_1 is not < parameter_2\n";
       }
    }
    return errs;
@@ -210,11 +215,12 @@ dysysim::Max::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -236,11 +242,12 @@ dysysim::Min::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -262,11 +269,12 @@ dysysim::Multiplier::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -288,11 +296,12 @@ dysysim::Sin::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -314,11 +323,12 @@ dysysim::Summator::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -344,11 +354,12 @@ dysysim::Frequency::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have no inputs\n";
+      std::cerr << "---- " << blockType_ << " error: should have no inputs\n";
    }
    if (config.parameters.size() != 2) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 2 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 2 parameters\n";
    }
    return errs;
 }
@@ -374,15 +385,17 @@ dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have no inputs\n";
+      std::cerr << "---- " << blockType_ << " error: should have no inputs\n";
    }
    if (config.parameters.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 3 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 3 parameters\n";
    } else {
       if (config.parameters[2] <= 0) {
          errs.push_back(SimBlockErrc::ConfigParameterError);
-         std::cerr << "---- DySySim error: parameter 3 should be > 0\n";
+         std::cerr << "---- " << blockType_
+                   << " error: parameter 3 should be > 0\n";
       }
    }
    return errs;
@@ -410,11 +423,12 @@ dysysim::Puls::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have no inputs\n";
+      std::cerr << "---- " << blockType_ << " error: should have no inputs\n";
    }
    if (config.parameters.size() != 4) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 4 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 4 parameters\n";
    }
    return errs;
 }
@@ -437,11 +451,12 @@ dysysim::Time::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have no inputs\n";
+      std::cerr << "---- " << blockType_ << " error: should have no inputs\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -471,11 +486,12 @@ dysysim::Delay::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 2) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 2 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 2 parameters\n";
    }
    return errs;
 }
@@ -500,11 +516,12 @@ dysysim::FirstOrder::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 2) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 2 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 2 parameters\n";
    }
    return errs;
 }
@@ -530,11 +547,12 @@ dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have 1 input\n";
    }
    if (config.parameters.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 3 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 3 parameters\n";
    }
    return errs;
 }
@@ -558,11 +576,11 @@ dysysim::Integrator::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 1 parameter\n";
+      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
    }
    return errs;
 }
@@ -586,11 +604,12 @@ std::vector<std::error_code> dysysim::IntegratorEuler::configDataIsOK(
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 3 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 3 parameters\n";
    }
    return errs;
 }
@@ -614,11 +633,12 @@ dysysim::PI::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 3 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 3 parameters\n";
    }
    return errs;
 }
@@ -642,11 +662,12 @@ dysysim::PID::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 3 parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have 3 parameters\n";
    }
    return errs;
 }
@@ -668,11 +689,12 @@ std::vector<std::error_code> dysysim::ZeroOrderHold::configDataIsOK(
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_
+                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -684,6 +706,10 @@ dysysim::Log::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
+   parameters_ = std::vector<int>(config.parameters.size());
+   for (auto index = 0; auto &e : parameters_) {
+      e = int(config.parameters[index++]);
+   }
 
    return errs;
 }
@@ -694,11 +720,12 @@ dysysim::Log::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have >= 1 input\n";
+      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
-   if (config.parameters.size() != 0) {
+   if (config.parameters.size() != (2 * config.inputs.size())) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have no parameters\n";
+      std::cerr << "---- " << blockType_ << " error: should have "
+                << (2 * config.inputs.size()) << " parameters\n";
    }
    return errs;
 }
@@ -722,12 +749,11 @@ dysysim::Relay::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (config.inputs.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- DySySim error: should have 3 inputs\n";
+      std::cerr << "---- " << blockType_ << " error: should have 3 inputs\n";
    }
    if (config.parameters.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- DySySim error: should have 1 parameter\n";
+      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
    }
    return errs;
 }
-
