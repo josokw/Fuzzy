@@ -154,12 +154,14 @@ delta_t = 0.005  t_end = 1.2  width_t = 5  precision_t = 1
 delta_t = 0.02  t_end = 5.00  width_t = 4  precision_t = 2
 
 1 PLS           off=0.0 on=25.0 t_on=0.1 t_off=1.1   // F = 25 N for 1 second
-2 ATT 1,-5,-6   att=10                               // m = 10 kg
+2 ATT 1,-5, -6  att=10                               // m = 10 kg
 3 INT 2         out_t0=0.0                           // x'(0) = 0 m/s
 4 INT 3         out_t0=0.0                           // x(0) = 0 m
 5 GAIN 3        gain=30                              // r = 30N s/m
 6 GAIN 4        gain=375                             // k = 375 N/m
-7 LOG 1,4
+
+7 LOG 1,4  w=6 p=3  w=6 p=3
+
 ```
 
 Some output:
