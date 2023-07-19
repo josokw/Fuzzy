@@ -1,4 +1,5 @@
 // Solar Thermal Collector (under construction)
+
 delta_t = 3600  t_end = 172800  width_t = 6  precision_t = 0
 
 1 FRQ f=1.15741E-05 phase=0     // Day rithm: sine 1/(24*60*60) [Hz]
@@ -28,6 +29,7 @@ delta_t = 3600  t_end = 172800  width_t = 6  precision_t = 0
 21 INT 20 out_t0=10.0           // Thouse [degree Celsius]
 22 ATT -21,3 Rh=3.6             // Rhouse [Ksec/kJ]
 
+30 DIV 1  div=3600
+
 // Output data
 30 LOG 3 8 14 21  w=6 p=1  w=7 p=0  w=6 p=1  w=6 p=1
-

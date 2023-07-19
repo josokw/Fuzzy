@@ -2,9 +2,9 @@
 delta_t = 0.05  t_end = 2  width_t = 6  precision_t = 2
 
 1 FRQ f=1.0 phase=0     // 1 [Hz]
-2 CON c=-11.0
-3 CON c=22.0
-10 RELAY 1,2,3 ref=0
+2 CON c=1.0
+3 CON c=0.0
+10 RELAY 1,2,3 ref=0.5
 
 20 LOG 1,2,3,10  w=6 p=3  w=5 p=1  w=5 p=1  w=5 p=1
 
