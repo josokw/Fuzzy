@@ -319,12 +319,12 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { out_ = sumInputs(); }
-   void input(double in1, double in2) { out_ = in1 + in2; }
-   void input(double in1, double in2, double in3) { out_ = in1 + in2 + in3; }
-   void input(double in1, double in2, double in3, double in4)
-   {
-      out_ = in1 + in2 + in3 + in4;
-   }
+   // void input(double in1, double in2) { out_ = in1 + in2; }
+   // void input(double in1, double in2, double in3) { out_ = in1 + in2 + in3; }
+   // void input(double in1, double in2, double in3, double in4)
+   // {
+   //    out_ = in1 + in2 + in3 + in4;
+   // }
 
 private:
    std::vector<std::error_code>
@@ -812,8 +812,8 @@ public:
       for (auto index = 0; auto id : inputs_) {
          auto pSB = SimBlock::getSimBlock(id);
          std::cerr << std::setw(parameters_[index])
-                   << std::setprecision(parameters_[index + 1])
-                   << pSB->output() << "  ";
+                   << std::setprecision(parameters_[index + 1]) << pSB->output()
+                   << "  ";
          index += 2;
       }
       std::cerr << "\n";
@@ -859,6 +859,75 @@ public:
 
 private:
    double ref_;
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
+class And : public SimBlock
+{
+public:
+   And()
+      : SimBlock{"AND", SimBlock::ioType_t::inputoutput}
+   {
+   }
+   ~And() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<And>();
+   }
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { out_ = andInputs(); }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
+class Or : public SimBlock
+{
+public:
+   Or()
+      : SimBlock{"OR", SimBlock::ioType_t::inputoutput}
+   {
+   }
+   ~Or() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Or>();
+   }
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { out_ = orInputs(); }
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
+class Not : public SimBlock
+{
+public:
+   Not()
+      : SimBlock{"NOT", SimBlock::ioType_t::inputoutput}
+   {
+   }
+   ~Not() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Not>();
+   }
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { out_ = notInput(); }
 
 private:
    std::vector<std::error_code>

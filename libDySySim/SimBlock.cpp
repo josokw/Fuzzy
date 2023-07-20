@@ -20,6 +20,36 @@ double dysysim::SimBlock::sumInputs() const
    return sum;
 }
 
+double dysysim::SimBlock::andInputs() const
+{
+   for (auto id : inputs_) {
+      // Lazy evaluation of inputs
+      if (dysysim::is_0(SimBlock::allSimBlocks_s[id]->out_)) {
+         return 0.0;
+      }
+   }
+   return 1.0;
+}
+
+double dysysim::SimBlock::orInputs() const
+{
+   for (auto id : inputs_) {
+      // Lazy evaluation of inputs
+      if (dysysim::is_1(SimBlock::allSimBlocks_s[id]->out_)) {
+         return 1.0;
+      }
+   }
+   return 0.0;
+}
+
+double dysysim::SimBlock::notInput() const
+{
+   if (dysysim::is_1(SimBlock::allSimBlocks_s[inputs_[0]]->out_)) {
+      return 0.0;
+   }
+   return 1.0;
+}
+
 void dysysim::SimTime::set(double delta, double end)
 {
    dysysim::SimBlock::clearSimBlocks();

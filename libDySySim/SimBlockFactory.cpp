@@ -40,6 +40,9 @@ void dysysim::SimBlockFactory::init()
    add("TIME", std::make_shared<dysysim::Time>());
    add("ZOH", std::make_shared<dysysim::ZeroOrderHold>());
    add("RELAY", std::make_shared<dysysim::Relay>());
+   add("AND", std::make_shared<dysysim::And>());
+   add("OR", std::make_shared<dysysim::Or>());
+   add("NOT", std::make_shared<dysysim::Not>());
 }
 
 std::vector<std::error_code>

@@ -13,6 +13,23 @@
 
 namespace dysysim {
 
+// For logic related simblocks
+const double LOGIC01{0.5};
+inline bool is_0(double in)
+{
+   return in < LOGIC01;
+}
+inline bool is_1(double in)
+{
+   return in >= LOGIC01;
+}
+inline double convert01(double in)
+{
+   if (is_0(in))
+      return 0.0;
+   return 1.0;
+}
+
 /// SimTime contains simulation time data.
 /// \todo Consider implementation as a struct?
 /// \todo Consider implementation t as std::chrono::...
@@ -68,6 +85,9 @@ public:
    ioType_t getIOType() const { return ioType_; }
    int getId() const { return id_; }
    double sumInputs() const;
+   double andInputs() const;
+   double orInputs() const;
+   double notInput() const;
    double output() const { return out_; }
 
    virtual std::shared_ptr<SimBlock> create() = 0;
