@@ -1,0 +1,12 @@
+// Pulse response Logic network
+
+delta_t = 0.005  t_end = 1.0  width_t = 4  precision_t = 2
+
+1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.5
+2 PLS      off=0.0 on=1.0 t_on=0.3 t_off=0.6
+3 AND 1,2
+4 OR 1,2
+5 NOT 4
+
+10 LOG 1,2,3,4,5 w=2 p=0  w=2 p=0  w=2 p=0  w=2 p=0  w=2 p=0
+
