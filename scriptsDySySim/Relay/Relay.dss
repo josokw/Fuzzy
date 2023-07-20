@@ -1,5 +1,5 @@
 // Relay test
-delta_t = 0.05  t_end = 2  width_t = 6  precision_t = 2
+delta_t = 0.001  t_end = 2  width_t = 6  precision_t = 2
 
 1 FRQ f=1.0 phase=0     // 1 [Hz]
 2 CON c=1.0
