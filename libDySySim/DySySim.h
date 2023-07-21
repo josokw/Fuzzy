@@ -978,6 +978,32 @@ public:
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
+class XOr : public SimBlock
+{
+public:
+   XOr()
+      : SimBlock{"XOR", SimBlock::ioType_t::inputoutput}
+   {
+   }
+   ~XOr() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<XOr>();
+   }
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override
+   {
+      auto nand = is_0(andInputs());
+      out_ = convert01(nand and orInputs());
+   }
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
 } // namespace dysysim
 
 #endif // DYSYSIM_H

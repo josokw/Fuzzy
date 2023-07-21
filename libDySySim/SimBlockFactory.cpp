@@ -45,6 +45,7 @@ void dysysim::SimBlockFactory::init()
    add("NOT", std::make_shared<dysysim::Not>());
    add("NAND", std::make_shared<dysysim::NAnd>());
    add("NOR", std::make_shared<dysysim::NOr>());
+   add("XOR", std::make_shared<dysysim::XOr>());
 }
 
 std::vector<std::error_code>
