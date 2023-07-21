@@ -794,12 +794,14 @@ public:
    void exe() override
    {
       if (write_columns_) {
-         std::cerr << std::right << "t"
-                   << std::string(SimBlock::sim_time.width_t + 1, ' ');
-         for (auto id : inputs_) {
+         std::cerr << '#' << std::setw(SimBlock::sim_time.width_t - 1)
+                   << std::right << "t";
+         for (auto index = 0; auto id : inputs_) {
             auto pSB = SimBlock::getSimBlock(id);
-            std::cerr << std::setw(2) << id << " " << std::setw(4)
-                      << pSB->getBlockType() << "  ";
+            // std::cerr << std::setw(2) << id << " " << std::setw(4)
+            //           << pSB->getBlockType() << "  ";
+            std::cerr << ' ' << std::setw(parameters_[index]) << id;
+            index += 2;
          }
          std::cerr << "\n";
          write_columns_ = false;
@@ -807,13 +809,12 @@ public:
       std::cerr << std::fixed << std::right
                 << std::setw(SimBlock::sim_time.width_t)
                 << std::setprecision(SimBlock::sim_time.precision_t)
-                << SimTime::t << "  ";
-      // std::cerr << std::endl;
+                << SimTime::t;
       for (auto index = 0; auto id : inputs_) {
          auto pSB = SimBlock::getSimBlock(id);
-         std::cerr << std::setw(parameters_[index])
-                   << std::setprecision(parameters_[index + 1]) << pSB->output()
-                   << "  ";
+         std::cerr << ' ' << std::setw(parameters_[index])
+                   << std::setprecision(parameters_[index + 1])
+                   << pSB->output();
          index += 2;
       }
       std::cerr << "\n";
