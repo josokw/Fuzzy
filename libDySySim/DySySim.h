@@ -934,6 +934,50 @@ private:
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
+class NAnd : public SimBlock
+{
+public:
+   NAnd()
+      : SimBlock{"NAND", SimBlock::ioType_t::inputoutput}
+   {
+   }
+   ~NAnd() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<NAnd>();
+   }
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { out_ = is_0(andInputs() ? 1.0 : 0.0); }
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
+class NOr : public SimBlock
+{
+public:
+   NOr()
+      : SimBlock{"NOR", SimBlock::ioType_t::inputoutput}
+   {
+   }
+   ~NOr() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<NOr>();
+   }
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { out_ = is_0(orInputs() ? 1.0 : 0.0); }
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
 } // namespace dysysim
 
 #endif // DYSYSIM_H

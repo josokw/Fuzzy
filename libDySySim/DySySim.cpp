@@ -608,8 +608,7 @@ std::vector<std::error_code> dysysim::IntegratorEuler::configDataIsOK(
    }
    if (config.parameters.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_
-                << " error: should have 1 parameter\n";
+      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
    }
    return errs;
 }
@@ -828,6 +827,58 @@ dysysim::Not::configDataIsOK(const SimBlock::configData_t &config) const
    if (config.inputs.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- " << blockType_ << " error: should have 0 parameter\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::NAnd::config(const SimBlock::configData_t &config)
+{
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::NAnd::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() < 2) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- " << blockType_ << " error: should have > 1 inputs\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- " << blockType_ << " error: should have 0 parameter\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::NOr::config(const SimBlock::configData_t &config)
+{
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::NOr::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() < 2) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- " << blockType_ << " error: should have > 1 inputs\n";
    }
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
