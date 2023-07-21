@@ -606,10 +606,10 @@ std::vector<std::error_code> dysysim::IntegratorEuler::configDataIsOK(
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
-   if (config.parameters.size() != 3) {
+   if (config.parameters.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
       std::cerr << "---- " << blockType_
-                << " error: should have 3 parameters\n";
+                << " error: should have 1 parameter\n";
    }
    return errs;
 }
