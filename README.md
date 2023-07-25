@@ -136,7 +136,7 @@ Fuzzy is not (yet) implemented in DySySim.
 
 ### Simulating the response of a *RC network*
 
-```
+```verbatim
 // Pulse response RC-network
 
 delta_t = 0.005  t_end = 1.2  width_t = 5  precision_t = 1
@@ -167,7 +167,7 @@ delta_t = 0.02  t_end = 5.00  width_t = 4  precision_t = 2
 Some output:
 
 ```
-t      1  PLS   4  INT  
+#  t         1         4
 0.00     0.000     0.000  
 0.02     0.000     0.000  
 0.04     0.000     0.000  

@@ -107,14 +107,20 @@ std::error_code dysysim::SimBlock::setExeSequence()
             auto error = pSB->allInputsAvailable();
             if (error != SimBlockErrc{}) {
                return error;
-            }
-            else {
+            } else {
                exeSequence_s.push_back(id);
                size_exeSeq = exeSequence_s.size();
             }
          }
       }
    }
+
+
+   std::cout << "..   exe sequence: ";
+   for (auto &id : exeSequence_s) {
+      std::cout << id << " ";
+   }
+   std::cout << std::endl;
 
    if (exeSequence_s.size() != dysysim::SimBlock::allSimBlocks_s.size()) {
       return SimBlockErrc::ModelIsInconsistentError;

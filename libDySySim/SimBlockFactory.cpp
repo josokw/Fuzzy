@@ -46,6 +46,8 @@ void dysysim::SimBlockFactory::init()
    add("NAND", std::make_shared<dysysim::NAnd>());
    add("NOR", std::make_shared<dysysim::NOr>());
    add("XOR", std::make_shared<dysysim::XOr>());
+   add("SGN", std::make_shared<dysysim::Sign>());
+   add("CLK", std::make_shared<dysysim::Clock>());
 }
 
 std::vector<std::error_code>

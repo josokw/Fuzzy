@@ -33,6 +33,7 @@ dysysim::AlgebraicDelay::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
+   out_= out_previous_ = config.parameters[0];
 
    return errs;
 }
@@ -45,10 +46,10 @@ std::vector<std::error_code> dysysim::AlgebraicDelay::configDataIsOK(
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have 1 input\n";
    }
-   if (config.parameters.size() != 0) {
+   if (config.parameters.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
       std::cerr << "---- " << blockType_
-                << " error: should not have parameters\n";
+                << " error: should have 1 parameter\n";
    }
    return errs;
 }
@@ -909,6 +910,61 @@ dysysim::XOr::configDataIsOK(const SimBlock::configData_t &config) const
    if (config.parameters.size() != 0) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
       std::cerr << "---- " << blockType_ << " error: should have 0 parameter\n";
+   }
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Sign::config(const SimBlock::configData_t &config)
+{
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Sign::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() != 1) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- " << blockType_ << " error: should have 1 input\n";
+   }
+   if (config.parameters.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- " << blockType_ << " error: should have 0 parameter\n";
+   }
+   return errs;
+}
+
+// Sinus generator, amplitude = 1
+std::vector<std::error_code>
+dysysim::Clock::config(const SimBlock::configData_t &config)
+{
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   auto par = begin(config.parameters);
+   frequency_ = par[0];
+
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Clock::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   if (config.inputs.size() != 0) {
+      errs.push_back(SimBlockErrc::ConfigInputIdError);
+      std::cerr << "---- " << blockType_ << " error: should have no inputs\n";
+   }
+   if (config.parameters.size() != 1) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
    }
    return errs;
 }

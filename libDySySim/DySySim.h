@@ -53,6 +53,7 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
+   void exe() override { input(sumInputs()); }
    void input(double in)
    {
       out_ = out_previous_;
@@ -1000,6 +1001,58 @@ public:
       auto nand = is_0(andInputs());
       out_ = convert01(nand and orInputs());
    }
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
+class Sign : public SimBlock
+{
+public:
+   Sign()
+      : SimBlock{"SGN", SimBlock::ioType_t::inputoutput}
+   {
+   }
+   ~Sign() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Sign>();
+   }
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { out_ = std::signbit(inputs_[0]) ? 1.0 : 0.0; }
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
+class Clock : public SimBlock
+{
+public:
+   Clock()
+      : SimBlock{"CLK", SimBlock::ioType_t::input0}
+      , frequency_{1.0}
+   {
+      // out_ = 1.0;
+   }
+   ~Clock() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Clock>();
+   }
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+   void exe() override
+   {
+      out_ =
+         std::signbit(std::sin(2 * M_PI * frequency_ * SimTime::t)) ? 0.0 : 1.0;
+   }
+
+private:
+   double frequency_;
 
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
