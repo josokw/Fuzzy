@@ -1,0 +1,17 @@
+// Flu Pandemic
+
+delta_t = 0.01  t_end = 10.0  width_t = 6  precision_t = 2
+
+1 GAIN 7  k=-0.05  // mortality ratio
+2 EUL 1   N=200    // N #persons in group
+3 GAIN 7  m=0.1    // immunity ratio
+4 EUL  3  I=0      // I #immuum persons
+5 SUM 2,-4,-7      // B #persons not yet infected
+6 MUL 5,8
+7 EUL 6,9 P=20     // P #flu patients
+8 GAIN 7  c=0.01   // infection ratio
+9 GAIN 7  k=0.05   // mortality ratio
+
+20 LOG 2,4,5,7  w=5 p=2 w=5 p=2 w=5 p=2  w=5 p=2
+
+
