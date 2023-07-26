@@ -1,9 +1,9 @@
-# Fuzzy and DySySim (Dynamical Systems Simulator)
+# Fuzzy Logic and Control, DySySim (Dynamical Systems Simulator)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/bf89c5a36cb9439182fa7d20216c0973)](https://www.codacy.com/project/josokw/Fuzzy/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=josokw/Fuzzy&amp;utm_campaign=Badge_Grade_Dashboard)
 [![CodeFactor](https://www.codefactor.io/repository/github/josokw/fuzzy/badge)](https://www.codefactor.io/repository/github/josokw/fuzzy)
 
-C++ FuzzyEngine library implemented.
+A C++ FuzzyEngine library is implemented.
 
 ## Build management by CMake
 
@@ -132,7 +132,7 @@ Defuzzification example 2 and 3:
 
 DySySim is a very basic [TUTSIM](http://tutsim.com/) look-a-like. TUTSIM was developed in the early 70's for script based simulation of time continuous systems represented in simulation blocks.
 
-Fuzzy is not (yet) implemented in DySySim.
+Fuzzy functions are not (yet) implemented in DySySim simulation blocks, available in hardcoded examples.
 
 ### Simulating the response of a *RC network*
 
