@@ -12,6 +12,6 @@ delta_t = 0.01  t_end = 10.0  width_t = 6  precision_t = 2
 8 GAIN 7  c=0.01   // infection ratio
 9 GAIN 7  k=0.05   // mortality ratio
 
-20 LOG 2,4,5,7  w=5 p=2 w=5 p=2 w=5 p=2  w=5 p=2
+20 LOG 2,4,5,7  w=6 p=1  w=6 p=1  w=6 p=1  w=6 p=1
 
 
