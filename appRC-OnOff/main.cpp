@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
       const double delta_t{0.005};
       const double RCtime{0.5};
       dss::SimTime::set(delta_t, 5 * RCtime);
+
       sbf.configCheck("STP", {1, {}, {0, 3000, 0.1}});
       sbf.configCheck("SUM", {2, {1, -4}, {}});
       sbf.configCheck("ONOFF", {3, {2}, {0, 4000, 0}});
@@ -40,16 +41,15 @@ int main(int argc, char *argv[])
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       do {
-         std::cout << "  t = " << std::setw(5) << dss::SimBlock::sim_time.t
-                   << "  Setpoint = " << std::setw(5) << getOutput(1)
-                   << "  Control = " << std::setw(5) << getOutput(3)
-                   << "  Measured Value = " << std::setw(8) << getOutput(4)
+         std::cout << std::setw(5) << dss::SimBlock::sim_time.t << " "
+                   << std::setw(5) << getOutput(1) << " " << std::setw(5)
+                   << getOutput(3) << " " << std::setw(8) << getOutput(4)
                    << std::endl;
 
          if (argc == 2) {
             simdata << std::setw(4) << dss::SimBlock::sim_time.t << " "
-                    << getOutput(1) << " " << getOutput(2) << " "
-                    << getOutput(4) << std::endl;
+                    << std::setw(5) << getOutput(1) << " " << std::setw(5)
+                    << getOutput(2) << " " << getOutput(4) << std::endl;
          }
       } while (dss::SimTime::simulation_on());
 
