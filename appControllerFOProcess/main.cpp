@@ -33,8 +33,9 @@ int main(int argc, char *argv[])
       sbf.add("FUZZYC", pFuzzyC);
 
       const double RCtime{0.47};
-      dss::SimTime::set(0.005, 20.0);
-      sbf.configCheck("STP", {1, {}, {0, 2055, 0.1}});
+      dss::SimTime::set(0.05, 10.0);
+
+      sbf.configCheck("STP", {1, {}, {0.5, 1, 0.1}});
       sbf.configCheck("SUM", {2, {1, -4}, {}});
       sbf.configCheck("FUZZYC", {3, {2}, {}});
       sbf.configCheck("FIO", {4, {3}, {RCtime, 0.0}});
@@ -47,7 +48,8 @@ int main(int argc, char *argv[])
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       do {
-         std::cout << "t = " << std::setw(5) << dss::SimBlock::sim_time.t
+         std::cout << "t = " << std::setw(6) << std::setprecision(1)
+                   << dss::SimBlock::sim_time.t
                    << "  Setpoint = " << std::setw(6) << getOutput(1)
                    << "  Control = " << std::setw(6) << getOutput(3)
                    << "  Measured Value = " << std::setw(10) << getOutput(4)

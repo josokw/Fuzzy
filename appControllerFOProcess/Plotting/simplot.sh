@@ -1,15 +1,15 @@
 #!/bin/bash
 
-simresult="simdata.txt"
+sim_name="ControllerFOProcess"
+
+simresult="sim"$sim_name".txt"
 
 echo
-echo ".. Start ControllerFOProcess"
-echo "..   to $simresult"
-../bin/ControllerFOProcess $simresult
+echo ".. Start" $sim_name "simulation"
+echo "..   data to $simresult"
 
-set term wxt
-gnuplot -persist < Plotting//plot.plt
+../../bin/$sim_name $simresult
+gnuplot -persist < plot.plt
 
-echo ".. Ready ControllerFOProcess"
+echo ".. Ready" $sim_name "simulation"
 echo
-
