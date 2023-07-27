@@ -13,8 +13,8 @@ message("==== RC-OnOff sources: ${RC-ONOFF_SOURCES}")
 
 add_executable(RC-OnOff ${RC-ONOFF_SOURCES})
 
-target_include_directories(RC-OnOff PUBLIC ../libFuzzyEngine)
+target_include_directories(RC-OnOff PUBLIC ../../libFuzzyEngine)
 target_link_libraries(RC-OnOff FuzzyEngine)
 
-target_include_directories(RC-OnOff PUBLIC ../libDySySim)
+target_include_directories(RC-OnOff PUBLIC ../../libDySySim)
 target_link_libraries(RC-OnOff DySySim)
