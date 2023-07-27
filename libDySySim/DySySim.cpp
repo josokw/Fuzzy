@@ -33,7 +33,7 @@ dysysim::AlgebraicDelay::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   out_= out_previous_ = config.parameters[0];
+   out_ = out_previous_ = config.parameters[0];
 
    return errs;
 }
@@ -48,8 +48,7 @@ std::vector<std::error_code> dysysim::AlgebraicDelay::configDataIsOK(
    }
    if (config.parameters.size() != 1) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_
-                << " error: should have 1 parameter\n";
+      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
    }
    return errs;
 }
@@ -469,14 +468,12 @@ dysysim::Delay::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   out_ = 0.0;
    auto par = begin(config.parameters);
-   out_t0_ = par[0];
+   out_ = out_t0_ = par[0];
    delaytime_ = par[1];
    for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
       buffer_.push(out_t0_);
    }
-   std::cout << "---- Delay buffer size = " << buffer_.size() << "\n";
 
    return errs;
 }

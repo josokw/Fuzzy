@@ -53,6 +53,7 @@ void dysysim::Builder::execute()
    SimBlock::sim_time.width_t = width_t;
    SimBlock::sim_time.precision_t = precision_t;
    SimBlock::initSimBlocks();
+
    do {
       SimBlock::exeSimBlocks();
    } while (SimTime::simulation_on());

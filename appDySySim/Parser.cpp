@@ -1,6 +1,7 @@
 #include "Parser.h"
 #include "Builder.h"
 #include "Exceptions.h"
+#include "SimBlock.h"
 
 #include <iostream>
 
@@ -55,9 +56,13 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
       std::get<3>(result).push_back(x3::_attr(ctx));
    };
 
-   auto set_t_end = [this](auto &ctx) { t_end_ = x3::_attr(ctx); };
+   auto set_t_end = [this](auto &ctx) {
+      SimTime::end_t = t_end_ = x3::_attr(ctx);
+   };
 
-   auto set_delta_t = [this](auto &ctx) { delta_t_ = x3::_attr(ctx); };
+   auto set_delta_t = [this](auto &ctx) {
+      SimTime::delta_t = delta_t_ = x3::_attr(ctx);
+   };
 
    auto set_width_t = [this](auto &ctx) { width_t_ = x3::_attr(ctx); };
 
