@@ -1,0 +1,14 @@
+// Delay system
+
+delta_t = 0.001  t_end = 10.00  width_t = 5  precision_t = 3
+
+1 PLS          off=0.0 on=1.0 t_on=0.5 t_off=0.6  
+2 SUM 1,-3
+3 DLY 2        out_t0=0.0 d=0.4
+
+4 FRQ          f=4 p=0
+5 SUM 4,-6
+6 DLY 5        out_t0=0 d=0.4
+
+7 LOG 1,3,4,6  w=6 p=3  w=6 p=3  w=6 p=3  w=6 p=3
+
