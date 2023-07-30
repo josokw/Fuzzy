@@ -26,7 +26,7 @@ SUITE(DySySim)
       dss::SimTime::set(1.0, 4.0);
       dss::SimBlockFactory sbf;
       sbf.init();
-      sbf.configCheck("LOG", {1, {2}, {}});
+      sbf.configCheck("LOG", {1, {2}, {4, 1}});
       double c = 3.0;
       sbf.configCheck("CON", {2, {}, {c}});
 
@@ -44,7 +44,7 @@ SUITE(DySySim)
       dss::SimBlockFactory sbf;
       sbf.init();
       dss::SimTime::set(1.0, 4.0);
-      sbf.configCheck("LOG", {1, {2, 3, 4, 5}, {}});
+      sbf.configCheck("LOG", {1, {2, 3, 4, 5}, {4, 1, 4, 1, 4, 1, 4, 1}});
       sbf.configCheck("CON", {2, {}, {1.0}});
       sbf.configCheck("CON", {3, {}, {-2.0}});
       sbf.configCheck("CON", {4, {}, {-2.0}});
@@ -64,7 +64,7 @@ SUITE(DySySim)
       dss::SimBlockFactory sbf;
       sbf.init();
       dss::SimTime::set(1.0, 4.0);
-      sbf.configCheck("LOG", {1, {2, 3, 4}, {}});
+      sbf.configCheck("LOG", {1, {2, 3, 4}, {4, 1, 4, 1, 4, 1}});
       sbf.configCheck("CON", {2, {}, {1.0}});
       sbf.configCheck("ATT", {3, {2}, {10.0}});
       sbf.configCheck("ATT", {4, {2}, {-10.0}});
@@ -87,7 +87,7 @@ SUITE(DySySim)
       sbf.configCheck("CON", {1, {}, {1.0}});
       sbf.configCheck("GAIN", {2, {1}, {10.0}});
       sbf.configCheck("GAIN", {3, {1}, {-5.0}});
-      sbf.configCheck("LOG", {4, {1, 2, 3}, {}});
+      sbf.configCheck("LOG", {4, {1, 2, 3}, {4, 1, 4, 1, 4, 1}});
 
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
@@ -106,7 +106,7 @@ SUITE(DySySim)
       const double delta_t{0.1};
       dss::SimTime::set(delta_t, 1.0);
       sbf.configCheck("TIME", {1, {}, {}});
-      sbf.configCheck("LOG", {2, {1}, {}});
+      sbf.configCheck("LOG", {2, {1}, {4, 1}});
 
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
@@ -126,7 +126,7 @@ SUITE(DySySim)
       double c = 1.0;
       sbf.configCheck("CON", {1, {}, {c}});
       sbf.configCheck("INT", {2, {1}, {0.0}});
-      sbf.configCheck("LOG", {3, {1, 2}, {}});
+      sbf.configCheck("LOG", {3, {1, 2}, {4, 2, 4, 2}});
 
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
@@ -195,7 +195,7 @@ SUITE(DySySim)
       double on = 11.0;
       double t_on = 4 * delta_t;
       sbf.configCheck("STP", {1, {}, {off, on, t_on}});
-      sbf.configCheck("LOG", {2, {1}, {}});
+      sbf.configCheck("LOG", {2, {1}, {5, 1}});
 
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
@@ -222,7 +222,7 @@ SUITE(DySySim)
       double t_on = 5 * delta_t;
       double t_off = 10 * delta_t;
       sbf.configCheck("PLS", {1, {}, {off, on, t_on, t_off}});
-      sbf.configCheck("LOG", {2, {1}, {}});
+      sbf.configCheck("LOG", {2, {1}, {3, 1}});
 
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
@@ -249,7 +249,7 @@ SUITE(DySySim)
       const double delta_t{0.1};
       const double delayTime{3 * delta_t};
       dss::SimTime::set(delta_t, 10 * delta_t);
-      sbf.configCheck("LOG", {1, {2, 3}, {}});
+      sbf.configCheck("LOG", {1, {2, 3}, {6, 2, 6, 2}});
       double t_on = 2 * delta_t;
       sbf.configCheck("STP", {2, {}, {0.0, 1.0, t_on}});
       sbf.configCheck("DLY", {3, {2}, {0.0, delayTime}});
@@ -283,7 +283,7 @@ SUITE(DySySim)
 
       sbf.configCheck("STP", {1, {}, {0.0, stp, stp_t}});
       sbf.configCheck("FIO", {2, {1}, {tau, 0.0}});
-      sbf.configCheck("LOG", {3, {1, 2}, {}});
+      sbf.configCheck("LOG", {3, {1, 2}, {6, 3, 6, 3}});
 
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();

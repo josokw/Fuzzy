@@ -3,13 +3,16 @@
 #include "Exceptions.h"
 #include "SimBlock.h"
 
-dysysim::Builder::Builder(): parser_(*this)
+dysysim::Builder::Builder()
+   : parser_(*this)
 {
    initFactory();
 }
 
-void dysysim::Builder::operator()(std::ifstream &script)
+bool dysysim::Builder::operator()(std::ifstream &script)
 {
+   bool no_errors = true;
+
    try {
       SimBlock::clearSimBlocks();
 
@@ -27,6 +30,7 @@ void dysysim::Builder::operator()(std::ifstream &script)
          if (id != -1) {
             auto erssnew = factory_.configCheck(type, cdata);
             if (erssnew.size()) {
+               no_errors = false;
                for (auto er : erssnew) {
                   std::cerr << "[" << lineNumber_ << "] '" << line << "' "
                             << simblockErrCategory.message(er.value()) << "\n";
@@ -34,8 +38,11 @@ void dysysim::Builder::operator()(std::ifstream &script)
             }
          }
       }
-      SimBlock::setExeSequence();
-      execute();
+      // \todo  should be executed not here but ??
+      if (no_errors) {
+         SimBlock::setExeSequence();
+         execute();
+      }
    }
    catch (dysysim::FactoryAddError &e) {
       std::cerr << e.what() << ": " << e.getKey() << " is not unique\n";
@@ -43,6 +50,8 @@ void dysysim::Builder::operator()(std::ifstream &script)
    catch (dysysim::FactoryUnknownTypeError &e) {
       std::cerr << e.what() << ": " << e.getType() << " is unknown\n";
    }
+
+   return no_errors;
 }
 
 void dysysim::Builder::execute()

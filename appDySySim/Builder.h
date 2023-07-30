@@ -20,7 +20,7 @@ public:
    ~Builder() = default;
 
    /// Reads script, parses every line.
-   void operator()(std::ifstream &script);
+   bool operator()(std::ifstream &script);
    /// Executes simulation model.
    void execute();
 

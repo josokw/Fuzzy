@@ -2,6 +2,8 @@
 #define PARSER_H
 
 #include "DySySim.h"
+#include "DySySimLogic.h"
+#include "DySySimMath.h"
 
 #include <boost/fusion/include/algorithm.hpp>
 #include <boost/fusion/include/sequence.hpp>
@@ -39,7 +41,7 @@ class Builder;
 /// 1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
 /// 2 ATT 1,-3 att=10.0
 /// 3 INT 2    out_t0=0.0
-/// 4 LOG 1,3 w=4 p=3  w=4 p=3
+/// 4 LOG 1,3  w=4 p=3  w=4 p=3
 /// ```
 /// In a DySySim script you can use single line comments like C++
 /// and empty lines.
@@ -50,7 +52,9 @@ class Builder;
 /// 2 ATT 1,-3 att=10.0    // time constant
 /// 3 INT 2    out_t0=0.0
 ///
-/// 4 LOG 1,3 w=4 p=3  w=4 p=3
+/// 4 LOG 1,3   w=4 p=3  w=4 p=3
+///
+/// The parameter names can be chosen arbitrarily.
 /// ```
 class Parser final
 {

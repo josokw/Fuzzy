@@ -75,6 +75,7 @@ public:
       , id_{-1}
       , inputs_{}
       , out_{0.0}
+      , n_params_{0}
    {
    }
    SimBlock(const SimBlock &other) = delete;
@@ -102,11 +103,7 @@ public:
    }
 
    static void clearSimBlocks() { allSimBlocks_s.clear(); }
-   static auto getSimBlock(int id)
-   {
-      auto p = allSimBlocks_s.at(id);
-      return p;
-   }
+   static auto getSimBlock(int id) { return allSimBlocks_s.at(id); }
    static bool idIsUnique(int id);
    static std::error_code addSimBlock(int id, std::shared_ptr<SimBlock> pSB);
    static std::error_code setExeSequence();
@@ -126,6 +123,7 @@ protected:
    int id_;
    std::vector<int> inputs_;
    double out_;
+   mutable size_t n_params_;
 
    std::error_code allInputsAvailable();
    bool allInputsInExeSequence();

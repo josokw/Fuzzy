@@ -1,5 +1,7 @@
 #include "SimBlockFactory.h"
 #include "DySySim.h"
+#include "DySySimLogic.h"
+#include "DySySimMath.h"
 #include "ErrorCodes.h"
 #include "Exceptions.h"
 #include "SimBlock.h"
@@ -17,7 +19,6 @@ void dysysim::SimBlockFactory::init()
    add("ADL", std::make_shared<dysysim::AlgebraicDelay>());
    add("ATT", std::make_shared<dysysim::Attenuator>());
    add("CON", std::make_shared<dysysim::Constant>());
-   add("COS", std::make_shared<dysysim::Cos>());
    add("DIV", std::make_shared<dysysim::Divider>());
    add("DLY", std::make_shared<dysysim::Delay>());
    add("EUL", std::make_shared<dysysim::IntegratorEuler>());
@@ -34,20 +35,23 @@ void dysysim::SimBlockFactory::init()
    add("PI", std::make_shared<dysysim::PI>());
    add("PID", std::make_shared<dysysim::PID>());
    add("PLS", std::make_shared<dysysim::Puls>());
-   add("SIN", std::make_shared<dysysim::Sin>());
    add("STP", std::make_shared<dysysim::Step>());
    add("SUM", std::make_shared<dysysim::Summator>());
    add("TIME", std::make_shared<dysysim::Time>());
    add("ZOH", std::make_shared<dysysim::ZeroOrderHold>());
    add("RELAY", std::make_shared<dysysim::Relay>());
+   add("SGN", std::make_shared<dysysim::Sign>());
+   add("CLK", std::make_shared<dysysim::Clock>());
+   // Logic
    add("AND", std::make_shared<dysysim::And>());
    add("OR", std::make_shared<dysysim::Or>());
    add("NOT", std::make_shared<dysysim::Not>());
    add("NAND", std::make_shared<dysysim::NAnd>());
    add("NOR", std::make_shared<dysysim::NOr>());
    add("XOR", std::make_shared<dysysim::XOr>());
-   add("SGN", std::make_shared<dysysim::Sign>());
-   add("CLK", std::make_shared<dysysim::Clock>());
+   // Math
+   add("COS", std::make_shared<dysysim::Cos>());
+   add("SIN", std::make_shared<dysysim::Sin>());
 }
 
 std::vector<std::error_code>

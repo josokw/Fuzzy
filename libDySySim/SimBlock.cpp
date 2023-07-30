@@ -115,7 +115,6 @@ std::error_code dysysim::SimBlock::setExeSequence()
       }
    }
 
-
    std::cout << "..   exe sequence: ";
    for (auto &id : exeSequence_s) {
       std::cout << id << " ";
@@ -162,12 +161,18 @@ dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
    std::vector<std::error_code> errs;
    if (config.id <= 0) {
       errs.push_back(SimBlockErrc::ConfigIdError);
-      std::cerr << "---- DySySim error: id = " << config.id << " <= 0\n";
+      std::cerr << "---- " << blockType_ << " error: id = " << config.id
+                << " should be > 0\n";
    }
    if (not SimBlock::idIsUnique(config.id)) {
       errs.push_back(SimBlockErrc::IdIsNotUniqueError);
-      std::cerr << "---- DySySim error: id = " << config.id
+      std::cerr << "---- " << blockType_ << " error: id = " << config.id
                 << " is not unique\n";
+   }
+   if (config.parameters.size() != n_params_) {
+      errs.push_back(SimBlockErrc::ConfigParameterError);
+      std::cerr << "---- " << blockType_ << " error: should have " << n_params_
+                << " parameter(s)\n";
    }
    return errs;
 }

@@ -21,15 +21,11 @@ int main(int argc, char *argv[])
 
       std::ifstream programFile;
 
-      if (argc > 2) {
+      if (argc != 2) {
          return 1;
       }
 
-      if (argc == 1) {
-         programFile.open("../appDySySim/scripts/RCnetworkLog.dss");
-      } else {
-         programFile.open(argv[1]);
-      }
+      programFile.open(argv[1]);
 
       if (programFile.is_open()) {
          builder(programFile);

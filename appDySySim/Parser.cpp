@@ -68,10 +68,6 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
 
    auto set_precision_t = [this](auto &ctx) { precision_t_ = x3::_attr(ctx); };
 
-   auto set_input_log = [&result_LOG](auto &ctx) {
-      std::get<2>(result_LOG).push_back(x3::_attr(ctx));
-   };
-
    Parser::removeSingleLineComment(codeLine);
    Parser::trim(codeLine, " \t");
 

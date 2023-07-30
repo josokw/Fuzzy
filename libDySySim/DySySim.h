@@ -17,18 +17,17 @@ namespace dysysim {
 class Constant : public SimBlock
 {
 public:
-   Constant()
-      : SimBlock{"CON", SimBlock::ioType_t::input0}
-   {
-   }
+   Constant();
    ~Constant() override = default;
 
    std::shared_ptr<SimBlock> create() override
    {
       return std::make_shared<Constant>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+
    void exe() override {}
 
 protected:
@@ -39,17 +38,14 @@ protected:
 class AlgebraicDelay : public SimBlock
 {
 public:
-   AlgebraicDelay()
-      : SimBlock{"ADL", SimBlock::ioType_t::history}
-      , out_previous_{0.0}
-   {
-   }
+   AlgebraicDelay();
    ~AlgebraicDelay() override = default;
 
    std::shared_ptr<SimBlock> create() override
    {
       return std::make_shared<AlgebraicDelay>();
    }
+   
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -69,11 +65,7 @@ private:
 class Attenuator : public SimBlock
 {
 public:
-   Attenuator()
-      : SimBlock{"ATT", SimBlock::ioType_t::inputoutput}
-      , attenuation_{1.0}
-   {
-   }
+   Attenuator();
    ~Attenuator() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -82,6 +74,7 @@ public:
    }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+
    void exe() override { input(sumInputs()); }
    void input(double in) { out_ = in / attenuation_; }
 
@@ -93,47 +86,20 @@ private:
    double attenuation_;
 };
 
-class Cos : public SimBlock
-{
-public:
-   Cos()
-      : SimBlock{"COS", SimBlock::ioType_t::inputoutput}
-      , multipier_{1.0}
-      , phase_{0.0}
-   {
-   }
-   ~Cos() override = default;
-
-   std::shared_ptr<SimBlock> create() override
-   {
-      return std::make_shared<Cos>();
-   }
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
-   void input(double in) { out_ = std::cos(in * multipier_ + phase_); }
-
-private:
-   double multipier_;
-   double phase_;
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
-};
-
 class Divider : public SimBlock
 {
 public:
-   Divider()
-      : SimBlock{"DIV", SimBlock::ioType_t::inputoutput}
-   {
-   }
+   Divider();
    ~Divider() override = default;
 
    std::shared_ptr<SimBlock> create() override
    {
       return std::make_shared<Divider>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+
    void input(double in1, double in2) { out_ = in1 / in2; }
 
 private:
@@ -144,11 +110,7 @@ private:
 class Gain : public SimBlock
 {
 public:
-   Gain()
-      : SimBlock{"GAIN", SimBlock::ioType_t::inputoutput}
-      , gain_(1.0)
-   {
-   }
+   Gain();
    ~Gain() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -170,12 +132,7 @@ private:
 class Limit : public SimBlock
 {
 public:
-   Limit()
-      : SimBlock{"LIM", SimBlock::ioType_t::inputoutput}
-      , min_(-1.0)
-      , max_(1.0)
-   {
-   }
+   Limit();
    ~Limit() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -198,10 +155,7 @@ private:
 class Max : public SimBlock
 {
 public:
-   Max()
-      : SimBlock{"MAX", SimBlock::ioType_t::inputoutput}
-   {
-   }
+   Max();
    ~Max() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -225,10 +179,7 @@ private:
 class Min : public SimBlock
 {
 public:
-   Min()
-      : SimBlock{"MIN", SimBlock::ioType_t::inputoutput}
-   {
-   }
+   Min();
    ~Min() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -252,10 +203,7 @@ private:
 class Multiplier : public SimBlock
 {
 public:
-   Multiplier()
-      : SimBlock{"MUL", SimBlock::ioType_t::inputoutput}
-   {
-   }
+   Multiplier();
    ~Multiplier() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -276,41 +224,10 @@ private:
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
-class Sin : public SimBlock
-{
-public:
-   Sin()
-      : SimBlock{"SIN", SimBlock::ioType_t::inputoutput}
-      , multiplier_{1.0}
-      , phase_{0.0}
-   {
-   }
-   ~Sin() override = default;
-
-   std::shared_ptr<SimBlock> create() override
-   {
-      return std::make_shared<Sin>();
-   }
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
-   void exe() override { input(sumInputs()); }
-   void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
-
-private:
-   double multiplier_;
-   double phase_;
-
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
-};
-
 class Summator : public SimBlock
 {
 public:
-   Summator()
-      : SimBlock{"SUM", SimBlock::ioType_t::inputoutput}
-   {
-   }
+   Summator();
    ~Summator() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -320,12 +237,6 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
    void exe() override { out_ = sumInputs(); }
-   // void input(double in1, double in2) { out_ = in1 + in2; }
-   // void input(double in1, double in2, double in3) { out_ = in1 + in2 + in3; }
-   // void input(double in1, double in2, double in3, double in4)
-   // {
-   //    out_ = in1 + in2 + in3 + in4;
-   // }
 
 private:
    std::vector<std::error_code>
@@ -336,12 +247,7 @@ private:
 class Frequency : public SimBlock
 {
 public:
-   Frequency()
-      : SimBlock{"FRQ", SimBlock::ioType_t::input0}
-      , frequency_{1.0}
-      , phase_{0.0}
-   {
-   }
+   Frequency();
    ~Frequency() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -366,13 +272,7 @@ private:
 class Step : public SimBlock
 {
 public:
-   Step()
-      : SimBlock{"STP", SimBlock::ioType_t::input0}
-      , off_{0.0}
-      , on_{1.0}
-      , t_on_{1.0}
-   {
-   }
+   Step();
    ~Step() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -395,14 +295,7 @@ private:
 class Puls : public SimBlock
 {
 public:
-   Puls()
-      : SimBlock{"PLS", SimBlock::ioType_t::input0}
-      , off_{0.0}
-      , on_{1.0}
-      , t_on_{1.0}
-      , t_off_{2.0}
-   {
-   }
+   Puls();
    ~Puls() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -431,10 +324,7 @@ private:
 class Time : public SimBlock
 {
 public:
-   Time()
-      : SimBlock{"TIME", SimBlock::ioType_t::input0}
-   {
-   }
+   Time();
    ~Time() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -453,13 +343,7 @@ private:
 class Delay : public SimBlock
 {
 public:
-   Delay()
-      : SimBlock{"DLY", SimBlock::ioType_t::history}
-      , out_t0_{0.0}
-      , delaytime_{1.0}
-      , buffer_{}
-   {
-   }
+   Delay();
    ~Delay() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -488,11 +372,7 @@ private:
 class FirstOrder : public SimBlock
 {
 public:
-   FirstOrder()
-      : SimBlock{"FIO", SimBlock::ioType_t::history}
-      , timeConstant_{1.0}
-   {
-   }
+   FirstOrder();
    ~FirstOrder() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -569,13 +449,7 @@ dysysim::Function<T>::config(const SimBlock::configData_t &config)
 class OnOff : public SimBlock
 {
 public:
-   OnOff()
-      : SimBlock{"ONOFF", SimBlock::ioType_t::inputoutput}
-      , off_{0.0}
-      , on_{1.0}
-      , onoff_{1.0}
-   {
-   }
+   OnOff();
    ~OnOff() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -600,10 +474,7 @@ private:
 class Integrator : public SimBlock
 {
 public:
-   Integrator()
-      : SimBlock{"INT", SimBlock::ioType_t::history}
-   {
-   }
+   Integrator();
    ~Integrator() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -632,11 +503,7 @@ private:
 class IntegratorEuler : public SimBlock
 {
 public:
-   IntegratorEuler()
-      : SimBlock{"EUL", SimBlock::ioType_t::history}
-      , initial_out_{0.0}
-   {
-   }
+   IntegratorEuler();
    ~IntegratorEuler() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -661,13 +528,7 @@ private:
 class PI : public SimBlock
 {
 public:
-   PI()
-      : SimBlock{"PI", SimBlock::ioType_t::history}
-      , Kp_{1.0}
-      , tau_I_{1.0}
-      , z_{3, 0.0}
-   {
-   }
+   PI();
    ~PI() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -705,14 +566,7 @@ private:
 class PID : public SimBlock
 {
 public:
-   PID()
-      : SimBlock{"PID", SimBlock::ioType_t::history}
-      , _Kp{1.0}
-      , _tau_I{1.0}
-      , _tau_D{1.0}
-      , _z{4, 0.0}
-   {
-   }
+   PID();
    ~PID() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -750,12 +604,7 @@ private:
 class ZeroOrderHold : public SimBlock
 {
 public:
-   ZeroOrderHold()
-      : SimBlock{"ZOH", SimBlock::ioType_t::history}
-      , nSamples_{1}
-      , sample_{0}
-   {
-   }
+   ZeroOrderHold();
    ~ZeroOrderHold() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -779,10 +628,7 @@ private:
 class Log : public SimBlock
 {
 public:
-   Log()
-      : SimBlock{"LOG", SimBlock::ioType_t::output0}
-   {
-   }
+   Log();
    ~Log() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -834,11 +680,7 @@ private:
 class Relay : public SimBlock
 {
 public:
-   Relay()
-      : SimBlock{"RELAY", SimBlock::ioType_t::inputoutput}
-      , ref_{0.0}
-   {
-   }
+   Relay();
    ~Relay() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -867,152 +709,10 @@ private:
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
-class And : public SimBlock
-{
-public:
-   And()
-      : SimBlock{"AND", SimBlock::ioType_t::inputoutput}
-   {
-   }
-   ~And() override = default;
-
-   std::shared_ptr<SimBlock> create() override
-   {
-      return std::make_shared<And>();
-   }
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
-
-   void exe() override { out_ = andInputs(); }
-
-private:
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
-};
-
-class Or : public SimBlock
-{
-public:
-   Or()
-      : SimBlock{"OR", SimBlock::ioType_t::inputoutput}
-   {
-   }
-   ~Or() override = default;
-
-   std::shared_ptr<SimBlock> create() override
-   {
-      return std::make_shared<Or>();
-   }
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
-
-   void exe() override { out_ = orInputs(); }
-
-private:
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
-};
-
-class Not : public SimBlock
-{
-public:
-   Not()
-      : SimBlock{"NOT", SimBlock::ioType_t::inputoutput}
-   {
-   }
-   ~Not() override = default;
-
-   std::shared_ptr<SimBlock> create() override
-   {
-      return std::make_shared<Not>();
-   }
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
-
-   void exe() override { out_ = notInput(); }
-
-private:
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
-};
-
-class NAnd : public SimBlock
-{
-public:
-   NAnd()
-      : SimBlock{"NAND", SimBlock::ioType_t::inputoutput}
-   {
-   }
-   ~NAnd() override = default;
-
-   std::shared_ptr<SimBlock> create() override
-   {
-      return std::make_shared<NAnd>();
-   }
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
-
-   void exe() override { out_ = is_0(andInputs() ? 1.0 : 0.0); }
-
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
-};
-
-class NOr : public SimBlock
-{
-public:
-   NOr()
-      : SimBlock{"NOR", SimBlock::ioType_t::inputoutput}
-   {
-   }
-   ~NOr() override = default;
-
-   std::shared_ptr<SimBlock> create() override
-   {
-      return std::make_shared<NOr>();
-   }
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
-
-   void exe() override { out_ = is_0(orInputs() ? 1.0 : 0.0); }
-
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
-};
-
-class XOr : public SimBlock
-{
-public:
-   XOr()
-      : SimBlock{"XOR", SimBlock::ioType_t::inputoutput}
-   {
-   }
-   ~XOr() override = default;
-
-   std::shared_ptr<SimBlock> create() override
-   {
-      return std::make_shared<XOr>();
-   }
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
-
-   void exe() override
-   {
-      auto nand = is_0(andInputs());
-      out_ = convert01(nand and orInputs());
-   }
-
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
-};
-
 class Sign : public SimBlock
 {
 public:
-   Sign()
-      : SimBlock{"SGN", SimBlock::ioType_t::inputoutput}
-   {
-   }
+   Sign();
    ~Sign() override = default;
 
    std::shared_ptr<SimBlock> create() override
@@ -1031,12 +731,7 @@ public:
 class Clock : public SimBlock
 {
 public:
-   Clock()
-      : SimBlock{"CLK", SimBlock::ioType_t::input0}
-      , frequency_{1.0}
-   {
-      // out_ = 1.0;
-   }
+   Clock();
    ~Clock() override = default;
 
    std::shared_ptr<SimBlock> create() override
