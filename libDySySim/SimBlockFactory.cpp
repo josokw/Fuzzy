@@ -1,5 +1,6 @@
 #include "SimBlockFactory.h"
 #include "DySySim.h"
+#include "DySySimControl.h"
 #include "DySySimLogic.h"
 #include "DySySimMath.h"
 #include "ErrorCodes.h"
@@ -53,6 +54,8 @@ void dysysim::SimBlockFactory::init()
    add("ABS", std::make_shared<dysysim::Abs>());
    add("COS", std::make_shared<dysysim::Cos>());
    add("SIN", std::make_shared<dysysim::Sin>());
+   // Control
+   add("HYS", std::make_shared<dysysim::Hysteresis>());
 }
 
 std::vector<std::error_code>
