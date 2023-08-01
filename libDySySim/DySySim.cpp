@@ -1,9 +1,8 @@
 #include "DySySim.h"
 
 dysysim::Constant::Constant()
-   : SimBlock{"CON", SimBlock::ioType_t::input0}
+   : SimBlock{"CON", SimBlock::ioType_t::input0, 1}
 {
-   SimBlock::n_params_ = 1;
 }
 
 std::vector<std::error_code>
@@ -29,10 +28,9 @@ dysysim::Constant::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::AlgebraicDelay::AlgebraicDelay()
-   : SimBlock{"ADL", SimBlock::ioType_t::history}
+   : SimBlock{"ADL", SimBlock::ioType_t::history, 1}
    , out_previous_{0.0}
 {
-   SimBlock::n_params_ = 1;
 }
 
 std::vector<std::error_code>
@@ -59,10 +57,9 @@ std::vector<std::error_code> dysysim::AlgebraicDelay::configDataIsOK(
 }
 
 dysysim::Attenuator::Attenuator()
-   : SimBlock{"ATT", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"ATT", SimBlock::ioType_t::inputoutput, 1}
    , attenuation_{1.0}
 {
-   SimBlock::n_params_ = 1;
 }
 
 std::vector<std::error_code>
@@ -116,19 +113,13 @@ dysysim::Divider::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have 2 inputs\n";
    }
-   if (config.parameters.size() != 0) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_
-                << " error: should have no parameters\n";
-   }
    return errs;
 }
 
 dysysim::Gain::Gain()
-   : SimBlock{"GAIN", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"GAIN", SimBlock::ioType_t::inputoutput, 1}
    , gain_(1.0)
 {
-   SimBlock::n_params_ = 1;
 }
 
 std::vector<std::error_code>
@@ -152,19 +143,14 @@ dysysim::Gain::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
-   if (config.parameters.size() != 1) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
-   }
    return errs;
 }
 
 dysysim::Limit::Limit()
-   : SimBlock{"LIM", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"LIM", SimBlock::ioType_t::inputoutput, 2}
    , min_(-1.0)
    , max_(1.0)
 {
-   SimBlock::n_params_ = 2;
 }
 
 std::vector<std::error_code>
@@ -189,16 +175,11 @@ dysysim::Limit::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
-   if (config.parameters.size() != 2) {
+   if (config.parameters.size() == n_params_ and
+       config.parameters[0] >= config.parameters[1]) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
       std::cerr << "---- " << blockType_
-                << " error: should have 2 parameters\n";
-   } else {
-      if (config.parameters[0] >= config.parameters[1]) {
-         errs.push_back(SimBlockErrc::ConfigParameterError);
-         std::cerr << "---- " << blockType_
-                   << " error: parameter_1 is not < parameter_2\n";
-      }
+                << " error: parameter_1 is not < parameter_2\n";
    }
    return errs;
 }
@@ -312,11 +293,10 @@ dysysim::Summator::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Frequency::Frequency()
-   : SimBlock{"FRQ", SimBlock::ioType_t::input0}
+   : SimBlock{"FRQ", SimBlock::ioType_t::input0, 2}
    , frequency_{1.0}
    , phase_{0.0}
 {
-   SimBlock::n_params_ = 2;
 }
 
 // Sinus generator, amplitude = 1
@@ -346,12 +326,11 @@ dysysim::Frequency::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Step::Step()
-   : SimBlock{"STP", SimBlock::ioType_t::input0}
+   : SimBlock{"STP", SimBlock::ioType_t::input0, 3}
    , off_{0.0}
    , on_{1.0}
    , t_on_{1.0}
 {
-   SimBlock::n_params_ = 3;
 }
 
 std::vector<std::error_code>
@@ -386,13 +365,12 @@ dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Puls::Puls()
-   : SimBlock{"PLS", SimBlock::ioType_t::input0}
+   : SimBlock{"PLS", SimBlock::ioType_t::input0, 4}
    , off_{0.0}
    , on_{1.0}
    , t_on_{1.0}
    , t_off_{2.0}
 {
-   SimBlock::n_params_ = 4;
 }
 
 std::vector<std::error_code>
@@ -451,12 +429,11 @@ dysysim::Time::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Delay::Delay()
-   : SimBlock{"DLY", SimBlock::ioType_t::history}
+   : SimBlock{"DLY", SimBlock::ioType_t::history, 2}
    , out_t0_{0.0}
    , delaytime_{1.0}
    , buffer_{}
 {
-   SimBlock::n_params_ = 2;
 }
 
 std::vector<std::error_code>
@@ -488,10 +465,9 @@ dysysim::Delay::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::FirstOrder::FirstOrder()
-   : SimBlock{"FIO", SimBlock::ioType_t::history}
+   : SimBlock{"FIO", SimBlock::ioType_t::history, 2}
    , timeConstant_{1.0}
 {
-   SimBlock::n_params_ = 2;
 }
 
 std::vector<std::error_code>
@@ -520,12 +496,11 @@ dysysim::FirstOrder::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::OnOff::OnOff()
-   : SimBlock{"ONOFF", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"ONOFF", SimBlock::ioType_t::inputoutput, 3}
    , off_{0.0}
    , on_{1.0}
    , onoff_{1.0}
 {
-   SimBlock::n_params_ = 3;
 }
 
 std::vector<std::error_code>
@@ -555,9 +530,8 @@ dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Integrator::Integrator()
-   : SimBlock{"INT", SimBlock::ioType_t::history}
+   : SimBlock{"INT", SimBlock::ioType_t::history, 1}
 {
-   SimBlock::n_params_ = 1;
 }
 
 std::vector<std::error_code>
@@ -581,18 +555,13 @@ dysysim::Integrator::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
-   if (config.parameters.size() != 1) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
-   }
    return errs;
 }
 
 dysysim::IntegratorEuler::IntegratorEuler()
-   : SimBlock{"EUL", SimBlock::ioType_t::history}
+   : SimBlock{"EUL", SimBlock::ioType_t::history, 1}
    , initial_out_{0.0}
 {
-   SimBlock::n_params_ = 1;
 }
 
 std::vector<std::error_code>
@@ -616,20 +585,15 @@ std::vector<std::error_code> dysysim::IntegratorEuler::configDataIsOK(
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
-   if (config.parameters.size() != 1) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
-   }
    return errs;
 }
 
 dysysim::PI::PI()
-   : SimBlock{"PI", SimBlock::ioType_t::history}
+   : SimBlock{"PI", SimBlock::ioType_t::history, 3}
    , Kp_{1.0}
    , tau_I_{1.0}
    , z_{3, 0.0}
 {
-   SimBlock::n_params_ = 3;
 }
 
 std::vector<std::error_code>
@@ -657,13 +621,12 @@ dysysim::PI::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::PID::PID()
-   : SimBlock{"PID", SimBlock::ioType_t::history}
+   : SimBlock{"PID", SimBlock::ioType_t::history, 3}
    , _Kp{1.0}
    , _tau_I{1.0}
    , _tau_D{1.0}
    , _z{4, 0.0}
 {
-   SimBlock::n_params_ = 3;
 }
 
 std::vector<std::error_code>
@@ -691,11 +654,10 @@ dysysim::PID::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::ZeroOrderHold::ZeroOrderHold()
-   : SimBlock{"ZOH", SimBlock::ioType_t::history}
+   : SimBlock{"ZOH", SimBlock::ioType_t::history, 2}
    , nSamples_{1}
    , sample_{0}
 {
-   SimBlock::n_params_ = 2;
 }
 
 std::vector<std::error_code>
@@ -716,11 +678,6 @@ std::vector<std::error_code> dysysim::ZeroOrderHold::configDataIsOK(
    if (config.inputs.size() < 1) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
-   }
-   if (config.parameters.size() != 0) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_
-                << " error: should have no parameters\n";
    }
    return errs;
 }
@@ -755,19 +712,13 @@ dysysim::Log::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
    }
-   // if (config.parameters.size() != (2 * config.inputs.size())) {
-   //    errs.push_back(SimBlockErrc::ConfigParameterError);
-   //    std::cerr << "---- " << blockType_ << " error: should have "
-   //              << (2 * config.inputs.size()) << " parameters\n";
-   // }
    return errs;
 }
 
 dysysim::Relay::Relay()
-   : SimBlock{"RELAY", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"RELAY", SimBlock::ioType_t::inputoutput, 1}
    , ref_{0.0}
 {
-   SimBlock::n_params_ = 1;
 }
 
 std::vector<std::error_code>
@@ -790,10 +741,6 @@ dysysim::Relay::configDataIsOK(const SimBlock::configData_t &config) const
    if (config.inputs.size() != 3) {
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have 3 inputs\n";
-   }
-   if (config.parameters.size() != 1) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
    }
    return errs;
 }
@@ -822,18 +769,13 @@ dysysim::Sign::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigInputIdError);
       std::cerr << "---- " << blockType_ << " error: should have 1 input\n";
    }
-   if (config.parameters.size() != 0) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_ << " error: should have 0 parameter\n";
-   }
    return errs;
 }
 
 dysysim::Clock::Clock()
-   : SimBlock{"CLK", SimBlock::ioType_t::input0}
+   : SimBlock{"CLK", SimBlock::ioType_t::input0, 1}
    , frequency_{1.0}
 {
-   SimBlock::n_params_ = 1;
    // out_ = 1.0;
 }
 

@@ -2,11 +2,10 @@
 #include "SimBlock.h"
 
 dysysim::Cos::Cos()
-   : SimBlock{"COS", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"COS", SimBlock::ioType_t::inputoutput, 2}
    , multipier_{1.0}
    , phase_{0.0}
 {
-   SimBlock::n_params_ = 2;
 }
 
 std::vector<std::error_code>
@@ -32,11 +31,10 @@ dysysim::Cos::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Sin::Sin()
-   : SimBlock{"SIN", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"SIN", SimBlock::ioType_t::inputoutput, 2}
    , multiplier_{1.0}
    , phase_{0.0}
 {
-   SimBlock::n_params_ = 2;
 }
 
 std::vector<std::error_code>

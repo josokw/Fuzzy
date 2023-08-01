@@ -69,13 +69,13 @@ public:
       std::vector<double> parameters;
    };
 
-   SimBlock(const std::string &blockType, const ioType_t ioType)
+   SimBlock(const std::string &blockType, const ioType_t ioType, size_t n_params = 0)
       : blockType_{blockType}
       , ioType_{ioType}
       , id_{-1}
       , inputs_{}
       , out_{0.0}
-      , n_params_{0}
+      , n_params_{n_params}
    {
    }
    SimBlock(const SimBlock &other) = delete;
