@@ -50,6 +50,7 @@ void dysysim::SimBlockFactory::init()
    add("NOR", std::make_shared<dysysim::NOr>());
    add("XOR", std::make_shared<dysysim::XOr>());
    // Math
+   add("ABS", std::make_shared<dysysim::Abs>());
    add("COS", std::make_shared<dysysim::Cos>());
    add("SIN", std::make_shared<dysysim::Sin>());
 }

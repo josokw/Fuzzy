@@ -9,6 +9,31 @@
 
 namespace dysysim {
 
+class Abs : public SimBlock
+{
+public:
+   Abs();
+   ~Abs() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Abs>();
+   }
+
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { input(sumInputs()); }
+   void input(double in) { out_ = multipier_ * std::abs(in); }
+
+private:
+   double multipier_;
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
 class Cos : public SimBlock
 {
 public:
