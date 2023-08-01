@@ -57,10 +57,13 @@ class SimBlock
 {
 public:
    using ioType_t = enum class ioType {
-      input0,      ///< SimBlock has no inputs
-      history,     ///< Simblock has state (history)
-      inputoutput, ///< Simblock has in- and output, no state
-      output0      ///< Simblock has no output only side effects
+      input0,        ///< SimBlock has no inputs
+      input1,        ///< SimBlock has 1 input
+      input2,        ///< SimBlock has 2 inputs
+      input3,        ///< SimBlock has 3 inputs
+      input1N,       ///< SimBlock has >= 1 inputs
+      input2N,       ///< SimBlock has >= 2 inputs
+      input1Noutput0 ///< Simblock has no output only side effects
    };
 
    using configData_t = struct ConFigData {
@@ -69,13 +72,15 @@ public:
       std::vector<double> parameters;
    };
 
-   SimBlock(const std::string &blockType, const ioType_t ioType, size_t n_params = 0)
+   SimBlock(const std::string &blockType, const ioType_t ioType,
+            size_t n_params = 0)
       : blockType_{blockType}
       , ioType_{ioType}
       , id_{-1}
       , inputs_{}
       , out_{0.0}
       , n_params_{n_params}
+      , has_history_{false}
    {
    }
    SimBlock(const SimBlock &other) = delete;
@@ -114,16 +119,17 @@ public:
    static void exeSimBlocks();
 
 public:
-   const std::string blockType_;
    static std::map<int, std::shared_ptr<SimBlock>> allSimBlocks_s;
    static SimTime sim_time;
 
 protected:
+   const std::string blockType_;
    const ioType_t ioType_;
    int id_;
    std::vector<int> inputs_;
    double out_;
    mutable size_t n_params_;
+   bool has_history_;
 
    std::error_code allInputsAvailable();
    bool allInputsInExeSequence();

@@ -1,7 +1,7 @@
 #include "DySySimLogic.h"
 
 dysysim::And::And()
-   : SimBlock{"AND", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"AND", SimBlock::ioType_t::input2N}
 {
 }
 
@@ -28,7 +28,7 @@ dysysim::And::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Or::Or()
-   : SimBlock{"OR", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"OR", SimBlock::ioType_t::input2N}
 {
 }
 
@@ -55,7 +55,7 @@ dysysim::Or::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Not::Not()
-   : SimBlock{"NOT", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"NOT", SimBlock::ioType_t::input1}
 {
 }
 
@@ -82,7 +82,7 @@ dysysim::Not::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::NAnd::NAnd()
-   : SimBlock{"NAND", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"NAND", SimBlock::ioType_t::input2N}
 {
 }
 
@@ -109,7 +109,7 @@ dysysim::NAnd::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::NOr::NOr()
-   : SimBlock{"NOR", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"NOR", SimBlock::ioType_t::input2N}
 {
 }
 
@@ -136,7 +136,7 @@ dysysim::NOr::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::XOr::XOr()
-   : SimBlock{"XOR", SimBlock::ioType_t::inputoutput}
+   : SimBlock{"XOR", SimBlock::ioType_t::input2N}
 {
 }
 

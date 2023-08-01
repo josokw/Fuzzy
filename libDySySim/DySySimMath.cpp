@@ -2,7 +2,7 @@
 #include "SimBlock.h"
 
 dysysim::Cos::Cos()
-   : SimBlock{"COS", SimBlock::ioType_t::inputoutput, 2}
+   : SimBlock{"COS", SimBlock::ioType_t::input1, 2}
    , multipier_{1.0}
    , phase_{0.0}
 {
@@ -31,7 +31,7 @@ dysysim::Cos::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Sin::Sin()
-   : SimBlock{"SIN", SimBlock::ioType_t::inputoutput, 2}
+   : SimBlock{"SIN", SimBlock::ioType_t::input1, 2}
    , multiplier_{1.0}
    , phase_{0.0}
 {

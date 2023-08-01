@@ -400,7 +400,7 @@ class Function : public SimBlock
 {
 public:
    Function()
-      : SimBlock{"FNC", SimBlock::ioType_t::inputoutput}
+      : SimBlock{"FNC", SimBlock::ioType_t::input1N}
       , callback_{cos}
    {
    }

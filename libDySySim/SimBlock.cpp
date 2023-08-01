@@ -137,8 +137,11 @@ void dysysim::SimBlock::initSimBlocks()
 {
    for (auto id : exeSequence_s) {
       auto pSB = getSimBlock(id);
-      if (pSB and ((pSB->getIOType() == SimBlock::ioType::output0) or
-                   (pSB->getIOType() == SimBlock::ioType::inputoutput))) {
+      if (pSB and ((pSB->getIOType() == SimBlock::ioType::input1Noutput0) or
+                   (pSB->getIOType() == SimBlock::ioType::input1) or
+                   (pSB->getIOType() == SimBlock::ioType::input2) or
+                   (pSB->getIOType() == SimBlock::ioType::input3) or
+                   (pSB->getIOType() == SimBlock::ioType::input2N))) {
          pSB->exe();
       }
    }
@@ -194,8 +197,7 @@ bool dysysim::SimBlock::allInputsInExeSequence()
       if (std::find(begin(dysysim::SimBlock::exeSequence_s),
                     end(dysysim::SimBlock::exeSequence_s),
                     abs(id)) == end(dysysim::SimBlock::exeSequence_s) and
-          (dysysim::SimBlock::allSimBlocks_s[abs(id)]->getIOType() !=
-           SimBlock::ioType::history)) {
+          (not dysysim::SimBlock::allSimBlocks_s[abs(id)]->has_history_)) {
          return false;
       }
    }
