@@ -70,7 +70,7 @@ dysysim::SimBlockFactory::configCheck(const std::string &key,
       errs = pSBfactory->configDataIsOK(cdata);
       if (errs.empty()) {
          auto pSB = pSBfactory->create();
-         pSB->config(cdata);
+         auto err = pSB->config(cdata);
          SimBlock::allSimBlocks_s[pSB->getId()] = pSB;
       }
    } else {

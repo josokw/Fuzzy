@@ -7,6 +7,7 @@ enum class SimBlockErrc {
    IdIsNotUniqueError = 10,
    ConfigIdError,
    ConfigInputIdError,
+   ConfigParameterError, 
    ConfigNumberOfParametersError,
    ConfigParameterRangeError,
    ModelIsInconsistentError
@@ -31,6 +32,8 @@ struct SimBlockErrCategory : std::error_category {
             return "config id value < 0";
          case SimBlockErrc::ConfigInputIdError:
             return "input id error";
+         case SimBlockErrc::ConfigParameterError:
+            return "parameter error";
          case SimBlockErrc::ConfigNumberOfParametersError:
             return "number of parameters not correct";
          case SimBlockErrc::ConfigParameterRangeError:

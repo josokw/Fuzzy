@@ -23,10 +23,6 @@ std::vector<std::error_code>
 dysysim::Abs::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
-   if (config.inputs.size() < 1) {
-      errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
-   }
    return errs;
 }
 
@@ -52,10 +48,6 @@ std::vector<std::error_code>
 dysysim::Cos::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
-   if (config.inputs.size() < 1) {
-      errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
-   }
    return errs;
 }
 
@@ -107,13 +99,8 @@ dysysim::Polynomial::configDataIsOK(const SimBlock::configData_t &config) const
    }
    degree_ = int(config.parameters[0]);
    SimBlock::n_params_ = degree_ + 2;
-   std::cout << "** degree = " << degree_ << std::endl;
 
    errs = SimBlock::configDataIsOK(config);
-   if (config.inputs.size() < 1) {
-      errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
-   }
    return errs;
 }
 
@@ -139,9 +126,5 @@ std::vector<std::error_code>
 dysysim::Sin::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
-   if (config.inputs.size() < 1) {
-      errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
-   }
    return errs;
 }

@@ -172,11 +172,59 @@ dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
       std::cerr << "---- " << blockType_ << " error: id = " << config.id
                 << " is not unique\n";
    }
+
+   switch (getIOType()) {
+      case SimBlock::ioType::input0:
+         if (config.inputs.size() != 0) {
+            errs.push_back(SimBlockErrc::ConfigInputIdError);
+            std::cerr << "---- " << blockType_
+                      << " error: should not have inputs\n";
+         }
+         break;
+      case SimBlock::ioType::input1:
+         if (config.inputs.size() != 1) {
+            errs.push_back(SimBlockErrc::ConfigInputIdError);
+            std::cerr << "---- " << blockType_
+                      << " error: should have 1 input\n";
+         }
+         break;
+      case SimBlock::ioType::input2:
+         if (config.inputs.size() != 2) {
+            errs.push_back(SimBlockErrc::ConfigInputIdError);
+            std::cerr << "---- " << blockType_
+                      << " error: should have 2 inputs\n";
+         }
+         break;
+      case SimBlock::ioType::input3:
+         if (config.inputs.size() != 3) {
+            errs.push_back(SimBlockErrc::ConfigInputIdError);
+            std::cerr << "---- " << blockType_
+                      << " error: should have 3 inputs\n";
+         }
+         break;
+      case SimBlock::ioType::input1N:
+      case SimBlock::ioType::input1Noutput0:
+         if (config.inputs.size() == 0) {
+            errs.push_back(SimBlockErrc::ConfigInputIdError);
+            std::cerr << "---- " << blockType_
+                      << " error: should have >= 1 inputs\n";
+         }
+         break;
+      case SimBlock::ioType::input2N:
+         if (config.inputs.size() < 2) {
+            errs.push_back(SimBlockErrc::ConfigInputIdError);
+            std::cerr << "---- " << blockType_
+                      << " error: should have >= 2 inputs\n";
+         }
+         break;
+   }
+
    if (config.parameters.size() != n_params_) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
       std::cerr << "---- " << blockType_ << " error: should have " << n_params_
                 << " parameter(s)\n";
    }
+
    return errs;
 }
 
