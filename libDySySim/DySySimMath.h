@@ -60,6 +60,44 @@ private:
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
+class Polynomial : public SimBlock
+{
+public:
+   Polynomial();
+   ~Polynomial() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Polynomial>();
+   }
+
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { input(sumInputs()); }
+   void input(double in)
+   {
+      auto power = in;
+      for (auto indx = 0; auto coef : coefficients_) {
+         if (indx == 0) {
+            out_ = coef;
+         } else {
+            out_ += coef * power;
+            power *= power;
+         }
+         ++indx;
+      }
+   }
+
+private:
+   mutable int degree_;
+   mutable std::vector<double> coefficients_;
+
+private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
 class Sin : public SimBlock
 {
 public:

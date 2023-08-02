@@ -11,6 +11,8 @@ namespace dysysim {
 class SimBlockFactory
 {
 public:
+   using errors_t = std::vector<std::error_code>;
+   
    SimBlockFactory() = default;
    ~SimBlockFactory() = default;
 
@@ -19,7 +21,7 @@ public:
    auto size() const { return factory_.size(); }
 
    /// Uses a SimBlock in the factory for checking the config data.
-   std::vector<std::error_code>
+   errors_t
    configCheck(const std::string &key,
                const SimBlock::configData_t &cdata) const;
 

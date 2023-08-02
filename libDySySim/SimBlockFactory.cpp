@@ -53,16 +53,17 @@ void dysysim::SimBlockFactory::init()
    // Math
    add("ABS", std::make_shared<dysysim::Abs>());
    add("COS", std::make_shared<dysysim::Cos>());
+   add("POL", std::make_shared<dysysim::Polynomial>());
    add("SIN", std::make_shared<dysysim::Sin>());
    // Control
    add("HYS", std::make_shared<dysysim::Hysteresis>());
 }
 
-std::vector<std::error_code>
+dysysim::SimBlockFactory::errors_t
 dysysim::SimBlockFactory::configCheck(const std::string &key,
                                       const SimBlock::configData_t &cdata) const
 {
-   std::vector<std::error_code> errs;
+   dysysim::SimBlockFactory::errors_t errs;
 
    if (factory_.isAvailable(key)) {
       auto pSBfactory = factory_.get(key);

@@ -28,7 +28,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/dss",
-            "args": ["../appDySySim/scripts/Collector.dss"],
+            "args": ["../appDySySim/scripts/MassSpringDamper.dss"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/appDySySim",
             "environment": [],
