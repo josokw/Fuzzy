@@ -55,6 +55,7 @@ void dysysim::SimBlockFactory::init()
    add("COS", std::make_shared<dysysim::Cos>());
    add("POL", std::make_shared<dysysim::Polynomial>());
    add("SIN", std::make_shared<dysysim::Sin>());
+   add("SQRT", std::make_shared<dysysim::SquareRoot>());
    // Control
    add("HYS", std::make_shared<dysysim::Hysteresis>());
 }

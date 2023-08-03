@@ -116,12 +116,37 @@ public:
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
-   
+
    void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
 
 private:
    double multiplier_;
    double phase_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
+class SquareRoot : public SimBlock
+{
+public:
+   SquareRoot();
+   ~SquareRoot() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<SquareRoot>();
+   }
+
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { input(sumInputs()); }
+
+   void input(double in) { out_ = multiplier_ * std::abs(in); }
+
+private:
+   double multiplier_;
 
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;

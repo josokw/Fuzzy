@@ -96,8 +96,7 @@ dysysim::Polynomial::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigNumberOfParametersError);
       return errs;
    }
-   if (int(config.parameters[0]) < 1 )
-   {
+   if (int(config.parameters[0]) < 1) {
       errs.push_back(SimBlockErrc::ConfigParameterRangeError);
       return errs;
    }
@@ -131,6 +130,32 @@ dysysim::Sin::config(const SimBlock::configData_t &config)
 
 std::vector<std::error_code>
 dysysim::Sin::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+
+   return errs;
+}
+
+dysysim::SquareRoot::SquareRoot()
+   : SimBlock{"SQRT", SimBlock::ioType_t::input1, 1}
+   , multiplier_{1.0}
+{
+}
+
+std::vector<std::error_code>
+dysysim::SquareRoot::config(const SimBlock::configData_t &config)
+{
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   multiplier_ = config.parameters[0];
+
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::SquareRoot::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
 
