@@ -62,7 +62,7 @@ dysysim::Attenuator::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   attenuation_ = *begin(config.parameters);
+   attenuation_ = config.parameters[0];
 
    return errs;
 }
@@ -71,10 +71,6 @@ std::vector<std::error_code>
 dysysim::Attenuator::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
-   if (config.parameters.size() != 1) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_ << " error: should have 1 parameter\n";
-   }
    return errs;
 }
 
@@ -114,8 +110,7 @@ dysysim::Gain::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   gain_ = par[0];
+   gain_ = config.parameters[0];
 
    return errs;
 }
@@ -141,9 +136,8 @@ dysysim::Limit::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   min_ = par[0];
-   max_ = par[1];
+   min_ = config.parameters[0];
+   max_ = config.parameters[1];
 
    return errs;
 }
@@ -152,11 +146,11 @@ std::vector<std::error_code>
 dysysim::Limit::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
-   if (config.parameters.size() == n_params_ and
-       config.parameters[0] >= config.parameters[1]) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_
-                << " error: parameter_1 is not < parameter_2\n";
+   if (errs.size() == 0 and config.parameters[0] >= config.parameters[1]) {
+      errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+      std::cerr << "---- " << blockType_ << " error: parameter "
+                << config.parameters[0] << " is not < parameter "
+                << config.parameters[1] << "\n";
    }
    return errs;
 }
@@ -268,9 +262,8 @@ dysysim::Frequency::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   frequency_ = par[0];
-   phase_ = par[1];
+   frequency_ = config.parameters[0];
+   phase_ = config.parameters[1];
 
    return errs;
 }
@@ -297,10 +290,9 @@ dysysim::Step::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   out_ = off_ = par[0];
-   on_ = par[1];
-   t_on_ = par[2];
+   out_ = off_ = config.parameters[0];
+   on_ = config.parameters[1];
+   t_on_ = config.parameters[2];
 
    return errs;
 }
@@ -310,9 +302,9 @@ dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
    if (errs.size() == 0 and config.parameters[2] <= 0) {
-      errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_
-                << " error: parameter 3 should be > 0\n";
+      errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+      std::cerr << "---- " << blockType_ << " error: parameter "
+                << config.parameters[2] << " should be > 0\n";
    }
    return errs;
 }
@@ -333,11 +325,10 @@ dysysim::Puls::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   out_ = off_ = par[0];
-   on_ = par[1];
-   t_on_ = par[2];
-   t_off_ = par[3];
+   out_ = off_ = config.parameters[0];
+   on_ = config.parameters[1];
+   t_on_ = config.parameters[2];
+   t_off_ = config.parameters[3];
 
    return errs;
 }
@@ -346,6 +337,13 @@ std::vector<std::error_code>
 dysysim::Puls::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
+   if (errs.size() == 0 and (config.parameters[2] > config.parameters[3])) {
+      errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+      std::cerr << "---- " << blockType_ << " error: parameter "
+                << config.parameters[2] << " should be < parameter "
+                << config.parameters[3] << "\n";
+   }
+
    return errs;
 }
 
@@ -389,9 +387,8 @@ dysysim::Delay::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   out_ = out_t0_ = par[0];
-   delaytime_ = par[1];
+   out_ = out_t0_ = config.parameters[0];
+   delaytime_ = config.parameters[1];
    for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
       buffer_.push(out_t0_);
    }
@@ -420,9 +417,8 @@ dysysim::FirstOrder::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   timeConstant_ = par[0];
-   out_ = par[1];
+   timeConstant_ = config.parameters[0];
+   out_ = config.parameters[1];
 
    return errs;
 }
@@ -449,10 +445,9 @@ dysysim::OnOff::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   out_ = off_ = par[0];
-   on_ = par[1];
-   onoff_ = par[2];
+   out_ = off_ = config.parameters[0];
+   on_ = config.parameters[1];
+   onoff_ = config.parameters[2];
 
    return errs;
 }
@@ -477,8 +472,7 @@ dysysim::Integrator::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   out_ = par[0];
+   out_ = config.parameters[0];
 
    return errs;
 }
@@ -504,8 +498,7 @@ dysysim::IntegratorEuler::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   out_ = par[0];
+   out_ = config.parameters[0];
 
    return errs;
 }
@@ -533,8 +526,7 @@ dysysim::PI::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   out_ = par[0];
+   out_ = config.parameters[0];
 
    return errs;
 }
@@ -563,8 +555,7 @@ dysysim::PID::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   out_ = par[0];
+   out_ = config.parameters[0];
 
    return errs;
 }
@@ -615,8 +606,8 @@ dysysim::Log::config(const SimBlock::configData_t &config)
    id_ = config.id;
    inputs_ = config.inputs;
    parameters_ = std::vector<int>(config.parameters.size());
-   for (auto index = 0; auto &e : parameters_) {
-      e = int(config.parameters[index++]);
+   for (auto index = 0; auto &p : parameters_) {
+      p = int(config.parameters[index++]);
    }
 
    return errs;
@@ -644,8 +635,7 @@ dysysim::Relay::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   ref_ = par[0];
+   ref_ = config.parameters[0];
 
    return errs;
 }
@@ -695,8 +685,7 @@ dysysim::Clock::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   frequency_ = par[0];
+   frequency_ = config.parameters[0];
 
    return errs;
 }
