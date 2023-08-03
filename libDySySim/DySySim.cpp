@@ -461,7 +461,7 @@ std::vector<std::error_code>
 dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
-   
+
    return errs;
 }
 
@@ -510,89 +510,6 @@ dysysim::IntegratorEuler::config(const SimBlock::configData_t &config)
 }
 
 std::vector<std::error_code> dysysim::IntegratorEuler::configDataIsOK(
-   const SimBlock::configData_t &config) const
-{
-   auto errs = SimBlock::configDataIsOK(config);
-   return errs;
-}
-
-dysysim::PI::PI()
-   : SimBlock{"PI", SimBlock::ioType_t::input1N, 3}
-   , Kp_{1.0}
-   , tau_I_{1.0}
-   , z_{3, 0.0}
-{
-   has_history_ = true;
-}
-
-std::vector<std::error_code>
-dysysim::PI::config(const SimBlock::configData_t &config)
-{
-   std::vector<std::error_code> errs;
-
-   id_ = config.id;
-   inputs_ = config.inputs;
-   out_ = config.parameters[0];
-
-   return errs;
-}
-
-std::vector<std::error_code>
-dysysim::PI::configDataIsOK(const SimBlock::configData_t &config) const
-{
-   auto errs = SimBlock::configDataIsOK(config);
-   return errs;
-}
-
-dysysim::PID::PID()
-   : SimBlock{"PID", SimBlock::ioType_t::input1N, 3}
-   , _Kp{1.0}
-   , _tau_I{1.0}
-   , _tau_D{1.0}
-   , _z{4, 0.0}
-{
-   SimBlock::has_history_ = true;
-}
-
-std::vector<std::error_code>
-dysysim::PID::config(const SimBlock::configData_t &config)
-{
-   std::vector<std::error_code> errs;
-
-   id_ = config.id;
-   inputs_ = config.inputs;
-   out_ = config.parameters[0];
-
-   return errs;
-}
-
-std::vector<std::error_code>
-dysysim::PID::configDataIsOK(const SimBlock::configData_t &config) const
-{
-   auto errs = SimBlock::configDataIsOK(config);
-   return errs;
-}
-
-dysysim::ZeroOrderHold::ZeroOrderHold()
-   : SimBlock{"ZOH", SimBlock::ioType_t::input1N, 2}
-   , nSamples_{1}
-   , sample_{0}
-{
-   has_history_ = true;
-}
-
-std::vector<std::error_code>
-dysysim::ZeroOrderHold::config(const SimBlock::configData_t &config)
-{
-   std::vector<std::error_code> errs;
-
-   id_ = config.id;
-   inputs_ = config.inputs;
-
-   return errs;
-}
-
-std::vector<std::error_code> dysysim::ZeroOrderHold::configDataIsOK(
    const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
@@ -703,7 +620,6 @@ dysysim::Clock::configDataIsOK(const SimBlock::configData_t &config) const
    if (errs.size() == 0) {
       if (frequency_ < 0) {
          errs.push_back(SimBlockErrc::ConfigParameterRangeError);
-
       }
    }
    return errs;
