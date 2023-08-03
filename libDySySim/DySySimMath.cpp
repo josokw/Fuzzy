@@ -23,6 +23,7 @@ std::vector<std::error_code>
 dysysim::Abs::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
+
    return errs;
 }
 
@@ -40,6 +41,8 @@ dysysim::Cos::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
+   multipier_ = config.parameters[0];
+   phase_ = config.parameters[1];
 
    return errs;
 }
@@ -48,6 +51,7 @@ std::vector<std::error_code>
 dysysim::Cos::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
+
    return errs;
 }
 
@@ -101,6 +105,7 @@ dysysim::Polynomial::configDataIsOK(const SimBlock::configData_t &config) const
    SimBlock::n_params_ = degree_ + 2;
 
    errs = SimBlock::configDataIsOK(config);
+
    return errs;
 }
 
@@ -118,6 +123,8 @@ dysysim::Sin::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
+   multiplier_ = config.parameters[0];
+   phase_ - config.parameters[1];
 
    return errs;
 }
@@ -126,5 +133,6 @@ std::vector<std::error_code>
 dysysim::Sin::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
+
    return errs;
 }

@@ -148,8 +148,8 @@ dysysim::Limit::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (errs.size() == 0 and config.parameters[0] >= config.parameters[1]) {
       errs.push_back(SimBlockErrc::ConfigParameterRangeError);
-      std::cerr << "---- " << blockType_ << " error: parameter "
-                << config.parameters[0] << " is not < parameter "
+      std::cerr << "---- " << blockType_ << " error: parameter-1 "
+                << config.parameters[0] << " is not < parameter-2 "
                 << config.parameters[1] << "\n";
    }
    return errs;
@@ -427,6 +427,11 @@ std::vector<std::error_code>
 dysysim::FirstOrder::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
+
+   if (errs.size() == 0 and timeConstant_ <= 0.0) {
+      errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+   }
+
    return errs;
 }
 
@@ -456,6 +461,7 @@ std::vector<std::error_code>
 dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
+   
    return errs;
 }
 
@@ -674,7 +680,7 @@ dysysim::Clock::Clock()
    : SimBlock{"CLK", SimBlock::ioType_t::input0, 1}
    , frequency_{1.0}
 {
-   // out_ = 1.0;
+   out_ = 1.0;
 }
 
 // Sinus generator, amplitude = 1
@@ -694,5 +700,11 @@ std::vector<std::error_code>
 dysysim::Clock::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
+   if (errs.size() == 0) {
+      if (frequency_ < 0) {
+         errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+
+      }
+   }
    return errs;
 }

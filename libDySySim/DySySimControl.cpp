@@ -16,10 +16,9 @@ dysysim::Hysteresis::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   auto par = begin(config.parameters);
-   out_ = par[0];
-   hysteresis_ = par[1];
-   slope_ = par[2];
+   out_ = config.parameters[0];
+   hysteresis_ = config.parameters[1];
+   slope_ = config.parameters[2];
 
    return errs;
 }
@@ -28,9 +27,6 @@ std::vector<std::error_code>
 dysysim::Hysteresis::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
-   if (config.inputs.size() < 1) {
-      errs.push_back(SimBlockErrc::ConfigInputIdError);
-      std::cerr << "---- " << blockType_ << " error: should have >= 1 input\n";
-   }
+  
    return errs;
 }

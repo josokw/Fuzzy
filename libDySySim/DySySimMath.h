@@ -24,6 +24,7 @@ public:
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
+
    void input(double in) { out_ = multipier_ * std::abs(in); }
 
 private:
@@ -49,6 +50,7 @@ public:
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
+
    void input(double in) { out_ = std::cos(in * multipier_ + phase_); }
 
 private:
@@ -75,6 +77,7 @@ public:
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
+
    void input(double in)
    {
       auto power = in;
@@ -113,6 +116,7 @@ public:
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
+   
    void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
 
 private:

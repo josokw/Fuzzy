@@ -15,17 +15,18 @@ public:
    {
       return std::make_shared<Hysteresis>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+
    void exe() override { input(sumInputs()); }
+
    void input(double in)
    {
       /// \todo implement
    }
-   void reset()
-   {
-      out_ = out_t0_;
-   }
+   
+   void reset() { out_ = out_t0_; }
 
 private:
    double out_t0_;

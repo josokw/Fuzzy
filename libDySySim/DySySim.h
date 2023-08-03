@@ -45,11 +45,12 @@ public:
    {
       return std::make_shared<AlgebraicDelay>();
    }
-   
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
+
    void input(double in)
    {
       out_ = out_previous_;
@@ -58,6 +59,8 @@ public:
 
 private:
    double out_previous_;
+
+private:
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
@@ -72,10 +75,12 @@ public:
    {
       return std::make_shared<Attenuator>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
+
    void input(double in) { out_ = in / attenuation_; }
 
 protected:
@@ -117,9 +122,12 @@ public:
    {
       return std::make_shared<Gain>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in) { out_ = in * gain_; }
 
 private:
@@ -139,9 +147,12 @@ public:
    {
       return std::make_shared<Limit>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in) { out_ = std::min(std::max(min_, in), max_); }
 
 private:
@@ -162,13 +173,16 @@ public:
    {
       return std::make_shared<Max>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override
    {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
             SimBlock::allSimBlocks_s[inputs_[1]]->output());
    }
+   
    void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
 
 private:
@@ -186,13 +200,16 @@ public:
    {
       return std::make_shared<Min>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override
    {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
             SimBlock::allSimBlocks_s[inputs_[1]]->output());
    }
+   
    void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
 
 private:
@@ -210,13 +227,16 @@ public:
    {
       return std::make_shared<Multiplier>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override
    {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
             SimBlock::allSimBlocks_s[inputs_[1]]->output());
    }
+
    void input(double in1, double in2) { out_ = in1 * in2; }
 
 private:
@@ -234,8 +254,10 @@ public:
    {
       return std::make_shared<Summator>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { out_ = sumInputs(); }
 
 private:
@@ -254,8 +276,10 @@ public:
    {
       return std::make_shared<Frequency>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override
    {
       out_ = std::sin(2 * M_PI * frequency_ * SimTime::t + phase_);
@@ -279,8 +303,10 @@ public:
    {
       return std::make_shared<Step>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
 
 private:
@@ -303,8 +329,10 @@ public:
       auto p = std::make_shared<Puls>();
       return p;
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override
    {
       out_ = (SimTime::t >= t_on_ and SimTime::t < t_off_) ? on_ : off_;
@@ -331,8 +359,10 @@ public:
    {
       return std::make_shared<Time>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { out_ = SimTime::t; }
 
 private:
@@ -350,9 +380,12 @@ public:
    {
       return std::make_shared<Delay>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in)
    {
       buffer_.push(in);
@@ -379,9 +412,12 @@ public:
    {
       return std::make_shared<FirstOrder>();
    }
+   
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in)
    {
       out_ += SimTime::delta_t * (in - out_) / timeConstant_;
@@ -394,7 +430,6 @@ private:
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
-/// \todo Implement setter for callback_
 template <typename T>
 class Function : public SimBlock
 {
@@ -410,11 +445,14 @@ public:
    {
       return std::make_shared<Function<T>>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
 
    void setFunction(std::function<double(T)> cbf) { callback_ = cbf; }
+   
    void input(double in) { out_ = callback_(in); }
 
 private:
@@ -424,10 +462,6 @@ private:
    configDataIsOK(const SimBlock::configData_t &config) const override
    {
       auto errs = SimBlock::configDataIsOK(config);
-      if (config.inputs.size() < 1) {
-         errs.push_back(SimBlockErrc::ConfigInputIdError);
-         std::cerr << "---- DySySim error: should have >= 1 input\n";
-      }
       return errs;
    }
 };
@@ -456,9 +490,12 @@ public:
    {
       return std::make_shared<OnOff>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in) { out_ = (in < onoff_) ? off_ : on_; }
 
 private:
@@ -481,14 +518,18 @@ public:
    {
       return std::make_shared<Integrator>();
    }
+   
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in)
    {
       out_ += 0.5 * (in + in_previous) * SimTime::delta_t;
       in_previous = in;
    }
+   
    void reset() { out_ = initial_out_; }
 
 private:
@@ -510,10 +551,14 @@ public:
    {
       return std::make_shared<IntegratorEuler>();
    }
+   
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in) { out_ += in * SimTime::delta_t; }
+   
    void reset() { out_ = initial_out_; }
 
 private:
@@ -535,15 +580,19 @@ public:
    {
       return std::make_shared<PI>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in)
    {
       z_.push_back(in);
       z_.pop_front();
       out_ = z_[0] + K1_ * z_[1] + K2_ * z_[2];
    }
+
    void reset()
    {
       z_.clear();
@@ -573,15 +622,19 @@ public:
    {
       return std::make_shared<PID>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in)
    {
       _z.push_back(in);
       _z.pop_front();
       out_ = _z[0] + _K1 * _z[1] + _K2 * _z[2] + _K3 * _z[3];
    }
+   
    void reset()
    {
       _z.clear();
@@ -610,10 +663,13 @@ public:
    std::shared_ptr<SimBlock> create() override
    {
       return std::make_shared<ZeroOrderHold>();
+   
    }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override { input(sumInputs()); }
+   
    void input(double in) { out_ = (sample_++ % nSamples_ == 0) ? in : out_; }
 
 private:
@@ -635,6 +691,7 @@ public:
    {
       return std::make_shared<Log>();
    }
+   
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -687,6 +744,7 @@ public:
    {
       return std::make_shared<Relay>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -696,6 +754,7 @@ public:
             SimBlock::allSimBlocks_s[inputs_[1]]->output(),
             SimBlock::allSimBlocks_s[inputs_[2]]->output());
    }
+   
    void input(double in1, double in2, double in3)
    {
       out_ = (in1 <= ref_) ? in2 : in3;
@@ -719,6 +778,7 @@ public:
    {
       return std::make_shared<Sign>();
    }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -740,6 +800,7 @@ public:
    }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
+   
    void exe() override
    {
       out_ =

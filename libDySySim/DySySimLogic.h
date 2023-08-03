@@ -85,6 +85,7 @@ public:
 
    void exe() override { out_ = is_0(andInputs() ? 1.0 : 0.0); }
 
+private:
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
