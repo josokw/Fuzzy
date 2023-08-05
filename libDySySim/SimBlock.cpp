@@ -137,11 +137,13 @@ void dysysim::SimBlock::initSimBlocks()
 {
    for (auto id : exeSequence_s) {
       auto pSB = getSimBlock(id);
-      if (pSB and ((pSB->getIOType() == SimBlock::ioType::input1Noutput0) or
-                   (pSB->getIOType() == SimBlock::ioType::input1) or
-                   (pSB->getIOType() == SimBlock::ioType::input2) or
-                   (pSB->getIOType() == SimBlock::ioType::input3) or
-                   (pSB->getIOType() == SimBlock::ioType::input2N))) {
+      if (pSB)
+      //  and ((pSB->getIOType() == SimBlock::ioType::input1Noutput0) or
+      //              (pSB->getIOType() == SimBlock::ioType::input1) or
+      //              (pSB->getIOType() == SimBlock::ioType::input2) or
+      //              (pSB->getIOType() == SimBlock::ioType::input3) or
+      //              (pSB->getIOType() == SimBlock::ioType::input2N))) 
+                   {
          pSB->exe();
       }
    }
