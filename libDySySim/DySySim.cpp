@@ -224,6 +224,31 @@ dysysim::Multiplier::configDataIsOK(const SimBlock::configData_t &config) const
    return errs;
 }
 
+dysysim::Offset::Offset()
+   : SimBlock{"OFFSET", SimBlock::ioType_t::input1N, 2}
+{
+}
+
+std::vector<std::error_code>
+dysysim::Offset::config(const SimBlock::configData_t &config)
+{
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   scale_ = config.parameters[0];
+   delta_ = config.parameters[1];
+
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::Offset::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+   return errs;
+}
+
 dysysim::Summator::Summator()
    : SimBlock{"SUM", SimBlock::ioType_t::input2N}
 {

@@ -32,6 +32,7 @@ void dysysim::SimBlockFactory::init()
    add("MAX", std::make_shared<dysysim::Max>());
    add("MIN", std::make_shared<dysysim::Min>());
    add("MUL", std::make_shared<dysysim::Multiplier>());
+   add("OFFSET", std::make_shared<dysysim::Offset>());
    add("ONOFF", std::make_shared<dysysim::OnOff>());
    add("PI", std::make_shared<dysysim::PI>());
    add("PID", std::make_shared<dysysim::PID>());

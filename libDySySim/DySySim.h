@@ -244,6 +244,30 @@ private:
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
+class Offset : public SimBlock
+{
+public:
+   Offset();
+   ~Offset() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<Offset>();
+   }
+
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { out_ = scale_ * (sumInputs() + delta_); }
+
+private:
+   double scale_;
+   double delta_;
+
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
 class Summator : public SimBlock
 {
 public:
@@ -642,7 +666,7 @@ public:
             SimBlock::allSimBlocks_s[inputs_[1]]->output(),
             SimBlock::allSimBlocks_s[inputs_[2]]->output());
    }
-   
+
    void input(double in1, double in2, double in3)
    {
       out_ = (in1 <= ref_) ? in2 : in3;
