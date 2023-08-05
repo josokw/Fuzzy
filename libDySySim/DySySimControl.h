@@ -25,7 +25,28 @@ public:
 
    void input(double in)
    {
-      /// \todo implement
+      if (in >= in_up_max_1_) {
+         out_ = 1.0;
+         up_ = false;
+         return;
+      }
+      if (in <= in_down_min_1_) {
+         out_ = -1.0;
+         up_ = true;
+         return;
+      }
+
+      if (up_) {
+         if (in < in_up_max_1_ and in > in_up_min_1_) {
+            out_ = hysteresis_ + slope_ * in;
+            return;
+         }
+      } else {
+         if (in < in_down_max_1_ and in > in_down_min_1_) {
+            out_ = -hysteresis_ + slope_ * in;
+            return;
+         }
+      }
    }
 
    void reset() { out_ = out_t0_; }
@@ -34,6 +55,12 @@ private:
    double out_t0_;
    double hysteresis_;
    double slope_;
+   // state vars
+   bool up_;
+   double in_up_max_1_;
+   double in_up_min_1_;
+   double in_down_max_1_;
+   double in_down_min_1_;
 
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;

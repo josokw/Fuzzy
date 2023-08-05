@@ -3,8 +3,8 @@
 dysysim::Hysteresis::Hysteresis()
    : SimBlock{"HYS", SimBlock::ioType_t::input1N, 3}
    , out_t0_{0.0}
-   , hysteresis_{1.0}
-   , slope_{1.0}
+   , hysteresis_{0.0}
+   , slope_{0.0}
 {
    has_history_ = true;
 }
@@ -20,6 +20,12 @@ dysysim::Hysteresis::config(const SimBlock::configData_t &config)
    hysteresis_ = config.parameters[1];
    slope_ = config.parameters[2];
 
+   up_ = true;
+   in_up_max_1_ = (1 - hysteresis_) / slope_;
+   in_up_min_1_ = (-1 - hysteresis_) / slope_;
+   in_down_max_1_ = (1 + hysteresis_) / slope_ ;
+   in_down_min_1_ = (-1 + hysteresis_) / slope_;
+
    return errs;
 }
 
@@ -27,7 +33,18 @@ std::vector<std::error_code>
 dysysim::Hysteresis::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
-  
+   if (errs.size() == 0) {
+      if (std::abs(out_) > 1) {
+         errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+      }
+      if (hysteresis_ <= 0.0) {
+         errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+      }
+      if (slope_ <= 0.0) {
+         errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+      }
+   }
+
    return errs;
 }
 
@@ -113,4 +130,3 @@ std::vector<std::error_code> dysysim::ZeroOrderHold::configDataIsOK(
    auto errs = SimBlock::configDataIsOK(config);
    return errs;
 }
-

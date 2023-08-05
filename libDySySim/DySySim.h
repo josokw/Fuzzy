@@ -125,9 +125,9 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { input(sumInputs()); }
-   
+
    void input(double in) { out_ = in * gain_; }
 
 private:
@@ -150,9 +150,9 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { input(sumInputs()); }
-   
+
    void input(double in) { out_ = std::min(std::max(min_, in), max_); }
 
 private:
@@ -176,13 +176,13 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override
    {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
             SimBlock::allSimBlocks_s[inputs_[1]]->output());
    }
-   
+
    void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
 
 private:
@@ -203,13 +203,13 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override
    {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
             SimBlock::allSimBlocks_s[inputs_[1]]->output());
    }
-   
+
    void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
 
 private:
@@ -230,7 +230,7 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override
    {
       input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
@@ -257,7 +257,7 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { out_ = sumInputs(); }
 
 private:
@@ -279,7 +279,7 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override
    {
       out_ = std::sin(2 * M_PI * frequency_ * SimTime::t + phase_);
@@ -306,7 +306,7 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
 
 private:
@@ -332,7 +332,7 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override
    {
       out_ = (SimTime::t >= t_on_ and SimTime::t < t_off_) ? on_ : off_;
@@ -362,7 +362,7 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { out_ = SimTime::t; }
 
 private:
@@ -383,9 +383,9 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { input(sumInputs()); }
-   
+
    void input(double in)
    {
       buffer_.push(in);
@@ -412,12 +412,12 @@ public:
    {
       return std::make_shared<FirstOrder>();
    }
-   
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { input(sumInputs()); }
-   
+
    void input(double in)
    {
       out_ += SimTime::delta_t * (in - out_) / timeConstant_;
@@ -448,11 +448,11 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { input(sumInputs()); }
 
    void setFunction(std::function<double(T)> cbf) { callback_ = cbf; }
-   
+
    void input(double in) { out_ = callback_(in); }
 
 private:
@@ -493,9 +493,9 @@ public:
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { input(sumInputs()); }
-   
+
    void input(double in) { out_ = (in < onoff_) ? off_ : on_; }
 
 private:
@@ -518,18 +518,18 @@ public:
    {
       return std::make_shared<Integrator>();
    }
-   
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { input(sumInputs()); }
-   
+
    void input(double in)
    {
       out_ += 0.5 * (in + in_previous) * SimTime::delta_t;
       in_previous = in;
    }
-   
+
    void reset() { out_ = initial_out_; }
 
 private:
@@ -551,14 +551,14 @@ public:
    {
       return std::make_shared<IntegratorEuler>();
    }
-   
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override { input(sumInputs()); }
-   
+
    void input(double in) { out_ += in * SimTime::delta_t; }
-   
+
    void reset() { out_ = initial_out_; }
 
 private:
@@ -579,7 +579,7 @@ public:
    {
       return std::make_shared<Log>();
    }
-   
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -688,7 +688,7 @@ public:
    }
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
-   
+
    void exe() override
    {
       out_ =
