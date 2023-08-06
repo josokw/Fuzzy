@@ -38,12 +38,12 @@ public:
 
       if (up_) {
          if (in < in_up_max_1_ and in > in_up_min_1_) {
-            out_ = hysteresis_ + slope_ * in;
+            out_ = slope_ * (in - hysteresis_);
             return;
          }
       } else {
          if (in < in_down_max_1_ and in > in_down_min_1_) {
-            out_ = -hysteresis_ + slope_ * in;
+            out_ = slope_ * (in + hysteresis_);
             return;
          }
       }

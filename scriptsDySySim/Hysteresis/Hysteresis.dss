@@ -1,0 +1,11 @@
+// Test
+
+delta_t = 0.01  t_end = 4.00  width_t = 4 precision_t = 2
+
+1 FRQ           f=1  p=0
+2 CON c=2
+3 MUL 1 2
+4 HYS 3         s=-1.0 h=0.5 s=1
+
+10 LOG 3,4     w=6 p=3  w=6 p=3
+
