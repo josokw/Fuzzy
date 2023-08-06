@@ -34,13 +34,10 @@ void dysysim::SimBlockFactory::init()
    add("MUL", std::make_shared<dysysim::Multiplier>());
    add("OFFSET", std::make_shared<dysysim::Offset>());
    add("ONOFF", std::make_shared<dysysim::OnOff>());
-   add("PI", std::make_shared<dysysim::PI>());
-   add("PID", std::make_shared<dysysim::PID>());
    add("PLS", std::make_shared<dysysim::Puls>());
    add("STP", std::make_shared<dysysim::Step>());
    add("SUM", std::make_shared<dysysim::Summator>());
    add("TIME", std::make_shared<dysysim::Time>());
-   add("ZOH", std::make_shared<dysysim::ZeroOrderHold>());
    add("RELAY", std::make_shared<dysysim::Relay>());
    add("SGN", std::make_shared<dysysim::Sign>());
    add("CLK", std::make_shared<dysysim::Clock>());
@@ -59,6 +56,9 @@ void dysysim::SimBlockFactory::init()
    add("SQRT", std::make_shared<dysysim::SquareRoot>());
    // Control
    add("HYS", std::make_shared<dysysim::Hysteresis>());
+   add("PI", std::make_shared<dysysim::PI>());
+   add("PID", std::make_shared<dysysim::PID>());
+   add("ZOH", std::make_shared<dysysim::ZeroOrderHold>());
 }
 
 dysysim::SimBlockFactory::errors_t

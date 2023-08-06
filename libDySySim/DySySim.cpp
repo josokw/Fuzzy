@@ -328,7 +328,7 @@ dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
    auto errs = SimBlock::configDataIsOK(config);
    if (errs.size() == 0 and config.parameters[2] <= 0) {
       errs.push_back(SimBlockErrc::ConfigParameterRangeError);
-      std::cerr << "---- " << blockType_ << " error: parameter "
+      std::cerr << "---- " << blockType_ << " error: parameter 3 "
                 << config.parameters[2] << " should be > 0\n";
    }
    return errs;
