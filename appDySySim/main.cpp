@@ -19,18 +19,23 @@ int main(int argc, char *argv[])
    try {
       dss::Builder builder;
 
-      std::ifstream programFile;
+      std::ifstream dssFile;
 
       if (argc != 2) {
+         std::cerr << "Usage: " << APPNAME_VERSION
+                   << " needs 1 dss file name as argument\n";
          return 1;
       }
 
-      programFile.open(argv[1]);
+      dssFile.open(argv[1]);
 
-      if (programFile.is_open()) {
-         builder(programFile);
+      if (dssFile.is_open()) {
+         builder(dssFile);
+      } else {
+         std::cerr << "-- ERROR: file " << argv[1] << " not available"
+                   << std::endl;
       }
-      programFile.close();
+      dssFile.close();
    }
    catch (dss::FactoryAddError &e) {
       std::cerr << e.what() << ": " << e.getKey() << " is not unique\n";
