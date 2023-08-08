@@ -103,7 +103,7 @@ private:
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
-/// PID controller.
+/// PID controller: out = in * (Kp + (Ki / s) + Kd * s)
 /// \todo test
 class PID : public SimBlock
 {
@@ -123,25 +123,36 @@ public:
 
    void input(double in)
    {
-      _z.push_back(in);
-      _z.pop_front();
-      out_ = _z[0] + _K1 * _z[1] + _K2 * _z[2] + _K3 * _z[3];
+      //    _z.push_back(in);
+      //    _z.pop_front();
+      //    out_ = _z[0] + _K1 * _z[1] + _K2 * _z[2] + _K3 * _z[3];
+      out_int_ += Ki_ * SimTime::delta_t * in;
+      out_dif_ = Kd_ * (in - in_n_1_);
+      out_ = in * Kp_ + out_int_ + out_dif_;;
+      in_n_1_ = in;
    }
 
    void reset()
    {
-      _z.clear();
-      _z = {0, 0, 0, 0};
+   //    _z.clear();
+   //    _z = {0, 0, 0, 0};
+   // 
    }
 
 private:
-   const double _Kp;
-   const double _tau_I;
-   const double _tau_D;
-   const double _K1{_Kp * (1 + (1 / _tau_I) + _tau_D)};
-   const double _K2{_Kp * (1 - 2 * _tau_D)};
-   const double _K3{_Kp * _tau_D};
-   std::deque<double> _z;
+   // const double _Kp;
+   // const double _tau_I;
+   // const double _tau_D;
+   // const double _K1{_Kp * (1 + (1 / _tau_I) + _tau_D)};
+   // const double _K2{_Kp * (1 - 2 * _tau_D)};
+   // const double _K3{_Kp * _tau_D};
+   // std::deque<double> _z;
+   double Kp_;
+   double Ki_;
+   double Kd_;
+   double out_int_;
+   double out_dif_;
+   double in_n_1_;
 
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;

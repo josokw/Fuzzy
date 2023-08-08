@@ -100,11 +100,16 @@ dysysim::PI::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::PID::PID()
-   : SimBlock{"PID", SimBlock::ioType_t::input1N, 3}
-   , _Kp{1.0}
-   , _tau_I{0.0}
-   , _tau_D{0.0}
-   , _z{4, 0.0}
+   : SimBlock{"PID", SimBlock::ioType_t::input1N, 4}
+   , Kp_{1.0}
+   , Ki_{1.0}
+   , Kd_{1.0}
+   , out_int_{0.0}
+   , out_dif_{0.0}
+   , in_n_1_{0.0}
+// , _tau_I{0.0}
+// , _tau_D{0.0}
+// , _z{4, 0.0}
 {
    SimBlock::has_history_ = true;
 }
@@ -117,6 +122,9 @@ dysysim::PID::config(const SimBlock::configData_t &config)
    id_ = config.id;
    inputs_ = config.inputs;
    out_ = config.parameters[0];
+   Kp_ = config.parameters[1];
+   Ki_ = config.parameters[2];
+   Kd_ = config.parameters[3];
 
    return errs;
 }
