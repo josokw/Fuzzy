@@ -60,8 +60,7 @@ dysysim::Hysteresis::configDataIsOK(const SimBlock::configData_t &config) const
 dysysim::PI::PI()
    : SimBlock{"PI", SimBlock::ioType_t::input1N, 3}
    , Kp_{0.0}
-   , tau_I_{0.0}
-   , z_{3, 0.0}
+   , Ki_{0.0}
 {
    has_history_ = true;
 }
@@ -75,7 +74,8 @@ dysysim::PI::config(const SimBlock::configData_t &config)
    inputs_ = config.inputs;
    out_ = config.parameters[0];
    Kp_ = config.parameters[1];
-   tau_I_ = config.parameters[2];
+   Ki_ = config.parameters[2];
+   out_int_ = 0.0;
 
    return errs;
 }

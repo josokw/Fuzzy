@@ -66,7 +66,7 @@ private:
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
-/// PI controller.
+/// PI controller: out = in * (Kp + (Ki / s))
 /// \todo test
 class PI : public SimBlock
 {
@@ -84,25 +84,20 @@ public:
 
    void exe() override { input(sumInputs()); }
 
+   /// @brief Uses Euler integration
+   /// @param in PI controller error input
    void input(double in)
    {
-      z_.push_back(in);
-      z_.pop_front();
-      out_ = z_[0] + K1_ * z_[1] + K2_ * z_[2];
+      out_int_ += Ki_ * SimTime::delta_t * in;
+      out_ = in * Kp_ + out_int_;
    }
 
-   void reset()
-   {
-      z_.clear();
-      z_ = {0, 0, 0};
-   }
+   void reset() { out_ = 0; }
 
 private:
    double Kp_;
-   double tau_I_;
-   double K1_{Kp_ * (1 + (1 / tau_I_))};
-   double K2_{Kp_};
-   std::deque<double> z_;
+   double Ki_;
+   double out_int_;
 
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;

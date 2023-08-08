@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sim_name="PIsr"
+sim_name="PIstepresponse"
 
 simresult="sim"$sim_name".txt"
 
