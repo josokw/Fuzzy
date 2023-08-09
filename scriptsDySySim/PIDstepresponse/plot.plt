@@ -8,7 +8,7 @@ set output sim_name.".png"
 
 set title sim_name.' simulation'
 set xrange [0:3]
-set yrange [-2:15]
+set yrange [-15:25]
 set xlabel "t [sec] -->"
-plot txt_file__name  u 1:2 w l t 'Step(t)', txt_file__name u 1:3 w l t 'PI(t)'
+plot txt_file__name  u 1:2 w l t 'Step(t)', txt_file__name u 1:3 w l t 'PID(t)'
  

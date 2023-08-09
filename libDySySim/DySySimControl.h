@@ -127,16 +127,16 @@ public:
       //    _z.pop_front();
       //    out_ = _z[0] + _K1 * _z[1] + _K2 * _z[2] + _K3 * _z[3];
       out_int_ += Ki_ * SimTime::delta_t * in;
-      out_dif_ = Kd_ * (in - in_n_1_);
-      out_ = in * Kp_ + out_int_ + out_dif_;;
+      out_dif_ = Kd_ * (in - in_n_1_) / SimTime::delta_t;
+      out_ = in * Kp_ + out_int_ + out_dif_;
       in_n_1_ = in;
    }
 
    void reset()
    {
-   //    _z.clear();
-   //    _z = {0, 0, 0, 0};
-   // 
+      //    _z.clear();
+      //    _z = {0, 0, 0, 0};
+      //
    }
 
 private:
