@@ -1,6 +1,6 @@
 // SEO step response
 
-delta_t = 0.005 t_end = 20.00  width_t = 4 precision_t = 2
+delta_t = 0.005 t_end = 20.00  width_t = 4 precision_t = 3
 
 1 PLS       off=0 on=1.0 ton=0.5  toff=10 
 2 SEO 1     w=5.0 damping=0.1
