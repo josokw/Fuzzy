@@ -35,6 +35,7 @@ void dysysim::SimBlockFactory::init()
    add("OFFSET", std::make_shared<dysysim::Offset>());
    add("ONOFF", std::make_shared<dysysim::OnOff>());
    add("PLS", std::make_shared<dysysim::Puls>());
+   add("SEO", std::make_shared<dysysim::SecondOrder>());
    add("STP", std::make_shared<dysysim::Step>());
    add("SUM", std::make_shared<dysysim::Summator>());
    add("TIME", std::make_shared<dysysim::Time>());

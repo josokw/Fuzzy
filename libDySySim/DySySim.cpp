@@ -588,6 +588,47 @@ dysysim::Relay::config(const SimBlock::configData_t &config)
    return errs;
 }
 
+dysysim::SecondOrder::SecondOrder()
+   : SimBlock{"SEO", SimBlock::ioType_t::input1N, 2}
+   , w_res_{1.0}
+   , damping_{1.0}
+   , gain_1_{1.0}
+   , int_2_(*this, 1)
+   , int_3_(*this, 1)
+   , gain_4_{1.0}
+{
+   has_history_ = true;
+}
+
+std::vector<std::error_code>
+dysysim::SecondOrder::config(const SimBlock::configData_t &config)
+{
+   std::vector<std::error_code> errs;
+
+   id_ = config.id;
+   inputs_ = config.inputs;
+   w_res_ = config.parameters[0];
+   damping_ = config.parameters[1];
+   out_ = config.parameters[2];
+
+   gain_1_ = w_res_ * w_res_;
+   gain_4_ = 2 * damping_ / w_res_;
+
+   return errs;
+}
+
+std::vector<std::error_code>
+dysysim::SecondOrder::configDataIsOK(const SimBlock::configData_t &config) const
+{
+   auto errs = SimBlock::configDataIsOK(config);
+
+   if (errs.size() == 0 and w_res_ <= 0.0) {
+      errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+   }
+
+   return errs;
+}
+
 std::vector<std::error_code>
 dysysim::Relay::configDataIsOK(const SimBlock::configData_t &config) const
 {

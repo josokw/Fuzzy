@@ -7,8 +7,10 @@ namespace dysysim {
 class SimBlock;
 }
 
-dysysim::SimBlock &operator>(dysysim::SimBlock &lhs, dysysim::SimBlock &rhs);
+dysysim::SimBlock &operator>>(double lhs, dysysim::SimBlock &rhs);
 
-dysysim::SimBlock &operator+(dysysim::SimBlock &lhs, dysysim::SimBlock &rhs);
+dysysim::SimBlock &operator>>(dysysim::SimBlock &lhs, dysysim::SimBlock &rhs);
+
+double operator+(dysysim::SimBlock &lhs, dysysim::SimBlock &rhs);
 
 #endif // CONNECTING_H

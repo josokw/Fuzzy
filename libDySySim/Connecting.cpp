@@ -2,15 +2,20 @@
 #include "SimBlock.h"
 #include <iostream>
 
-dysysim::SimBlock &operator>(dysysim::SimBlock &lhs, dysysim::SimBlock &rhs)
+dysysim::SimBlock &operator>>(double lhs, dysysim::SimBlock &rhs)
+{
+   std::cout << lhs << " --> " << rhs.getId() << std::endl;
+   // rhs.inputs_[0] = lhs;
+   return rhs;
+}
+
+dysysim::SimBlock &operator>>(dysysim::SimBlock &lhs, dysysim::SimBlock &rhs)
 {
    std::cout << lhs.getId() << " --> " << rhs.getId() << std::endl;
    return rhs;
 }
 
-dysysim::SimBlock &operator+(dysysim::SimBlock &lhs, dysysim::SimBlock &rhs)
+double operator+(dysysim::SimBlock &lhs, dysysim::SimBlock &rhs)
 {
-   dysysim::Summator *pSum = new dysysim::Summator;
-   std::cout << "SUM " << lhs.getId() << " + " << rhs.getId() << std::endl;
-   return *pSum;
+   return lhs.output() + rhs.output();
 }

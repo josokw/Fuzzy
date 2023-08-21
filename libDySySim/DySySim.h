@@ -1,6 +1,7 @@
 #ifndef DYSYSIM_H
 #define DYSYSIM_H
 
+#include "DySySimHC.h"
 #include "ErrorCodes.h"
 #include "SimBlock.h"
 
@@ -676,6 +677,47 @@ private:
    double ref_;
 
 private:
+   std::vector<std::error_code>
+   configDataIsOK(const SimBlock::configData_t &config) const override;
+};
+
+class SecondOrder : public SimBlock
+{
+public:
+   SecondOrder();
+   ~SecondOrder() override = default;
+
+   std::shared_ptr<SimBlock> create() override
+   {
+      return std::make_shared<SecondOrder>();
+   }
+
+   std::vector<std::error_code>
+   config(const SimBlock::configData_t &config) override;
+
+   void exe() override { input(sumInputs()); }
+
+   void input(double in)
+   {
+      out_ = int_3_.output();
+      int_3_[0] = int_2_.output();
+
+      int_2_[0] =
+         (in - (gain_4_ * int_2_.output()) - int_3_.output()) * gain_1_;
+
+      int_2_.exe();
+      int_3_.exe();
+   }
+
+private:
+   double w_res_;
+   double damping_;
+
+   double gain_1_;
+   IntegratorHC int_2_;
+   IntegratorHC int_3_;
+   double gain_4_;
+
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
