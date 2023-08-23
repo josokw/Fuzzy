@@ -20,6 +20,8 @@ namespace dysysim {
 
 class Builder;
 
+void init_logger();
+
 /// Parser parsers one line of DySySim code.
 ///
 /// Syntax line of code in PEG (Parsing Expression Grammer) notation
@@ -70,6 +72,7 @@ public:
    Parser(Builder &builder)
       : builder_{builder}
    {
+      init_logger();
    }
    ~Parser() = default;
 

@@ -19,12 +19,14 @@ Go to the Fuzzy directory:
     cmake ..
     make
 
-## DySySim parser and Unit testing
+## DySySim parser, logging and Unit testing
 
 This project contains some unit tests for **Fuzzy** and **DySySim**.
 Install the C++ [UnitTest++](https://github.com/unittest-cpp/unittest-cpp) library.
 
 DySySim uses C++ [Boost Spirit X3](https://www.boost.org/doc/libs/develop/libs/spirit/doc/x3/html/index.html).
+
+Install logging lib [spdlog](https://github.com/gabime/spdlog).
 
 For creating diagrams [gnuplot](http://www.gnuplot.info) is used.
 

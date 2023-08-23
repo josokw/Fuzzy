@@ -3,11 +3,23 @@
 #include "Exceptions.h"
 #include "SimBlock.h"
 
+#include "spdlog/sinks/basic_file_sink.h"
+#include "spdlog/spdlog.h"
+
 #include <iostream>
 
 #include <boost/spirit/home/x3.hpp>
 
 namespace x3 = boost::spirit::x3;
+
+auto logger = spdlog::basic_logger_mt("logger", "parser.log");
+
+void dysysim::init_logger()
+{
+   spdlog::set_default_logger(logger);
+   spdlog::set_level(spdlog::level::debug);
+   spdlog::debug("==== Start logging =====");
+}
 
 void dysysim::Parser::trim(std ::string &str, const std::string &whitespace)
 {
@@ -37,22 +49,22 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
    result_t result_LOG{0, "LOG", {}, {}};
 
    auto set_id = [&result](auto &ctx) {
-      // std::cout << "ID = " << x3::_attr(ctx) << "\n";
+      spdlog::debug("ID    = {}", x3::_attr(ctx));
       std::get<0>(result) = x3::_attr(ctx);
    };
 
    auto set_type = [&result](auto &ctx) {
-      // std::cout << "Type = " << x3::_attr(ctx) << "\n";
+      spdlog::debug("type  = {}", x3::_attr(ctx));
       std::get<1>(result) = x3::_attr(ctx);
    };
 
    auto set_input = [&result](auto &ctx) {
-      // std::cout << "Input = " << x3::_attr(ctx) << "\n";
+      spdlog::debug("input = {}", x3::_attr(ctx));
       std::get<2>(result).push_back(x3::_attr(ctx));
    };
 
    auto set_param = [&result](auto &ctx) {
-      // std::cout << "Param = " << x3::_attr(ctx) << "\n";
+      spdlog::debug("param = {}", x3::_attr(ctx));
       std::get<3>(result).push_back(x3::_attr(ctx));
    };
 
@@ -72,6 +84,9 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
    Parser::trim(codeLine, " \t");
 
    if (!codeLine.empty()) {
+
+      spdlog::debug("[{:2}] codeLine = '{}'", lineNumber, codeLine);
+
       auto iter = begin(codeLine);
       auto iterEnd = end(codeLine);
 
@@ -85,7 +100,6 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
 
       auto set_sim_parameters = x3::lit("delta_t") >> x3::char_('=') >>
                                 value[set_delta_t] >> x3::lit("t_end") >> '=' >>
-
                                 value[set_t_end] >> x3::lit("width_t") >> '=' >>
                                 value[set_width_t] >> x3::lit("precision_t") >>
                                 '=' >> value[set_precision_t];
@@ -93,7 +107,8 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
       auto set_simblock_parameters =
          id[set_id] >> type[set_type] >> *(inputs) >> *(set_parameter);
 
-      auto set_log_parameters = ':' >> x3::uint_ >> x3::repeat(0, 2)[x3::uint_];
+      // auto set_log_parameters = ':' >> x3::uint_ >> x3::repeat(0,
+      // 2)[x3::uint_];
 
       if (simParametersAreSet_) {
          auto p = (x3::phrase_parse(iter, iterEnd, set_simblock_parameters,
@@ -103,14 +118,16 @@ dysysim::Parser::result_t dysysim::Parser::operator()(int lineNumber,
             simBlocksAreSet_ = true;
             iter = codeLine.begin();
             iterEnd = codeLine.end();
-            std::cout << "LOG = " << std::string(iter, iterEnd) << std::endl;
+            std::cout << "--- Script line: " << std::string(iter, iterEnd)
+                      << std::endl;
 
-            auto plog =
-               x3::phrase_parse(iter, iterEnd, *set_log_parameters, x3::space);
-            if (not(plog and iter == iterEnd)) {
-               std::cout << "--- ERROR LOG: " << plog << "="
-                         << std::string(iter, iterEnd) << std::endl;
-            }
+            // auto plog =
+            //    x3::phrase_parse(iter, iterEnd, *set_log_parameters,
+            //    x3::space);
+            // if (not(plog and iter == iterEnd)) {
+            //    std::cout << "--- ERROR LOG: " << plog << "="
+            //              << std::string(iter, iterEnd) << std::endl;
+            // }
             result = result_LOG;
          }
       } else {
