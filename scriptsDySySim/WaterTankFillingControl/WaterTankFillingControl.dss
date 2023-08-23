@@ -1,25 +1,20 @@
 // Water Tank Filling Control (is under development, model ok???)
 
-delta_t = 0.01  t_end = 50.00  width_t = 4  precision_t = 1
+delta_t = 0.01  t_end = 60.00  width_t = 4  precision_t = 1
 
-//1 CON tv=10
-//2 CON tv=20
-//3 RELAY 1,2,16  ref=15
+1 PLS  off=0 on=10 t_on=1 t_off=20   // h_ref
+2 SUM 1,-40
 
-1 PLS off=5 on=15 t_on=1 t_off=20
+10 GAIN 2  p=10.0   // P-controller 
 
-10 CON k=4
-11 FIO 1 -24 tau=1 init=0
-12 MUL 10,11
-13 DLY 12 init=10 delay=0.5
-14 CON c=3.15
-15 FIO 13 tau=30 init=1
-16 MUL 14,15
+20 DLY 10  init=0 delay=4   // dead time caused by long supply tube
+21 FIO 20  tau=2 init=0
 
-21 ATT 16    LC=0.11                              
-22 INT 21    out_t0=0.0                  
-23 INT 22    out_t0=0.0                    
-24 GAIN 22   tau=0.33                    
+30 CON  k=0.1
+31 MUL 21,30
+32 INT 31  init=5      // tank cylinder h(t) 
 
-39 LOG 1,16  w=6 p=3  w=6 p=3
+40 SEO 1  w=1 d=0.5    // transfer function h(t) sensor
+
+50 LOG 1,2,32  w=6 p=3  w=6 p=3  w=6 p=3 
 
