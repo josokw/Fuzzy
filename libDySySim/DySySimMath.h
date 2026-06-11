@@ -4,7 +4,6 @@
 #include "ErrorCodes.h"
 #include "SimBlock.h"
 
-#define _USE_MATH_DEFINES
 #include <cmath>
 
 namespace dysysim {
@@ -25,10 +24,10 @@ public:
 
    void exe() override { input(sumInputs()); }
 
-   void input(double in) { out_ = multipier_ * std::abs(in); }
+   void input(double in) { out_ = multiplier_ * std::abs(in); }
 
 private:
-   double multipier_;
+   double multiplier_;
 
 private:
    std::vector<std::error_code>
@@ -78,15 +77,15 @@ public:
 
    void exe() override { input(sumInputs()); }
 
-   void input(double in)
+   void input(double inp)
    {
-      auto power = in;
+      auto power = inp;
       for (auto indx = 0; auto coef : coefficients_) {
          if (indx == 0) {
             out_ = coef;
          } else {
             out_ += coef * power;
-            power *= power;
+            power *= inp;
          }
          ++indx;
       }
@@ -143,7 +142,7 @@ public:
 
    void exe() override { input(sumInputs()); }
 
-   void input(double in) { out_ = multiplier_ * std::abs(in); }
+   void input(double in) { out_ = multiplier_ * std::sqrt(in); }
 
 private:
    double multiplier_;

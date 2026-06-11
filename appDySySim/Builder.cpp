@@ -31,7 +31,7 @@ bool dysysim::Builder::operator()(std::ifstream &script)
             auto erssnew = factory_.configCheck(type, cdata);
             if (erssnew.size()) {
                no_errors = false;
-               for (auto er : erssnew) {
+               for (const auto &er : erssnew) {
                   std::cerr << "[" << lineNumber_ << "] '" << line << "' "
                             << simblockErrCategory.message(er.value()) << "\n";
                }

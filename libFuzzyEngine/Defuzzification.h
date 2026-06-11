@@ -75,17 +75,17 @@ inline double defuzCenterOfSums(const std::vector<OutputFuzzySet *> &vfs)
 {
    double crisp{0};
    double numerator{0.0};
-   double denomenator{0.0};
+   double denominator{0.0};
 
    for (auto &fs : vfs) {
       auto [minr, maxr] = fs->range();
       auto midpoint{(minr + maxr) / 2.0};
       auto ar{fs->area()};
       numerator += ar * midpoint;
-      denomenator += ar;
+      denominator += ar;
    }
 
-   crisp = numerator / denomenator;
+   crisp = numerator / denominator;
 
    return crisp;
 }

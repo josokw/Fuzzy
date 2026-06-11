@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
       } else {
          std::cerr << "-- ERROR: file " << argv[1] << " not available"
                    << std::endl;
+         return 1;
       }
       dssFile.close();
    }

@@ -414,7 +414,7 @@ dysysim::Delay::config(const SimBlock::configData_t &config)
    inputs_ = config.inputs;
    out_ = out_t0_ = config.parameters[0];
    delaytime_ = config.parameters[1];
-   for (int i = 0; i < int(delaytime_ / SimTime::delta_t); i++) {
+   for (int i = 0; i < int(delaytime_ / SimTime::delta_t); ++i) {
       buffer_.push(out_t0_);
    }
 

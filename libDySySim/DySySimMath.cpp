@@ -3,7 +3,7 @@
 
 dysysim::Abs::Abs()
    : SimBlock{"ABS", SimBlock::ioType_t::input1N, 1}
-   , multipier_{1.0}
+   , multiplier_{1.0}
 {
 }
 
@@ -14,7 +14,7 @@ dysysim::Abs::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   multipier_ = config.parameters[0];
+   multiplier_ = config.parameters[0];
 
    return errs;
 }
@@ -123,7 +123,7 @@ dysysim::Sin::config(const SimBlock::configData_t &config)
    id_ = config.id;
    inputs_ = config.inputs;
    multiplier_ = config.parameters[0];
-   phase_ - config.parameters[1];
+   phase_= config.parameters[1];
 
    return errs;
 }

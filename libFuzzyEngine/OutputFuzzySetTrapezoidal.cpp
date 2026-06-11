@@ -38,7 +38,7 @@ double OutputFuzzySetTrapezoidal::meanOfMaximum() const
 
 double OutputFuzzySetTrapezoidal::area() const
 {
-   return ((_t[4] - _t[0]) + (_t[3] - _t[2])) * mbs_ / 2.0;
+   return ((_t[3] - _t[0]) + (_t[3] - _t[2])) * mbs_ / 2.0;
 }
 
 std::ostream &OutputFuzzySetTrapezoidal::write(std::ostream &os) const

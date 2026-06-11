@@ -1,8 +1,8 @@
 #ifndef EXCEPTIONS_H
-#define EXECPTIONS_H
+#define EXCEPTIONS_H
 
-#include <exception>
-#include <sstream>
+// #include <exception>
+// #include <sstream>
 
 namespace dysysim {
 
@@ -13,7 +13,7 @@ public:
       : key_{key}
    {
    }
-   const char *what() const throw() override
+   const char *what() const noexcept override
    {
       return "SimBlockFactory add() error";
    }
@@ -30,7 +30,7 @@ public:
       : type_{type}
    {
    }
-   const char *what() const throw() override
+   const char *what() const noexcept override
    {
       return "SimBlockFactory unknown type error";
    }
@@ -43,13 +43,13 @@ private:
 class ConfigError : public std::exception
 {
 public:
-   const char *what() const throw() { return "Parser config error\n"; }
+   const char *what() const noexcept { return "Parser config error\n"; }
 };
 
 class ModelError : public std::exception
 {
 public:
-   const char *what() const throw() { return "Model error\n"; }
+   const char *what() const noexcept { return "Model error\n"; }
 };
 
 } // namespace dysysim

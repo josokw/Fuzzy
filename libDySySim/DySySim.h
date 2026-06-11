@@ -5,7 +5,6 @@
 #include "ErrorCodes.h"
 #include "SimBlock.h"
 
-#define _USE_MATH_DEFINES
 #include <cmath>
 #include <functional>
 #include <iomanip>
@@ -332,7 +331,7 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
-   void exe() { out_ = (SimTime::t < t_on_) ? off_ : on_; }
+   void exe() override { out_ = (SimTime::t < t_on_) ? off_ : on_; }
 
 private:
    double off_;
