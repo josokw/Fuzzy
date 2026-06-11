@@ -59,13 +59,13 @@ inline double defuzWeightedAverage(const std::vector<OutputFuzzySet *> &fs)
 {
    double crisp{0.0};
    double numerator{0.0};
-   double denomenator{0.0};
+   double denominator{0.0};
 
    for (auto &f : fs) {
       numerator += f->getMbs() * f->meanOfMaximum();
-      denomenator += f->getMbs();
+      denominator += f->getMbs();
    }
-   crisp = denomenator != 0.0 ? numerator / denomenator : 0;
+   crisp = denominator != 0.0 ? numerator / denominator : 0;
 
    return crisp;
 }

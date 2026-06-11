@@ -9,6 +9,7 @@
 #include <functional>
 #include <iomanip>
 #include <iostream>
+#include <numbers>
 #include <queue>
 #include <vector>
 
@@ -306,7 +307,7 @@ public:
 
    void exe() override
    {
-      out_ = std::sin(2 * M_PI * frequency_ * SimTime::t + phase_);
+      out_ = std::sin(2 * std::numbers::pi * frequency_ * SimTime::t + phase_);
    }
 
 private:
@@ -757,7 +758,9 @@ public:
    void exe() override
    {
       out_ =
-         std::signbit(std::sin(2 * M_PI * frequency_ * SimTime::t)) ? 0.0 : 1.0;
+         std::signbit(std::sin(2 * std::numbers::pi * frequency_ * SimTime::t))
+            ? 0.0
+            : 1.0;
    }
 
 private:

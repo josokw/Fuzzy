@@ -50,10 +50,10 @@ public:
 
    void exe() override { input(sumInputs()); }
 
-   void input(double in) { out_ = std::cos(in * multipier_ + phase_); }
+   void input(double in) { out_ = std::cos(in * multiplier_ + phase_); }
 
 private:
-   double multipier_;
+   double multiplier_;
    double phase_;
 
 private:

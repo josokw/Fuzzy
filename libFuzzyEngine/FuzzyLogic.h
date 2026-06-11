@@ -1,7 +1,7 @@
 #ifndef FUZZYLOGIC_H
 #define FUZZYLOGIC_H
 
-#include <iostream>
+#include <ostream>
 
 class FuzzySet;
 class OutputFuzzySet;

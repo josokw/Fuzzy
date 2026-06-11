@@ -10,6 +10,7 @@ std::ostream &operator<<(std::ostream &os, const LogicModel rhs)
       case LogicModel::Lukasiewicz:
          return os << "Lukasiewicz";
    }
+   return os;
 }
 
 namespace zadeh {

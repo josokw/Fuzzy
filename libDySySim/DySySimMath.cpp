@@ -29,7 +29,7 @@ dysysim::Abs::configDataIsOK(const SimBlock::configData_t &config) const
 
 dysysim::Cos::Cos()
    : SimBlock{"COS", SimBlock::ioType_t::input1, 2}
-   , multipier_{1.0}
+   , multiplier_{1.0}
    , phase_{0.0}
 {
 }
@@ -41,7 +41,7 @@ dysysim::Cos::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   multipier_ = config.parameters[0];
+   multiplier_ = config.parameters[0];
    phase_ = config.parameters[1];
 
    return errs;

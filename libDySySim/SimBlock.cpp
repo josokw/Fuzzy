@@ -80,9 +80,9 @@ std::error_code dysysim::SimBlock::addSimBlock(int id,
 {
    if (idIsUnique(id)) {
       allSimBlocks_s[id] = std::move(pSB);
-      return SimBlockErrc::IdIsNotUniqueError;
+      return SimBlockErrc{};
    }
-   return SimBlockErrc{};
+   return SimBlockErrc::IdIsNotUniqueError;
 }
 
 std::error_code dysysim::SimBlock::setExeSequence()
