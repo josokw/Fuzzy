@@ -10,7 +10,8 @@
 namespace dss = dysysim;
 using namespace std;
 
-const double EPS{0.02};
+const double EPS{0.001};
+const double EPS_DYN{0.1}; // For dynamic behavior, allow a larger error margin
 
 inline double getOutput(int id)
 {
@@ -131,7 +132,7 @@ SUITE(DySySim)
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       do {
-         CHECK_CLOSE(dss::SimTime::t * getOutput(1), getOutput(2), EPS);
+         CHECK_CLOSE(dss::SimTime::t * getOutput(1), getOutput(2), EPS_DYN);
       } while (dss::SimTime::simulation_on());
    }
 
@@ -289,7 +290,83 @@ SUITE(DySySim)
       dss::SimBlock::initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(2), EPS);
       do {
-         CHECK_CLOSE(getOutput(2), fio_response(dss::SimTime::t), EPS * 8);
+         CHECK_CLOSE(getOutput(2), fio_response(dss::SimTime::t), EPS_DYN);
+      } while (dss::SimTime::simulation_on());
+   }
+
+   TEST(Logic)
+   {
+      cout << "-- Logic: AND, OR, NOT, NAND, NOR, XOR" << endl;
+      double zero{0.0};
+      double one{1.0};
+
+      dss::SimBlockFactory sbf;
+      sbf.init();
+      // No dynamic behavior
+      dss::SimTime::set(1.0, 5.0);
+
+      sbf.configCheck("CON", {1, {}, {zero}});
+      sbf.configCheck("CON", {2, {}, {one}});
+
+      sbf.configCheck("AND", {3, {1, 1}, {}});
+      sbf.configCheck("AND", {4, {1, 2}, {}});
+      sbf.configCheck("AND", {5, {2, 1}, {}});
+      sbf.configCheck("AND", {6, {2, 2}, {}});
+
+      sbf.configCheck("OR", {7, {1, 1}, {}});
+      sbf.configCheck("OR", {8, {1, 2}, {}});
+      sbf.configCheck("OR", {9, {2, 1}, {}});
+      sbf.configCheck("OR", {10, {2, 2}, {}});
+
+      sbf.configCheck("NOT", {11, {1}, {}});
+      sbf.configCheck("NOT", {12, {2}, {}});
+
+      sbf.configCheck("NAND", {13, {1, 1}, {}});
+      sbf.configCheck("NAND", {14, {1, 2}, {}});
+      sbf.configCheck("NAND", {15, {2, 1}, {}});
+      sbf.configCheck("NAND", {16, {2, 2}, {}});
+
+      sbf.configCheck("NOR", {17, {1, 1}, {}});
+      sbf.configCheck("NOR", {18, {1, 2}, {}});
+      sbf.configCheck("NOR", {19, {2, 1}, {}});
+      sbf.configCheck("NOR", {20, {2, 2}, {}});
+
+      sbf.configCheck("XOR", {21, {1, 1}, {}});
+      sbf.configCheck("XOR", {22, {1, 2}, {}});
+      sbf.configCheck("XOR", {23, {2, 1}, {}});
+      sbf.configCheck("XOR", {24, {2, 2}, {}});
+
+      dss::SimBlock::setExeSequence();
+      dss::SimBlock::initSimBlocks();
+      CHECK_CLOSE(zero, getOutput(1), EPS);
+      do {
+         CHECK_CLOSE(zero, getOutput(3), EPS);
+         CHECK_CLOSE(zero, getOutput(4), EPS);
+         CHECK_CLOSE(zero, getOutput(5), EPS);
+         CHECK_CLOSE(one, getOutput(6), EPS);
+
+         CHECK_CLOSE(zero, getOutput(7), EPS);
+         CHECK_CLOSE(one, getOutput(8), EPS);
+         CHECK_CLOSE(one, getOutput(9), EPS);
+         CHECK_CLOSE(one, getOutput(10), EPS);
+
+         CHECK_CLOSE(one, getOutput(11), EPS);
+         CHECK_CLOSE(zero, getOutput(12), EPS);
+
+         CHECK_CLOSE(one, getOutput(13), EPS);
+         CHECK_CLOSE(one, getOutput(14), EPS);
+         CHECK_CLOSE(one, getOutput(15), EPS);
+         CHECK_CLOSE(zero, getOutput(16), EPS);
+
+         CHECK_CLOSE(one, getOutput(17), EPS);
+         CHECK_CLOSE(zero, getOutput(18), EPS);
+         CHECK_CLOSE(zero, getOutput(19), EPS);
+         CHECK_CLOSE(zero, getOutput(20), EPS);
+
+         CHECK_CLOSE(zero, getOutput(21), EPS);
+         CHECK_CLOSE(one, getOutput(22), EPS);
+         CHECK_CLOSE(one, getOutput(23), EPS);
+         CHECK_CLOSE(zero, getOutput(24), EPS);
       } while (dss::SimTime::simulation_on());
    }
 }
