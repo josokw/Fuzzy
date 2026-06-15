@@ -1,5 +1,5 @@
-#ifndef DEFUZZIFICATION
-#define DEFUZZIFICATION
+#ifndef DEFUZZIFICATION_H
+#define DEFUZZIFICATION_H
 
 #include "OutputFuzzySet.h"
 
@@ -90,4 +90,4 @@ inline double defuzCenterOfSums(const std::vector<OutputFuzzySet *> &vfs)
    return crisp;
 }
 
-#endif // DEFUZZIFICATION
+#endif // DEFUZZIFICATION_H
