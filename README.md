@@ -1,6 +1,5 @@
 # Fuzzy Logic and Control, DySySim (Dynamical Systems Simulator)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bf89c5a36cb9439182fa7d20216c0973)](https://www.codacy.com/project/josokw/Fuzzy/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=josokw/Fuzzy&amp;utm_campaign=Badge_Grade_Dashboard)
 [![CodeFactor](https://www.codefactor.io/repository/github/josokw/fuzzy/badge)](https://www.codefactor.io/repository/github/josokw/fuzzy)
 
 A C++ FuzzyEngine library is implemented.
@@ -17,7 +16,7 @@ Go to the Fuzzy directory:
 
     cd build
     cmake ..
-    make
+    make -j
 
 ## DySySim parser, logging and Unit testing
 
@@ -130,7 +129,7 @@ Defuzzification example 2 and 3:
 
 ---
 
-## DySySim
+## DySySim: Dynamical Systems Simulator
 
 DySySim is a very basic [TUTSIM](http://tutsim.com/) look-a-like. **TUTSIM** was developed in the early 70's for script based simulation of time continuous systems represented in simulation blocks. Only a subset of the TUTSIM simulation blocks are implemented, sometimes with slightly other names.
 
@@ -142,18 +141,16 @@ Fuzzy logic and control functions are not (yet) implemented in DySySim simulatio
 
 Go to the **scriptsDySySim/RCnetwork** directory.
 
-The following DySySim script file **[RCnetwork.dss](md/RCnetwork.md)** is used.
+The following DySySim script file **[RCnetwork.dss](READMEexample/RCnetwork.dss)** is used.
 
 Use the next command:
 
-```bash
-./simplot.sh
-```
+    ./simplot.sh
 
 All simulation values are calculated. The response diagram is plotted by **gnuplot** in a .png file.
 
-![Build Status](md/RCnetwork.png)
+![Build Status](READMEexample/RCnetwork.png)
 
 ---
 
-Further development, testing and debugging are in progress.
+Further development, testing and debugging are still in progress.
