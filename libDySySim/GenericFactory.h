@@ -17,19 +17,21 @@ public:
    GenericFactory() = default;
    GenericFactory(const GenericFactory &) = delete;
    GenericFactory &operator=(const GenericFactory &) = delete;
+   GenericFactory(GenericFactory &&) = default;
+   GenericFactory &operator=(GenericFactory &&) = default;
    virtual ~GenericFactory() = default;
 
    bool add(const KEYTYPE &key, std::shared_ptr<BASETYPE> tbm);
    bool isAvailable(const KEYTYPE &key) const
    {
-      return registry_.find(key) != end(registry_);
+      return registry_.find(key) != registry_.end();
    }
    std::shared_ptr<BASETYPE> get(const KEYTYPE &key) const;
    std::shared_ptr<BASETYPE> create(const KEYTYPE &key) const;
-   int size() const { return registry_.size(); }
+   size_t size() const { return registry_.size(); }
 
 private:
-   using registry_t = std::map<const KEYTYPE, std::shared_ptr<BASETYPE>>;
+   using registry_t = std::map<KEYTYPE, std::shared_ptr<BASETYPE>>;
    registry_t registry_;
 };
 
@@ -56,7 +58,7 @@ GenericFactory<BASETYPE, KEYTYPE>::get(const KEYTYPE &key) const
    std::shared_ptr<BASETYPE> pB = nullptr;
 
    auto iterf = registry_.find(key);
-   if (iterf != end(registry_)) {
+   if (iterf != registry_.end()) {
       pB = iterf->second;
    }
    return pB;
@@ -72,7 +74,7 @@ GenericFactory<BASETYPE, KEYTYPE>::create(const KEYTYPE &key) const
    std::shared_ptr<BASETYPE> pB = nullptr;
 
    auto iterf = registry_.find(key);
-   if (iterf != end(registry_)) {
+   if (iterf != registry_.end()) {
       pB = iterf->second->create();
    }
    return pB;
