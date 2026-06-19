@@ -141,13 +141,23 @@ Fuzzy logic and control functions are not (yet) implemented in DySySim simulatio
 
 Go to the **scriptsDySySim/RCnetwork** directory.
 
-The following DySySim script file **[RCnetwork.dss](READMEexample/RCnetwork.dss)** is used.
+The following DySySim script is used for this example:
 
-Use the next command:
+    // Pulse response RC-network
+
+    delta_t = 0.005  t_end = 1.3  width_t = 6  precision_t = 3
+
+    1 PLS       off=0.0 on=1.0 t_on=0.1 t_off=0.5
+    2 ATT 1,-3  RC=0.1    // RC time constant = 0.1 sec
+    3 INT 2     out_t0=0.0
+
+    4 LOG 1,3 w=4 p=3  w=4 p=3
+
+Use the next command in the **scriptsDySySim/RCnetwork** directory:
 
     ./simplot.sh
 
-All simulation values are calculated. The response diagram is plotted by **gnuplot** in a .png file.
+All simulation values are calculated. The response diagram is plotted by **gnuplot** in a .png file in in the **scriptsDySySim/RCnetwork** directory:
 
 ![Build Status](READMEexample/RCnetwork.png)
 
