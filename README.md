@@ -6,17 +6,25 @@ A C++ FuzzyEngine library is implemented.
 
 ## Build management by CMake
 
-Update CMake to the latest version (pip command must be available):
-
-    sudo apt remove cmake
-
-    sudo pip install cmake --upgrade
-
 Go to the Fuzzy directory:
 
     cd build
     cmake ..
     make -j
+
+## Running Tests
+
+Build and run unit tests:
+
+    cd build
+    cmake ..
+    make -j
+    make test          # or: ctest --output-on-failure
+
+Or run test binaries directly:
+
+    ./bin/testFuzzyEngine
+    ./bin/testDySySim
 
 ## DySySim parser, logging and Unit testing
 

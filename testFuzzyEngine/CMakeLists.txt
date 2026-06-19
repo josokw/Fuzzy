@@ -21,3 +21,5 @@ add_executable(testFuzzyEngine ${TESTFUZZYENGINE_SOURCES}
 target_include_directories(testFuzzyEngine PUBLIC ../libFuzzyEngine)
 target_link_libraries(testFuzzyEngine FuzzyEngine)
 target_link_libraries(testFuzzyEngine UnitTest++)
+
+add_test(NAME testFuzzyEngine COMMAND testFuzzyEngine)

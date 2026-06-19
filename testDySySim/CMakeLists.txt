@@ -22,3 +22,5 @@ add_executable(testDySySim ${TESTDYSYSIM_SOURCES} ${TESTDYSYSIM_INCLUDES})
 target_include_directories(testDySySim PUBLIC ../libDySySim)
 target_link_libraries(testDySySim DySySim)
 target_link_libraries(testDySySim UnitTest++)
+
+add_test(NAME testDySySim COMMAND testDySySim)
