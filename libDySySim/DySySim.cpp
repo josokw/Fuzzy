@@ -123,7 +123,7 @@ dysysim::Gain::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Limit::Limit()
-   : SimBlock{"LIM", SimBlock::ioType_t::input2N, 2}
+   : SimBlock{"LIM", SimBlock::ioType_t::input1N, 2}
    , min_(-1.0)
    , max_(1.0)
 {
@@ -589,7 +589,7 @@ dysysim::Relay::config(const SimBlock::configData_t &config)
 }
 
 dysysim::SecondOrder::SecondOrder()
-   : SimBlock{"SEO", SimBlock::ioType_t::input1N, 2}
+   : SimBlock{"SEO", SimBlock::ioType_t::input1N, 3}
    , w_res_{1.0}
    , damping_{1.0}
    , gain_1_{1.0}
