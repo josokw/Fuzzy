@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <source_location>
 
 double dysysim::SimTime::delta_t = 1;
 double dysysim::SimTime::end_t = 0.0;
@@ -160,71 +161,70 @@ void dysysim::SimBlock::exeSimBlocks()
    }
 }
 
+static void reportError(const std::string &blockType, const std::string &message,
+                        const std::source_location &loc = std::source_location::current())
+{
+   std::cerr << "---- " << blockType << " error: " << message
+             << " [" << loc.file_name() << ":" << loc.line()
+             << " in " << loc.function_name() << "]\n";
+}
+
 std::vector<std::error_code>
 dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
 {
    std::vector<std::error_code> errs;
    if (config.id <= 0) {
       errs.push_back(SimBlockErrc::ConfigIdError);
-      std::cerr << "---- " << blockType_ << " error: id = " << config.id
-                << " should be > 0\n";
+      reportError(blockType_, "id = " + std::to_string(config.id) + " should be > 0");
    }
    if (not SimBlock::idIsUnique(config.id)) {
       errs.push_back(SimBlockErrc::IdIsNotUniqueError);
-      std::cerr << "---- " << blockType_ << " error: id = " << config.id
-                << " is not unique\n";
+      reportError(blockType_, "id = " + std::to_string(config.id) + " is not unique");
    }
 
    switch (getIOType()) {
       case SimBlock::ioType::input0:
          if (config.inputs.size() != 0) {
             errs.push_back(SimBlockErrc::ConfigInputIdError);
-            std::cerr << "---- " << blockType_
-                      << " error: should not have inputs\n";
+            reportError(blockType_, "should not have inputs");
          }
          break;
       case SimBlock::ioType::input1:
          if (config.inputs.size() != 1) {
             errs.push_back(SimBlockErrc::ConfigInputIdError);
-            std::cerr << "---- " << blockType_
-                      << " error: should have 1 input\n";
+            reportError(blockType_, "should have 1 input");
          }
          break;
       case SimBlock::ioType::input2:
          if (config.inputs.size() != 2) {
             errs.push_back(SimBlockErrc::ConfigInputIdError);
-            std::cerr << "---- " << blockType_
-                      << " error: should have 2 inputs\n";
+            reportError(blockType_, "should have 2 inputs");
          }
          break;
       case SimBlock::ioType::input3:
          if (config.inputs.size() != 3) {
             errs.push_back(SimBlockErrc::ConfigInputIdError);
-            std::cerr << "---- " << blockType_
-                      << " error: should have 3 inputs\n";
+            reportError(blockType_, "should have 3 inputs");
          }
          break;
       case SimBlock::ioType::input1N:
       case SimBlock::ioType::input1Noutput0:
          if (config.inputs.size() == 0) {
             errs.push_back(SimBlockErrc::ConfigInputIdError);
-            std::cerr << "---- " << blockType_
-                      << " error: should have >= 1 inputs\n";
+            reportError(blockType_, "should have >= 1 inputs");
          }
          break;
       case SimBlock::ioType::input2N:
          if (config.inputs.size() < 2) {
             errs.push_back(SimBlockErrc::ConfigInputIdError);
-            std::cerr << "---- " << blockType_
-                      << " error: should have >= 2 inputs\n";
+            reportError(blockType_, "should have >= 2 inputs");
          }
          break;
    }
 
    if (config.parameters.size() != n_params_) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      std::cerr << "---- " << blockType_ << " error: should have " << n_params_
-                << " parameter(s)\n";
+      reportError(blockType_, "should have " + std::to_string(n_params_) + " parameter(s)");
    }
 
    return errs;

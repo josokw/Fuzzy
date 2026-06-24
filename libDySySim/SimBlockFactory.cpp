@@ -7,11 +7,13 @@
 #include "Exceptions.h"
 #include "SimBlock.h"
 
+#include <source_location>
+
 void dysysim::SimBlockFactory::add(const std::string &key,
-                                   std::shared_ptr<SimBlock> tbm)
+                                    std::shared_ptr<SimBlock> tbm)
 {
    if (not factory_.add(key, tbm)) {
-      throw dysysim::FactoryAddError(key);
+      throw dysysim::FactoryAddError(key, std::source_location::current());
    }
 }
 
@@ -76,9 +78,9 @@ dysysim::SimBlockFactory::configCheck(const std::string &key,
          auto err = pSB->config(cdata);
          SimBlock::allSimBlocks_s[pSB->getId()] = pSB;
       }
-   } else {
-      throw dysysim::FactoryUnknownTypeError(key);
-   }
+} else {
+       throw dysysim::FactoryUnknownTypeError(key, std::source_location::current());
+    }
 
    return errs;
 }
