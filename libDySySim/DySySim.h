@@ -106,6 +106,12 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
+   void exe() override
+   {
+      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
+            SimBlock::allSimBlocks_s[inputs_[1]]->output());
+   }
+
    void input(double in1, double in2) { out_ = in1 / in2; }
 
 private:

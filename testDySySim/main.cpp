@@ -85,16 +85,17 @@ SUITE(DySySim)
       dss::SimBlockFactory sbf;
       sbf.init();
       dss::SimTime::set(1.0, 4.0);
-      sbf.configCheck("CON", {1, {}, {1.0}});
-      sbf.configCheck("GAIN", {2, {1}, {10.0}});
-      sbf.configCheck("GAIN", {3, {1}, {-5.0}});
-      sbf.configCheck("LOG", {4, {1, 2, 3}, {4, 1, 4, 1, 4, 1}});
+      sbf.configCheck("CON", {1, {}, {2.0}});
+      sbf.configCheck("CON", {2, {}, {1.0}});
+      sbf.configCheck("GAIN", {3, {1, -2}, {10.0}});
+      sbf.configCheck("GAIN", {4, {1, -2}, {-5.0}});
+      sbf.configCheck("LOG", {5, {1, 2, 3}, {5, 1, 5, 1, 5, 1}});
 
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       do {
-         CHECK_CLOSE(10.0, getOutput(2), EPS);
-         CHECK_CLOSE(-5, getOutput(3), EPS);
+         CHECK_CLOSE(10.0, getOutput(3), EPS);
+         CHECK_CLOSE(-5, getOutput(4), EPS);
       } while (dss::SimTime::simulation_on());
    }
 
@@ -124,15 +125,17 @@ SUITE(DySySim)
       dss::SimBlockFactory sbf;
       sbf.init();
       dss::SimTime::set(0.01, 1.0);
-      double c = 1.0;
+      double c = 0.5;
       sbf.configCheck("CON", {1, {}, {c}});
-      sbf.configCheck("INT", {2, {1}, {0.0}});
-      sbf.configCheck("LOG", {3, {1, 2}, {4, 2, 4, 2}});
+      sbf.configCheck("CON", {2, {}, {c}});
+      sbf.configCheck("INT", {3, {1, 2}, {0.0}});
+      sbf.configCheck("LOG", {4, {1, 2, 3}, {4, 2, 4, 2, 4, 2}});
 
       dss::SimBlock::setExeSequence();
       dss::SimBlock::initSimBlocks();
       do {
-         CHECK_CLOSE(dss::SimTime::t * getOutput(1), getOutput(2), EPS_DYN);
+         CHECK_CLOSE(dss::SimTime::t * (getOutput(1) + getOutput(2)),
+                     getOutput(3), EPS_DYN);
       } while (dss::SimTime::simulation_on());
    }
 
@@ -369,7 +372,36 @@ SUITE(DySySim)
          CHECK_CLOSE(zero, getOutput(24), EPS);
       } while (dss::SimTime::simulation_on());
    }
+   // **Arithmetic:** MUL (Multiplier), DIV (Divider), OFFSET (Offset), MAX (Max), MIN (Min)
+   TEST(Arithmetic)
+   {
+      cout << "-- Arithmetic: DIV, MUL. MAX, MIN, OFFSET" << endl;
+
+      dss::SimBlockFactory sbf;
+      sbf.init();
+      // No dynamic behavior
+      dss::SimTime::set(1.0, 5.0);
+
+      sbf.configCheck("CON", {1, {}, {1.0}});
+      sbf.configCheck("CON", {2, {}, {2.0}});
+      sbf.configCheck("DIV", {3, {1, 2}, {}});
+      sbf.configCheck("MUL", {4, {1, 2}, {}});
+      sbf.configCheck("MAX", {5, {1, 2}, {}});
+      sbf.configCheck("MIN", {6, {1, 2}, {}});
+      sbf.configCheck("OFFSET", {7, {1, 2}, {2.0, 5.0}});
+
+      dss::SimBlock::setExeSequence();
+      dss::SimBlock::initSimBlocks();
+      do {
+         CHECK_CLOSE(0.5, getOutput(3), EPS);
+         CHECK_CLOSE(2.0, getOutput(4), EPS);
+         CHECK_CLOSE(2.0, getOutput(5), EPS);
+         CHECK_CLOSE(1.0, getOutput(6), EPS);
+         CHECK_CLOSE(16.0, getOutput(7), EPS);
+      } while (dss::SimTime::simulation_on());
+   }
 }
+
 
 int main()
 {
