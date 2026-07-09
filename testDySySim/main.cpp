@@ -4,6 +4,7 @@
 #include "SimBlockFactory.h"
 
 #include <UnitTest++/UnitTest++.h>
+#include <UnitTest++/TestReporterStdout.h>
 
 #include <iostream>
 
@@ -408,7 +409,9 @@ int main()
    cout << "\n== Tests DySySim lib: " << dss::libVersion << " "
         << string(50, '=') << "\n\n";
 
-   auto result = UnitTest::RunAllTests();
+   UnitTest::TestReporterStdout reporter;
+   UnitTest::TestRunner runner(reporter);
+   auto result = runner.RunTestsIf(UnitTest::Test::GetTestList(), nullptr, UnitTest::True(), 0);
 
    cout << "\n" << string(80, '=') << endl;
 

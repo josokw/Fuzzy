@@ -7,6 +7,7 @@
 #include "OutputFuzzySetTriangular.h"
 
 #include <UnitTest++/UnitTest++.h>
+#include <UnitTest++/TestReporterStdout.h>
 
 #include <iostream>
 
@@ -419,7 +420,9 @@ int main()
              << std::endl
              << std::endl;
 
-   auto result = UnitTest::RunAllTests();
+   UnitTest::TestReporterStdout reporter;
+   UnitTest::TestRunner runner(reporter);
+   auto result = runner.RunTestsIf(UnitTest::Test::GetTestList(), nullptr, UnitTest::True(), 0);
    std::cout << std::endl;
    return result;
 }
