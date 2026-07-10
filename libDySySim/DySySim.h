@@ -620,9 +620,9 @@ public:
       if (write_columns_) {
          std::string header =
             std::format("#{:>{}s}", "t", SimBlock::sim_time.width_t - 1);
-         for (size_t index = 0; index < inputs_.size(); index += 2) {
+         for (size_t index = 0; index < inputs_.size(); ++index) {
             int id = inputs_[index];
-            int width = parameters_[index];
+            int width = parameters_[2 * index];
             header += std::format(" {:>{}d}", id, width);
          }
          std::cerr << header << "\n";
@@ -631,10 +631,10 @@ public:
       std::string line =
          std::format("{:{}.{}f}", SimTime::t, SimBlock::sim_time.width_t,
                      SimBlock::sim_time.precision_t);
-      for (size_t index = 0; index < inputs_.size(); index += 2) {
+      for (size_t index = 0; index < inputs_.size(); ++index) {
          auto pSB = SimBlock::getSimBlock(inputs_[index]);
-         int width = parameters_[index];
-         int precision = parameters_[index + 1];
+         int width = parameters_[2 * index];
+         int precision = parameters_[2 * index + 1];
          line += std::format(" {:>{}.{}f}", pSB->output(), width, precision);
       }
       std::cerr << line << "\n";
