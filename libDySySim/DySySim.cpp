@@ -614,6 +614,8 @@ dysysim::SecondOrder::config(const SimBlock::configData_t &config)
    gain_1_ = w_res_ * w_res_;
    gain_4_ = 2 * damping_ / w_res_;
 
+   int_3_.setOutput(out_);
+
    return errs;
 }
 

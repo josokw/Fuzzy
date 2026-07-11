@@ -121,7 +121,7 @@ dysysim::PID::config(const SimBlock::configData_t &config)
 
    id_ = config.id;
    inputs_ = config.inputs;
-   out_ = config.parameters[0];
+   out_int_ = config.parameters[0];
    Kp_ = config.parameters[1];
    Ki_ = config.parameters[2];
    Kd_ = config.parameters[3];
