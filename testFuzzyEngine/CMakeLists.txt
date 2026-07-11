@@ -1,25 +1,9 @@
-cmake_minimum_required(VERSION 3.12)
+find_library(UNITTESTPP_LIB UnitTest++)
+find_path(UNITTESTPP_INC UnitTest++/UnitTest++.h)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+add_executable(testFuzzyEngine main.cpp)
 
-file(
-    GLOB_RECURSE TESTFUZZYENGINE_SOURCES
-    *.cpp 
-)
-
-file(
-    GLOB_RECURSE TESTFUZZYENGINE_INCLUDES
-    *.h
-)
-
-message("==== testFuzzyEngine includes: ${TESTFUZZYENGINE_INCLUDES}")
-message("==== testFuzzyEngine sources : ${TESTFUZZYENGINE_SOURCES}")
-
-add_executable(testFuzzyEngine ${TESTFUZZYENGINE_SOURCES}
-                               ${TESTFUZZYENGINE_INCLUDES})
-
-target_include_directories(testFuzzyEngine PUBLIC ../libFuzzyEngine)
-target_link_libraries(testFuzzyEngine FuzzyEngine)
-target_link_libraries(testFuzzyEngine UnitTest++)
+target_link_libraries(testFuzzyEngine PRIVATE FuzzyEngine ${UNITTESTPP_LIB})
+target_include_directories(testFuzzyEngine PRIVATE ${UNITTESTPP_INC})
 
 add_test(NAME testFuzzyEngine COMMAND testFuzzyEngine)

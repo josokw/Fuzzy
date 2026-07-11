@@ -1,15 +1,18 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(PROJECT_NAME Fuzzy)
-project(${PROJECT_NAME})
-message("==== Projectname: ${PROJECT_NAME}")
-message("==== Project dir: ${PROJECT_SOURCE_DIR}")
+project(Fuzzy LANGUAGES CXX)
+message(STATUS "==== Project: ${PROJECT_NAME}")
+message(STATUS "==== Source dir: ${PROJECT_SOURCE_DIR}")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -g")
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+
+add_compile_options(-Wall -Wextra -pedantic -g)
 
 enable_testing()
 
