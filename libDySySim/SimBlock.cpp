@@ -235,6 +235,9 @@ std::error_code dysysim::SimBlock::allInputsAvailable()
    for (auto id : inputs_) {
       if ((dysysim::SimBlock::allSimBlocks_s.find(abs(id)) ==
            end(dysysim::SimBlock::allSimBlocks_s))) {
+         reportError(blockType_,
+                     "block id " + std::to_string(id_) + " references input id "
+                        + std::to_string(abs(id)) + " which does not exist");
          return SimBlockErrc::ModelIsInconsistentError;
       }
    }
