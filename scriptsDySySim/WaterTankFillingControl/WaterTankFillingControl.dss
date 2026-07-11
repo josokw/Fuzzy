@@ -2,19 +2,19 @@
 
 delta_t = 0.01  t_end = 60.00  width_t = 4  precision_t = 1
 
-1 PLS  off=0 on=10 t_on=1 t_off=20   // h_ref
+1 PLS  off=0.0 on=10.0 t_on=1.0 t_off=20.0   // h_ref
 2 SUM 1,-40
 
-10 GAIN 2  p=10.0   // P-controller 
+10 GAIN 2  P=10.0   // P-controller 
 
-20 DLY 10  init=0 delay=4   // dead time caused by long supply tube
-21 FIO 20  tau=2 init=0
+20 DLY 10  out_t0=0.0 delay=4.0   // dead time caused by long supply tube
+21 FIO 20  tau=2.0 out_t0=0.0
 
-30 CON  k=0.1
+30 CON k=0.1
 31 MUL 21,30
-32 INT 31  init=5      // tank cylinder h(t) 
+32 INT 31  out_t0=5.0  // tank cylinder h(t) 
 
-40 SEO 1  w=1 d=0.5    // transfer function h(t) sensor
+40 SEO 32  w=1.0 d=0.5    // transfer function h(t) sensor
 
 50 LOG 1,2,32  w=6 p=3  w=6 p=3  w=6 p=3 
 

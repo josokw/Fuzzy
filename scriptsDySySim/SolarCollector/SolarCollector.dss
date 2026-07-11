@@ -2,9 +2,9 @@
 
 delta_t = 500  t_end = 259200  width_t = 6  precision_t = 0
 
-1 FRQ f=1.15741E-05 phase=0     // Day rithm: sine 1/(24*60*60) [Hz]
+1 FRQ freq=1.15741E-05 phase=0  // Day rhithm: sine 1/(24*60*60) [Hz]
 2 GAIN 1 A=10                   // Amplitude [degree Celsius]
-3 LIM 2,4  Tmin=-5.0 Tmax=8.0   // Toutside [degree Celsius]
+3 LIM 2,4  T_min=-5.0 T_max=8.0 // Temperature outside [degree Celsius]
 4 CON c=2.0                     // degree Celsius
 5 CON c=0.0                     // phi_sun minimum 
 6 MAX 1,5
@@ -12,7 +12,7 @@ delta_t = 500  t_end = 259200  width_t = 6  precision_t = 0
 8 GAIN 7 k=0.8                  // [kJ/sec]
 
 // Heated water tank
-9 GAIN 8 Rc=7.92                // [Ksec/kJ]
+9 GAIN 8 Rc=7.92                // [Ksec/kJ] thermal resistance
 10 ATT 3,8 RcRct=8.4            // Rc + Rct, 7.92 + 0.48 [Ksec/kJ]
 11 MAX 10,12
 12 CON minPhi=0.0               // minimum Phi through Rc and Rct
