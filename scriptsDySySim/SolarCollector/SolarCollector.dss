@@ -1,33 +1,34 @@
-// Solar Thermal Collector (under construction)
+// Solar Thermal Collector (corrected co-authored by AI)
 
 delta_t = 500  t_end = 259200  width_t = 6  precision_t = 0
 
-1 FRQ freq=1.15741E-05 phase=0  // Day rhithm: sine 1/(24*60*60) [Hz]
-2 GAIN 1 A=10                   // Amplitude [degree Celsius]
-3 LIM 2,4  T_min=-5.0 T_max=8.0 // Temperature outside [degree Celsius]
-4 CON c=2.0                     // degree Celsius
-5 CON c=0.0                     // phi_sun minimum 
-6 MAX 1,5
-7 GAIN 6 C=27.8                 // [kJ/sec]
-8 GAIN 7 k=0.8                  // [kJ/sec]
+// Solar irradiance
+1 FRQ freq=1.15741E-05 phase=0   // Day rhythm: sine 1/(24*60*60) [Hz]
+2 GAIN 1 A=10                    // Amplitude [degree Celsius]
+3 LIM 2,4 T_min=-5.0 T_max=8.0  // Temperature outside [degree Celsius]
+4 CON c=2.0                      // offset
+
+// Solar flux
+5 CON c=0.0                      // phi_sun minimum
+6 MAX 1,5                        // half-wave rectified sine
+7 GAIN 6 C=27.8                  // peak irradiance [kJ/s]
+8 GAIN 7 k=0.8                   // eta * Ap [kJ/s]
 
 // Heated water tank
-9 GAIN 8 Rc=7.92                // [Ksec/kJ] thermal resistance
-10 ATT 3,8 RcRct=8.4            // Rc + Rct, 7.92 + 0.48 [Ksec/kJ]
-11 MAX 10,12
-12 CON minPhi=0.0               // minimum Phi through Rc and Rct
-13 ATT 11 Ct=7.942E+03          // [kJ/K]
-14 INT 13 out_t0=5              // Ttank [degree Celsius]
-15 ATT -14,3  Rt=76.2           // k.phi_sun [Ksec/kJ]
+9 ATT 8       Rc=7.92            // phi_sun / Rc [K/s] — solar heating rate
+10 ATT 14,-3  Rct=0.48           // (T_tank - T_outside) / Rct [K/s] — heat loss rate
+11 SUM 9,-10                     // net heating rate = solar - loss [K/s]
+12 ATT 11     Ct=7.942E+03       // dT/dt = net_rate / Ct [K/s]
+13 INT 12     out_t0=5           // T_tank [degree Celsius]
 
 // House
-16 ATT 14,-19 Rth=0.4           // [Ksec/kJ]
-17 MAX 18,16
-18 CON minPhi=0.0
-19 RELAY 21,17,18 Tref=20.0     // [degree Celsius]
-20 ATT 19,22 Ch=48000           // Chouse [kJ/K]
-21 INT 20 out_t0=10.0           // Thouse [degree Celsius]
-22 ATT -21,3 Rh=3.6             // Rhouse [Ksec/kJ]
+14 ATT 13,-20  Rth=0.4           // (T_tank - Thouse) / Rth [kJ/s]
+15 MAX 14,16                     // max(flow, 0) — ensure non-negative
+16 CON minPhi=0.0
+17 RELAY 20,15,16 Tref=20.0     // gate heating based on house temperature
+18 ATT -20,3   Rh=3.6            // (T_outside - Thouse) / Rh [kJ/s]
+19 ATT 17,18   Ch=48000          // (relay_out + heat_loss) / Ch [K/s]
+20 INT 19      out_t0=10.0       // Thouse [degree Celsius]
 
 // Output data
-30 LOG 3 8 14 21  w=6 p=1  w=7 p=0  w=6 p=1  w=6 p=1
+30 LOG 3 8 13 20  w=6 p=1  w=7 p=0  w=6 p=1  w=6 p=1
