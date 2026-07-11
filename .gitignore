@@ -52,6 +52,11 @@ compile_commands.json
 # Executables
 Tipping/Tipping
 
+# Build output
+bin/
+lib/
+build/
+
 # Doxygen
 html
 
