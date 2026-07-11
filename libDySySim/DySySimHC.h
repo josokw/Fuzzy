@@ -20,6 +20,12 @@ public:
       in_previous = in;
    }
 
+   void setOutput(double value)
+   {
+      out_ = value;
+      in_previous = value;
+   }
+
 private:
    double initial_out_{0.0};
    double in_previous{initial_out_};
