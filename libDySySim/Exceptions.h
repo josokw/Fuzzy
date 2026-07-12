@@ -59,7 +59,10 @@ public:
       : location_{loc}
    {
    }
-   const char *what() const noexcept { return "Parser config error\n"; }
+   const char *what() const noexcept override
+   {
+      return "Parser config error\n";
+   }
    const auto &getLocation() const { return location_; }
 
 private:
@@ -74,7 +77,7 @@ public:
       : location_{loc}
    {
    }
-   const char *what() const noexcept { return "Model error\n"; }
+   const char *what() const noexcept override { return "Model error\n"; }
    const auto &getLocation() const { return location_; }
 
 private:
