@@ -85,7 +85,7 @@ protected:
    SimBlock &simblock_;
    size_t n_inputs_;
    std::vector<double> inputs_;
-   double out_;
+   double out_{0.0};
 };
 
 } // namespace dysysim
