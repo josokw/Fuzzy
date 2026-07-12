@@ -84,8 +84,7 @@ inline double defuzCenterOfSums(const std::vector<OutputFuzzySet *> &vfs)
       numerator += ar * midpoint;
       denominator += ar;
    }
-
-   crisp = numerator / denominator;
+   crisp = denominator != 0.0 ? numerator / denominator : 0;
 
    return crisp;
 }
