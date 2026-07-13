@@ -84,6 +84,28 @@ private:
    const std::source_location location_;
 };
 
+class SyntaxError : public std::exception
+{
+public:
+   explicit SyntaxError(
+      int lineNumber, const std::string &codeLine,
+      const std::source_location &loc = std::source_location::current())
+      : lineNumber_{lineNumber}
+      , codeLine_{codeLine}
+      , location_{loc}
+   {
+   }
+   const char *what() const noexcept override { return "Parser syntax error"; }
+   int getLineNumber() const { return lineNumber_; }
+   const auto &getCodeLine() const { return codeLine_; }
+   const auto &getLocation() const { return location_; }
+
+private:
+   const int lineNumber_;
+   const std::string codeLine_;
+   const std::source_location location_;
+};
+
 } // namespace dysysim
 
 #endif
