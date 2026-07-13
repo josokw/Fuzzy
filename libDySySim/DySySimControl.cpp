@@ -1,7 +1,7 @@
 #include "DySySimControl.h"
 
 dysysim::Hysteresis::Hysteresis()
-   : SimBlock{"HYS", SimBlock::ioType_t::input1N, 3}
+   : SimBlock{"HYS", SimBlock::ioType_t::input1N}
    , out_t0_{0.0}
    , hysteresis_{0.0}
    , slope_{0.0}
@@ -58,7 +58,7 @@ dysysim::Hysteresis::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::PI::PI()
-   : SimBlock{"PI", SimBlock::ioType_t::input1N, 3}
+   : SimBlock{"PI", SimBlock::ioType_t::input1N}
    , Kp_{0.0}
    , Ki_{0.0}
 {
@@ -100,7 +100,7 @@ dysysim::PI::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::PID::PID()
-   : SimBlock{"PID", SimBlock::ioType_t::input1N, 4}
+   : SimBlock{"PID", SimBlock::ioType_t::input1N}
    , Kp_{1.0}
    , Ki_{1.0}
    , Kd_{1.0}
@@ -151,7 +151,7 @@ dysysim::PID::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::ZeroOrderHold::ZeroOrderHold()
-   : SimBlock{"ZOH", SimBlock::ioType_t::input1N, 2}
+   : SimBlock{"ZOH", SimBlock::ioType_t::input1N}
    , nSamples_{1}
    , sample_{0}
 {

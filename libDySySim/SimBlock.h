@@ -52,14 +52,12 @@ public:
       std::vector<double> parameters;
    };
 
-   SimBlock(const std::string &blockType, const ioType_t ioType,
-            size_t n_params = 0)
+   SimBlock(const std::string &blockType, const ioType_t ioType)
       : blockType_{blockType}
       , ioType_{ioType}
       , id_{-1}
       , inputs_{}
       , out_{0.0}
-      , n_params_{n_params}
       , has_history_{false}
       , context_{nullptr}
    {
@@ -83,6 +81,8 @@ public:
    SimContext *getContext() const { return context_; }
 
    virtual std::shared_ptr<SimBlock> create() = 0;
+   /// Returns the expected number of parameters for this block.
+   virtual size_t n_params(const configData_t & /*config*/) const { return 0; }
    /// Checks all config data, returns a vector of all errors.
    virtual std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const;
@@ -99,7 +99,6 @@ protected:
    int id_;
    std::vector<int> inputs_;
    double out_;
-   mutable size_t n_params_;
    bool has_history_;
    SimContext *context_;
 

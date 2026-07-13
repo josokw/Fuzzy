@@ -19,6 +19,8 @@ public:
       return std::make_shared<Abs>();
    }
 
+   size_t n_params(const configData_t &) const override { return 1; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -44,6 +46,8 @@ public:
    {
       return std::make_shared<Cos>();
    }
+
+   size_t n_params(const configData_t &) const override { return 2; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -72,6 +76,11 @@ public:
       return std::make_shared<Polynomial>();
    }
 
+   size_t n_params(const configData_t &config) const override
+   {
+      return static_cast<size_t>(config.parameters[0]) + 2;
+   }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -92,8 +101,8 @@ public:
    }
 
 private:
-   mutable int degree_;
-   mutable std::vector<double> coefficients_;
+   int degree_;
+   std::vector<double> coefficients_;
 
 private:
    std::vector<std::error_code>
@@ -110,6 +119,8 @@ public:
    {
       return std::make_shared<Sin>();
    }
+
+   size_t n_params(const configData_t &) const override { return 2; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -136,6 +147,8 @@ public:
    {
       return std::make_shared<SquareRoot>();
    }
+
+   size_t n_params(const configData_t &) const override { return 1; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;

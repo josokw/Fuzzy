@@ -2,7 +2,7 @@
 #include "SimContext.h"
 
 dysysim::Constant::Constant()
-   : SimBlock{"CON", SimBlock::ioType_t::input0, 1}
+   : SimBlock{"CON", SimBlock::ioType_t::input0}
 {
 }
 
@@ -25,7 +25,7 @@ dysysim::Constant::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::AlgebraicDelay::AlgebraicDelay()
-   : SimBlock{"ADL", SimBlock::ioType_t::input1, 1}
+   : SimBlock{"ADL", SimBlock::ioType_t::input1}
    , out_previous_{0.0}
 {
    has_history_ = true;
@@ -51,7 +51,7 @@ std::vector<std::error_code> dysysim::AlgebraicDelay::configDataIsOK(
 }
 
 dysysim::Attenuator::Attenuator()
-   : SimBlock{"ATT", SimBlock::ioType_t::input1N, 1}
+   : SimBlock{"ATT", SimBlock::ioType_t::input1N}
    , attenuation_{1.0}
 {
 }
@@ -99,7 +99,7 @@ dysysim::Divider::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Gain::Gain()
-   : SimBlock{"GAIN", SimBlock::ioType_t::input1N, 1}
+   : SimBlock{"GAIN", SimBlock::ioType_t::input1N}
    , gain_(1.0)
 {
 }
@@ -124,7 +124,7 @@ dysysim::Gain::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Limit::Limit()
-   : SimBlock{"LIM", SimBlock::ioType_t::input1N, 2}
+   : SimBlock{"LIM", SimBlock::ioType_t::input1N}
    , min_(-1.0)
    , max_(1.0)
 {
@@ -226,7 +226,7 @@ dysysim::Multiplier::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Offset::Offset()
-   : SimBlock{"OFFSET", SimBlock::ioType_t::input1N, 2}
+   : SimBlock{"OFFSET", SimBlock::ioType_t::input1N}
 {
 }
 
@@ -274,7 +274,7 @@ dysysim::Summator::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Frequency::Frequency()
-   : SimBlock{"FRQ", SimBlock::ioType_t::input0, 2}
+   : SimBlock{"FRQ", SimBlock::ioType_t::input0}
    , frequency_{1.0}
    , phase_{0.0}
 {
@@ -301,7 +301,7 @@ dysysim::Frequency::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Step::Step()
-   : SimBlock{"STP", SimBlock::ioType_t::input0, 3}
+   : SimBlock{"STP", SimBlock::ioType_t::input0}
    , off_{0.0}
    , on_{1.0}
    , t_on_{1.0}
@@ -335,7 +335,7 @@ dysysim::Step::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Puls::Puls()
-   : SimBlock{"PLS", SimBlock::ioType_t::input0, 4}
+   : SimBlock{"PLS", SimBlock::ioType_t::input0}
    , off_{0.0}
    , on_{1.0}
    , t_on_{1.0}
@@ -397,7 +397,7 @@ dysysim::Time::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Delay::Delay()
-   : SimBlock{"DLY", SimBlock::ioType_t::input1N, 2}
+   : SimBlock{"DLY", SimBlock::ioType_t::input1N}
    , out_t0_{0.0}
    , delaytime_{1.0}
    , buffer_{}
@@ -447,7 +447,7 @@ dysysim::Delay::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::FirstOrder::FirstOrder()
-   : SimBlock{"FIO", SimBlock::ioType_t::input1N, 2}
+   : SimBlock{"FIO", SimBlock::ioType_t::input1N}
    , timeConstant_{1.0}
 {
    has_history_ = true;
@@ -479,7 +479,7 @@ dysysim::FirstOrder::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::OnOff::OnOff()
-   : SimBlock{"ONOFF", SimBlock::ioType_t::input1, 3}
+   : SimBlock{"ONOFF", SimBlock::ioType_t::input1}
    , off_{0.0}
    , on_{1.0}
    , onoff_{1.0}
@@ -509,7 +509,7 @@ dysysim::OnOff::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Integrator::Integrator()
-   : SimBlock{"INT", SimBlock::ioType_t::input1N, 1}
+   : SimBlock{"INT", SimBlock::ioType_t::input1N}
 {
    has_history_ = true;
 }
@@ -535,7 +535,7 @@ dysysim::Integrator::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::IntegratorEuler::IntegratorEuler()
-   : SimBlock{"EUL", SimBlock::ioType_t::input1N, 1}
+   : SimBlock{"EUL", SimBlock::ioType_t::input1N}
    , initial_out_{0.0}
 {
    has_history_ = true;
@@ -584,14 +584,12 @@ dysysim::Log::config(const SimBlock::configData_t &config)
 std::vector<std::error_code>
 dysysim::Log::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   SimBlock::n_params_ = 2 * config.inputs.size();
-
    auto errs = SimBlock::configDataIsOK(config);
    return errs;
 }
 
 dysysim::Relay::Relay()
-   : SimBlock{"RELAY", SimBlock::ioType_t::input3, 1}
+   : SimBlock{"RELAY", SimBlock::ioType_t::input3}
    , ref_{0.0}
 {
 }
@@ -609,7 +607,7 @@ dysysim::Relay::config(const SimBlock::configData_t &config)
 }
 
 dysysim::SecondOrder::SecondOrder()
-   : SimBlock{"SEO", SimBlock::ioType_t::input1N, 3}
+   : SimBlock{"SEO", SimBlock::ioType_t::input1N}
    , w_res_{1.0}
    , damping_{1.0}
    , gain_1_{1.0}
@@ -682,7 +680,7 @@ dysysim::Sign::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Clock::Clock()
-   : SimBlock{"CLK", SimBlock::ioType_t::input0, 1}
+   : SimBlock{"CLK", SimBlock::ioType_t::input0}
    , frequency_{1.0}
 {
    out_ = 1.0;

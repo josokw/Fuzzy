@@ -28,6 +28,8 @@ public:
       return std::make_shared<Constant>();
    }
 
+   size_t n_params(const configData_t &) const override { return 1; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -78,6 +80,8 @@ public:
    {
       return std::make_shared<Attenuator>();
    }
+
+   size_t n_params(const configData_t &) const override { return 1; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -133,6 +137,8 @@ public:
       return std::make_shared<Gain>();
    }
 
+   size_t n_params(const configData_t &) const override { return 1; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -157,6 +163,8 @@ public:
    {
       return std::make_shared<Limit>();
    }
+
+   size_t n_params(const configData_t &) const override { return 2; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -268,6 +276,8 @@ public:
       return std::make_shared<Offset>();
    }
 
+   size_t n_params(const configData_t &) const override { return 2; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -314,6 +324,8 @@ public:
       return std::make_shared<Frequency>();
    }
 
+   size_t n_params(const configData_t &) const override { return 2; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -341,6 +353,8 @@ public:
    {
       return std::make_shared<Step>();
    }
+
+   size_t n_params(const configData_t &) const override { return 3; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -370,6 +384,8 @@ public:
       auto p = std::make_shared<Puls>();
       return p;
    }
+
+   size_t n_params(const configData_t &) const override { return 4; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -423,6 +439,8 @@ public:
       return std::make_shared<Delay>();
    }
 
+   size_t n_params(const configData_t &) const override { return 2; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -463,6 +481,8 @@ public:
    {
       return std::make_shared<FirstOrder>();
    }
+
+   size_t n_params(const configData_t &) const override { return 2; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -541,6 +561,8 @@ public:
       return std::make_shared<OnOff>();
    }
 
+   size_t n_params(const configData_t &) const override { return 3; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -568,6 +590,8 @@ public:
    {
       return std::make_shared<Integrator>();
    }
+
+   size_t n_params(const configData_t &) const override { return 1; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -602,6 +626,8 @@ public:
       return std::make_shared<IntegratorEuler>();
    }
 
+   size_t n_params(const configData_t &) const override { return 1; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -631,6 +657,11 @@ public:
    std::shared_ptr<SimBlock> create() override
    {
       return std::make_shared<Log>();
+   }
+
+   size_t n_params(const configData_t &config) const override
+   {
+      return 2 * config.inputs.size();
    }
 
    std::vector<std::error_code>
@@ -684,6 +715,8 @@ public:
       return std::make_shared<Relay>();
    }
 
+   size_t n_params(const configData_t &) const override { return 1; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -718,6 +751,8 @@ public:
    {
       return std::make_shared<SecondOrder>();
    }
+
+   size_t n_params(const configData_t &) const override { return 3; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -783,6 +818,9 @@ public:
    {
       return std::make_shared<Clock>();
    }
+
+   size_t n_params(const configData_t &) const override { return 1; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 

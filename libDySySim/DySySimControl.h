@@ -19,6 +19,8 @@ public:
       return std::make_shared<Hysteresis>();
    }
 
+   size_t n_params(const configData_t &) const override { return 3; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -79,6 +81,8 @@ public:
       return std::make_shared<PI>();
    }
 
+   size_t n_params(const configData_t &) const override { return 3; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
@@ -114,6 +118,8 @@ public:
    {
       return std::make_shared<PID>();
    }
+
+   size_t n_params(const configData_t &) const override { return 4; }
 
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
@@ -153,6 +159,9 @@ public:
    {
       return std::make_shared<ZeroOrderHold>();
    }
+
+   size_t n_params(const configData_t &) const override { return 2; }
+
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 

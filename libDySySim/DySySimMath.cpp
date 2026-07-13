@@ -2,7 +2,7 @@
 #include "SimBlock.h"
 
 dysysim::Abs::Abs()
-   : SimBlock{"ABS", SimBlock::ioType_t::input1N, 1}
+   : SimBlock{"ABS", SimBlock::ioType_t::input1N}
    , multiplier_{1.0}
 {
 }
@@ -28,7 +28,7 @@ dysysim::Abs::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Cos::Cos()
-   : SimBlock{"COS", SimBlock::ioType_t::input1, 2}
+   : SimBlock{"COS", SimBlock::ioType_t::input1}
    , multiplier_{1.0}
    , phase_{0.0}
 {
@@ -56,7 +56,7 @@ dysysim::Cos::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Polynomial::Polynomial()
-   : SimBlock{"POL", SimBlock::ioType_t::input1N, 1}
+   : SimBlock{"POL", SimBlock::ioType_t::input1N}
    , degree_{0}
    , coefficients_{}
 {
@@ -100,8 +100,6 @@ dysysim::Polynomial::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigParameterRangeError);
       return errs;
    }
-   degree_ = int(config.parameters[0]);
-   SimBlock::n_params_ = degree_ + 2;
 
    errs = SimBlock::configDataIsOK(config);
 
@@ -109,7 +107,7 @@ dysysim::Polynomial::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::Sin::Sin()
-   : SimBlock{"SIN", SimBlock::ioType_t::input1, 2}
+   : SimBlock{"SIN", SimBlock::ioType_t::input1}
    , multiplier_{1.0}
    , phase_{0.0}
 {
@@ -137,7 +135,7 @@ dysysim::Sin::configDataIsOK(const SimBlock::configData_t &config) const
 }
 
 dysysim::SquareRoot::SquareRoot()
-   : SimBlock{"SQRT", SimBlock::ioType_t::input1, 1}
+   : SimBlock{"SQRT", SimBlock::ioType_t::input1}
    , multiplier_{1.0}
 {
 }

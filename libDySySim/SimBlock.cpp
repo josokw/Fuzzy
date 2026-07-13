@@ -110,9 +110,9 @@ dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
          break;
    }
 
-   if (config.parameters.size() != n_params_) {
+   if (config.parameters.size() != n_params(config)) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      reportError(blockType_, "should have " + std::to_string(n_params_) + " parameter(s)");
+      reportError(blockType_, "should have " + std::to_string(n_params(config)) + " parameter(s)");
    }
 
    return errs;
