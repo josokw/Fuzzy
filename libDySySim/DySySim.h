@@ -64,8 +64,6 @@ public:
 
 private:
    double out_previous_;
-
-private:
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
@@ -697,8 +695,6 @@ public:
 private:
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
-
-private:
    bool write_columns_ = true;
    std::vector<int> parameters_;
 };
@@ -735,8 +731,6 @@ public:
 
 private:
    double ref_;
-
-private:
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };

@@ -30,8 +30,6 @@ public:
 
 private:
    double multiplier_;
-
-private:
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
@@ -59,8 +57,6 @@ public:
 private:
    double multiplier_;
    double phase_;
-
-private:
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
@@ -103,8 +99,6 @@ public:
 private:
    int degree_;
    std::vector<double> coefficients_;
-
-private:
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
