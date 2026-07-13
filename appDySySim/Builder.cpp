@@ -57,8 +57,7 @@ bool dysysim::Builder::operator()(std::ifstream &script)
 void dysysim::Builder::execute()
 {
    auto [delta_t, t_end, width_t, precision_t] = parser_.getSimParameters();
-   context_.sim_time.delta_t = delta_t;
-   context_.sim_time.end_t = t_end;
+   context_.sim_time.set(delta_t, t_end);
    context_.sim_time.width_t = width_t;
    context_.sim_time.precision_t = precision_t;
    context_.initSimBlocks();
