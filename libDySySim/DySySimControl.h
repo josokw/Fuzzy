@@ -50,7 +50,7 @@ public:
       }
    }
 
-   void reset() { out_ = out_t0_; }
+   void reset() { out_ = out_t0_; up_ = true; }
 
 private:
    double out_t0_;
@@ -92,7 +92,7 @@ public:
       out_ = in * Kp_ + out_int_;
    }
 
-   void reset() { out_ = 0; }
+   void reset() { out_ = 0; out_int_ = 0; }
 
 private:
    double Kp_;
@@ -129,9 +129,7 @@ public:
       in_n_1_ = in;
    }
 
-   void reset()
-   {
-   }
+   void reset() { out_ = 0; out_int_ = 0; out_dif_ = 0; in_n_1_ = 0; }
 
 private:
    double Kp_;

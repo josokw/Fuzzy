@@ -571,9 +571,9 @@ public:
       in_previous = in;
    }
 
-   void reset() { out_ = initial_out_; }
+   void reset() { out_ = initial_out_; in_previous = initial_out_; }
 
-private:
+   private:
    double initial_out_{0.0};
    double in_previous{initial_out_};
 
