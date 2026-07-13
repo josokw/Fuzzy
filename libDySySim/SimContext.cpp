@@ -38,7 +38,7 @@ std::error_code dysysim::SimContext::addSimBlock(int id,
    return SimBlockErrc::IdIsNotUniqueError;
 }
 
-std::shared_ptr<dysysim::SimBlock> dysysim::SimContext::getSimBlock(int id)
+std::shared_ptr<dysysim::SimBlock> dysysim::SimContext::getSimBlock(int id) const
 {
    auto it = allSimBlocks_.find(id);
    if (it != allSimBlocks_.end()) {

@@ -53,7 +53,7 @@ public:
    void initSimBlocks();
    void exeSimBlocks();
 
-   std::shared_ptr<SimBlock> getSimBlock(int id);
+   std::shared_ptr<SimBlock> getSimBlock(int id) const;
    double time() const { return sim_time.t; }
 
 private:

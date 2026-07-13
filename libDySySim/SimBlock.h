@@ -78,7 +78,7 @@ public:
    const std::vector<int> &getInputs() const { return inputs_; }
    bool hasHistory() const { return has_history_; }
    void setContext(SimContext *ctx) { context_ = ctx; }
-   SimContext *getContext() const { return context_; }
+   const SimContext *getContext() const { return context_; }
 
    virtual std::shared_ptr<SimBlock> create() = 0;
    /// Returns the expected number of parameters for this block.
