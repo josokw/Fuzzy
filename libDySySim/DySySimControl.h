@@ -2,6 +2,7 @@
 #define DYSYSIMCONTROL_H
 
 #include "SimBlock.h"
+#include "SimContext.h"
 
 #include <deque>
 
@@ -67,7 +68,6 @@ private:
 };
 
 /// PI controller: out = in * (Kp + (Ki / s))
-/// \todo test
 class PI : public SimBlock
 {
 public:
@@ -88,7 +88,7 @@ public:
    /// @param in PI controller error input
    void input(double in)
    {
-      out_int_ += Ki_ * SimTime::delta_t * in;
+      out_int_ += Ki_ * context_->sim_time.delta_t * in;
       out_ = in * Kp_ + out_int_;
    }
 
@@ -104,7 +104,6 @@ private:
 };
 
 /// PID controller: out = in * (Kp + (Ki / s) + Kd * s)
-/// \todo test
 class PID : public SimBlock
 {
 public:
@@ -123,30 +122,18 @@ public:
 
    void input(double in)
    {
-      //    _z.push_back(in);
-      //    _z.pop_front();
-      //    out_ = _z[0] + _K1 * _z[1] + _K2 * _z[2] + _K3 * _z[3];
-      out_int_ += Ki_ * SimTime::delta_t * in;
-      out_dif_ = Kd_ * (in - in_n_1_) / SimTime::delta_t;
+      out_int_ += Ki_ * context_->sim_time.delta_t * in;
+      out_dif_ =
+         Kd_ * (in - in_n_1_) / context_->sim_time.delta_t;
       out_ = in * Kp_ + out_int_ + out_dif_;
       in_n_1_ = in;
    }
 
    void reset()
    {
-      //    _z.clear();
-      //    _z = {0, 0, 0, 0};
-      //
    }
 
 private:
-   // const double _Kp;
-   // const double _tau_I;
-   // const double _tau_D;
-   // const double _K1{_Kp * (1 + (1 / _tau_I) + _tau_D)};
-   // const double _K2{_Kp * (1 - 2 * _tau_D)};
-   // const double _K3{_Kp * _tau_D};
-   // std::deque<double> _z;
    double Kp_;
    double Ki_;
    double Kd_;

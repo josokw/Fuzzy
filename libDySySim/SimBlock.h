@@ -3,18 +3,20 @@
 
 #include "ErrorCodes.h"
 
+#include <cmath>
 #include <fstream>
 #include <initializer_list>
 #include <iostream>
-#include <map>
 #include <memory>
 #include <system_error>
 #include <vector>
 
 namespace dysysim {
 
+class SimContext;
+
 // For logic related simblocks
-const double LOGIC01{0.5};
+inline constexpr double LOGIC01{0.5};
 inline bool is_0(double in)
 {
    return in < LOGIC01;
@@ -29,28 +31,6 @@ inline double convert01(double in)
       return 0.0;
    return 1.0;
 }
-
-/// SimTime contains simulation time data.
-/// \todo Consider implementation as a struct?
-/// \todo Consider implementation t as std::chrono::...
-class SimTime
-{
-public:
-   SimTime() = default;
-   ~SimTime() = default;
-
-   static double delta_t;
-   static double end_t;
-   static int width_t;
-   static int precision_t;
-   static double t;
-
-   static void set(double delta, double end);
-   static double output() { return t; }
-   static void reset() { t = 0.0; }
-   static void next() { t += delta_t; }
-   static bool simulation_on();
-};
 
 /// Abstract Base Class for all simulation block derived classes.
 class SimBlock
@@ -81,6 +61,7 @@ public:
       , out_{0.0}
       , n_params_{n_params}
       , has_history_{false}
+      , context_{nullptr}
    {
    }
    SimBlock(const SimBlock &other) = delete;
@@ -96,6 +77,11 @@ public:
    double notInput() const;
    double output() const { return out_; }
 
+   const std::vector<int> &getInputs() const { return inputs_; }
+   bool hasHistory() const { return has_history_; }
+   void setContext(SimContext *ctx) { context_ = ctx; }
+   SimContext *getContext() const { return context_; }
+
    virtual std::shared_ptr<SimBlock> create() = 0;
    /// Checks all config data, returns a vector of all errors.
    virtual std::vector<std::error_code>
@@ -107,21 +93,6 @@ public:
       std::cerr << blockType_ << " --- exe() NOT implemented\n";
    }
 
-   static void clearSimBlocks() { allSimBlocks_s.clear(); }
-   static auto getSimBlock(int id) { return allSimBlocks_s.at(id); }
-   static bool idIsUnique(int id);
-   static std::error_code addSimBlock(int id, std::shared_ptr<SimBlock> pSB);
-   static std::error_code setExeSequence();
-   static void setExeSequence(std::vector<int> &exeSequence);
-   /// Calculates all SimBlock out_ for t = 0.
-   static void initSimBlocks();
-   /// Calculates all SimBlock out_ for t = t_n (n > 0).
-   static void exeSimBlocks();
-
-public:
-   static std::map<int, std::shared_ptr<SimBlock>> allSimBlocks_s;
-   static SimTime sim_time;
-
 protected:
    const std::string blockType_;
    const ioType_t ioType_;
@@ -130,12 +101,9 @@ protected:
    double out_;
    mutable size_t n_params_;
    bool has_history_;
+   SimContext *context_;
 
    std::error_code allInputsAvailable();
-   bool allInputsInExeSequence();
-   bool IdInExeSequence(int id);
-
-   static std::vector<int> exeSequence_s;
 };
 
 } // namespace dysysim

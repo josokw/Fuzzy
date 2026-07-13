@@ -3,6 +3,7 @@
 #include "DySySim.h"
 #include "LibInfoDySySim.h"
 #include "SimBlockFactory.h"
+#include "SimContext.h"
 
 #include <exception>
 #include <fstream>
@@ -11,22 +12,18 @@
 
 namespace dss = dysysim;
 
-inline double getOutput(int id)
-{
-   return dss::SimBlock::getSimBlock(id)->output();
-}
-
 int main(int argc, char *argv[])
 {
    std::cout << "-- " APPNAME_VERSION " "
              << "-- uses " + dss::libName + " " << dss::libVersion << "\n\n";
 
    try {
-      dss::SimBlockFactory sbf;
+      dss::SimContext ctx;
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
       const double delta_t{0.005};
       const double RCtime{0.5};
-      dss::SimTime::set(delta_t, 5 * RCtime);
+      ctx.sim_time.set(delta_t, 5 * RCtime);
 
       sbf.configCheck("STP", {1, {}, {0, 3000, 0.1}});
       sbf.configCheck("SUM", {2, {1, -4}, {}});
@@ -38,20 +35,23 @@ int main(int argc, char *argv[])
          simdata.open(argv[1]);
       }
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       do {
-         std::cout << std::setw(5) << dss::SimBlock::sim_time.t << " "
-                   << std::setw(5) << getOutput(1) << " " << std::setw(5)
-                   << getOutput(3) << " " << std::setw(8) << getOutput(4)
+         ctx.exeSimBlocks();
+         std::cout << std::setw(5) << ctx.time() << " "
+                   << std::setw(5) << ctx.getSimBlock(1)->output() << " "
+                   << std::setw(5) << ctx.getSimBlock(3)->output() << " "
+                   << std::setw(8) << ctx.getSimBlock(4)->output()
                    << std::endl;
 
          if (argc == 2) {
-            simdata << std::setw(4) << dss::SimBlock::sim_time.t << " "
-                    << std::setw(5) << getOutput(1) << " " << std::setw(5)
-                    << getOutput(2) << " " << getOutput(4) << std::endl;
+            simdata << std::setw(4) << ctx.time() << " "
+                    << std::setw(5) << ctx.getSimBlock(1)->output() << " "
+                    << std::setw(5) << ctx.getSimBlock(2)->output() << " "
+                    << ctx.getSimBlock(4)->output() << std::endl;
          }
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
 
       simdata.close();
    }

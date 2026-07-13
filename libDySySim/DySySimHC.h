@@ -2,6 +2,7 @@
 #define DYSYSIMHC_H
 
 #include "SimBlockHC.h"
+#include "SimContext.h"
 
 namespace dysysim {
 
@@ -16,7 +17,8 @@ public:
 
    void input(double in)
    {
-      out_ += 0.5 * (in + in_previous) * SimTime::delta_t;
+      out_ += 0.5 * (in + in_previous) *
+              simblock_.getContext()->sim_time.delta_t;
       in_previous = in;
    }
 

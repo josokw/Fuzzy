@@ -4,6 +4,7 @@
 #include "DySySimHC.h"
 #include "ErrorCodes.h"
 #include "SimBlock.h"
+#include "SimContext.h"
 
 #include <cmath>
 #include <format>
@@ -109,8 +110,9 @@ public:
 
    void exe() override
    {
-      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
-            SimBlock::allSimBlocks_s[inputs_[1]]->output());
+      auto pIn0 = context_->getSimBlock(std::abs(inputs_[0]));
+      auto pIn1 = context_->getSimBlock(std::abs(inputs_[1]));
+      input(pIn0->output(), pIn1->output());
    }
 
    void input(double in1, double in2) { out_ = in1 / in2; }
@@ -187,8 +189,9 @@ public:
 
    void exe() override
    {
-      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
-            SimBlock::allSimBlocks_s[inputs_[1]]->output());
+      auto pIn0 = context_->getSimBlock(std::abs(inputs_[0]));
+      auto pIn1 = context_->getSimBlock(std::abs(inputs_[1]));
+      input(pIn0->output(), pIn1->output());
    }
 
    void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
@@ -214,8 +217,9 @@ public:
 
    void exe() override
    {
-      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
-            SimBlock::allSimBlocks_s[inputs_[1]]->output());
+      auto pIn0 = context_->getSimBlock(std::abs(inputs_[0]));
+      auto pIn1 = context_->getSimBlock(std::abs(inputs_[1]));
+      input(pIn0->output(), pIn1->output());
    }
 
    void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
@@ -241,8 +245,9 @@ public:
 
    void exe() override
    {
-      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
-            SimBlock::allSimBlocks_s[inputs_[1]]->output());
+      auto pIn0 = context_->getSimBlock(std::abs(inputs_[0]));
+      auto pIn1 = context_->getSimBlock(std::abs(inputs_[1]));
+      input(pIn0->output(), pIn1->output());
    }
 
    void input(double in1, double in2) { out_ = in1 * in2; }
@@ -314,7 +319,8 @@ public:
 
    void exe() override
    {
-      out_ = std::sin(2 * std::numbers::pi * frequency_ * SimTime::t + phase_);
+      out_ = std::sin(2 * std::numbers::pi * frequency_ * context_->time() +
+                      phase_);
    }
 
 private:
@@ -339,7 +345,10 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { out_ = (SimTime::t < t_on_) ? off_ : on_; }
+   void exe() override
+   {
+      out_ = (context_->time() < t_on_) ? off_ : on_;
+   }
 
 private:
    double off_;
@@ -367,7 +376,8 @@ public:
 
    void exe() override
    {
-      out_ = (SimTime::t >= t_on_ and SimTime::t < t_off_) ? on_ : off_;
+      out_ = (context_->time() >= t_on_ and context_->time() < t_off_) ? on_
+                                                                        : off_;
    }
 
 private:
@@ -395,7 +405,7 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { out_ = SimTime::t; }
+   void exe() override { out_ = context_->time(); }
 
 private:
    std::vector<std::error_code>
@@ -452,7 +462,7 @@ public:
 
    void input(double in)
    {
-      out_ += SimTime::delta_t * (in - out_) / timeConstant_;
+      out_ += context_->sim_time.delta_t * (in - out_) / timeConstant_;
    }
 
 private:
@@ -511,7 +521,6 @@ dysysim::Function<T>::config(const SimBlock::configData_t &config)
 }
 
 /// OnOff starts (t == 0) off.
-/// \todo Add hysteresis
 class OnOff : public SimBlock
 {
 public:
@@ -558,7 +567,7 @@ public:
 
    void input(double in)
    {
-      out_ += 0.5 * (in + in_previous) * SimTime::delta_t;
+      out_ += 0.5 * (in + in_previous) * context_->sim_time.delta_t;
       in_previous = in;
    }
 
@@ -589,7 +598,10 @@ public:
 
    void exe() override { input(sumInputs()); }
 
-   void input(double in) { out_ += in * SimTime::delta_t; }
+   void input(double in)
+   {
+      out_ += in * context_->sim_time.delta_t;
+   }
 
    void reset() { out_ = initial_out_; }
 
@@ -619,7 +631,8 @@ public:
    {
       if (write_columns_) {
          std::string header =
-            std::format("#{:>{}s}", "t", SimBlock::sim_time.width_t - 1);
+            std::format("#{:>{}s}", "t",
+                        context_->sim_time.width_t - 1);
          for (size_t index = 0; index < inputs_.size(); ++index) {
             int id = inputs_[index];
             int width = parameters_[2 * index];
@@ -629,10 +642,11 @@ public:
          write_columns_ = false;
       }
       std::string line =
-         std::format("{:{}.{}f}", SimTime::t, SimBlock::sim_time.width_t,
-                     SimBlock::sim_time.precision_t);
+         std::format("{:{}.{}f}", context_->time(),
+                     context_->sim_time.width_t,
+                     context_->sim_time.precision_t);
       for (size_t index = 0; index < inputs_.size(); ++index) {
-         auto pSB = SimBlock::getSimBlock(inputs_[index]);
+         auto pSB = context_->getSimBlock(inputs_[index]);
          int width = parameters_[2 * index];
          int precision = parameters_[2 * index + 1];
          line += std::format(" {:>{}.{}f}", pSB->output(), width, precision);
@@ -666,9 +680,10 @@ public:
 
    void exe() override
    {
-      input(SimBlock::allSimBlocks_s[inputs_[0]]->output(),
-            SimBlock::allSimBlocks_s[inputs_[1]]->output(),
-            SimBlock::allSimBlocks_s[inputs_[2]]->output());
+      auto pIn0 = context_->getSimBlock(std::abs(inputs_[0]));
+      auto pIn1 = context_->getSimBlock(std::abs(inputs_[1]));
+      auto pIn2 = context_->getSimBlock(std::abs(inputs_[2]));
+      input(pIn0->output(), pIn1->output(), pIn2->output());
    }
 
    void input(double in1, double in2, double in3)
@@ -739,7 +754,11 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { out_ = std::signbit(inputs_[0]) ? 1.0 : 0.0; }
+   void exe() override
+   {
+      auto pSB = context_->getSimBlock(std::abs(inputs_[0]));
+      out_ = (pSB && std::signbit(pSB->output())) ? 1.0 : 0.0;
+   }
 
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
@@ -761,7 +780,8 @@ public:
    void exe() override
    {
       out_ =
-         std::signbit(std::sin(2 * std::numbers::pi * frequency_ * SimTime::t))
+         std::signbit(
+            std::sin(2 * std::numbers::pi * frequency_ * context_->time()))
             ? 0.0
             : 1.0;
    }

@@ -6,12 +6,10 @@ add_library(DySySim STATIC
     DySySimLogic.cpp
     DySySimMath.cpp
     ErrorCodes.cpp
-    Model.cpp
     SimBlock.cpp
     SimBlockFactory.cpp
     SimBlockHC.cpp
-    SimModel.cpp
-    SimModelTime.cpp
+    SimContext.cpp
 )
 
 target_include_directories(DySySim PUBLIC ${PROJECT_SOURCE_DIR}/libDySySim)

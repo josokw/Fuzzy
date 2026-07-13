@@ -4,7 +4,8 @@
 #include "SimBlock.h"
 
 dysysim::Builder::Builder()
-   : parser_(*this)
+   : factory_{context_}
+   , parser_(*this)
 {
    initFactory();
 }
@@ -14,7 +15,7 @@ bool dysysim::Builder::operator()(std::ifstream &script)
    bool no_errors = true;
 
    try {
-      SimBlock::clearSimBlocks();
+      context_.clear();
 
       lineNumber_ = 0;
       std::string line;
@@ -38,9 +39,8 @@ bool dysysim::Builder::operator()(std::ifstream &script)
             }
          }
       }
-      // \todo  should be executed not here but ??
       if (no_errors) {
-         SimBlock::setExeSequence();
+         context_.setExeSequence();
          execute();
       }
    }
@@ -57,15 +57,15 @@ bool dysysim::Builder::operator()(std::ifstream &script)
 void dysysim::Builder::execute()
 {
    auto [delta_t, t_end, width_t, precision_t] = parser_.getSimParameters();
-   SimBlock::sim_time.delta_t = delta_t;
-   SimBlock::sim_time.end_t = t_end;
-   SimBlock::sim_time.width_t = width_t;
-   SimBlock::sim_time.precision_t = precision_t;
-   SimBlock::initSimBlocks();
+   context_.sim_time.delta_t = delta_t;
+   context_.sim_time.end_t = t_end;
+   context_.sim_time.width_t = width_t;
+   context_.sim_time.precision_t = precision_t;
+   context_.initSimBlocks();
 
-   do {
-      SimBlock::exeSimBlocks();
-   } while (SimTime::simulation_on());
+   while (context_.sim_time.simulation_is_on()) {
+      context_.exeSimBlocks();
+   }
 }
 
 void dysysim::Builder::initFactory()

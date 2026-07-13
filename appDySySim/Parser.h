@@ -23,41 +23,6 @@ class Builder;
 void init_logger();
 
 /// Parser parsers one line of DySySim code.
-///
-/// Syntax line of code in PEG (Parsing Expression Grammer) notation
-/// using Spirit parser x3 names (white space ignored x3::space)
-/// for configuring a simulation block:
-/// ``
-/// id             <- x3::uint_
-/// type           <- x3::alpha (x3::alnum / x3::char_('_'))*
-/// value          <- x3::double_
-/// parameter_name <- x3::alpha (x3::alnum / x3::char_('_'))*;
-/// inputs         <- x3::int_ (x3::char_(',') x3::int_)*;
-/// set_parameter  <- parameter_name '=' value;
-///
-/// codeline       <- id (inputs)* (set_parameter)*
-/// ```
-///
-/// Example DySySim script 4 lines of code:
-/// ```
-/// 1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
-/// 2 ATT 1,-3 att=10.0
-/// 3 INT 2    out_t0=0.0
-/// 4 LOG 1,3  w=4 p=3  w=4 p=3
-/// ```
-/// In a DySySim script you can use single line comments like C++
-/// and empty lines.
-/// ```
-/// // DySySim script example
-///
-/// 1 PLS      off=0.0 on=1.0 t_on=0.1 t_off=0.3
-/// 2 ATT 1,-3 att=10.0    // time constant
-/// 3 INT 2    out_t0=0.0
-///
-/// 4 LOG 1,3   w=4 p=3  w=4 p=3
-///
-/// The parameter names can be chosen arbitrarily.
-/// ```
 class Parser final
 {
 public:
@@ -100,8 +65,8 @@ private:
 
    Log logger_;
 
-   uint log_width_ = 0;
-   uint log_precision_ = 0;
+   unsigned int log_width_ = 0;
+   unsigned int log_precision_ = 0;
 };
 
 } // namespace dysysim

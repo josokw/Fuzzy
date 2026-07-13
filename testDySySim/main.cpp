@@ -2,6 +2,7 @@
 #include "LibInfoDySySim.h"
 #include "SimBlock.h"
 #include "SimBlockFactory.h"
+#include "SimContext.h"
 
 #include <UnitTest++/UnitTest++.h>
 #include <UnitTest++/TestReporterStdout.h>
@@ -12,11 +13,13 @@ namespace dss = dysysim;
 using namespace std;
 
 const double EPS{0.001};
-const double EPS_DYN{0.1}; // For dynamic behavior, allow a larger error margin
+const double EPS_DYN{0.1};
+
+dss::SimContext ctx;
 
 inline double getOutput(int id)
 {
-   return dss::SimBlock::getSimBlock(id)->output();
+   return ctx.getSimBlock(id)->output();
 }
 
 SUITE(DySySim)
@@ -25,157 +28,174 @@ SUITE(DySySim)
    {
       cout << "-- Constant" << endl;
 
-      dss::SimTime::set(1.0, 4.0);
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      ctx.sim_time.set(1.0, 4.0);
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
       sbf.configCheck("LOG", {1, {2}, {4, 1}});
       double c = 3.0;
       sbf.configCheck("CON", {2, {}, {c}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       do {
+         ctx.exeSimBlocks();
          CHECK_CLOSE(c, getOutput(2), EPS);
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(Summator)
    {
       cout << "-- Summator" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
-      dss::SimTime::set(1.0, 4.0);
+      ctx.sim_time.set(1.0, 4.0);
       sbf.configCheck("LOG", {1, {2, 3, 4, 5}, {4, 1, 4, 1, 4, 1, 4, 1}});
       sbf.configCheck("CON", {2, {}, {1.0}});
       sbf.configCheck("CON", {3, {}, {-2.0}});
       sbf.configCheck("CON", {4, {}, {-2.0}});
       sbf.configCheck("SUM", {5, {2, 3, -4}, {}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       do {
+         ctx.exeSimBlocks();
          CHECK_CLOSE(1.0, getOutput(5), EPS);
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(Attenuator)
    {
       cout << "-- Attenuator" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
-      dss::SimTime::set(1.0, 4.0);
+      ctx.sim_time.set(1.0, 4.0);
       sbf.configCheck("LOG", {1, {2, 3, 4}, {4, 1, 4, 1, 4, 1}});
       sbf.configCheck("CON", {2, {}, {1.0}});
       sbf.configCheck("ATT", {3, {2}, {10.0}});
       sbf.configCheck("ATT", {4, {2}, {-10.0}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       do {
+         ctx.exeSimBlocks();
          CHECK_CLOSE(0.1, getOutput(3), EPS);
          CHECK_CLOSE(-0.1, getOutput(4), EPS);
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(Gain)
    {
       cout << "-- Gain" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
-      dss::SimTime::set(1.0, 4.0);
+      ctx.sim_time.set(1.0, 4.0);
       sbf.configCheck("CON", {1, {}, {2.0}});
       sbf.configCheck("CON", {2, {}, {1.0}});
       sbf.configCheck("GAIN", {3, {1, -2}, {10.0}});
       sbf.configCheck("GAIN", {4, {1, -2}, {-5.0}});
       sbf.configCheck("LOG", {5, {1, 2, 3}, {5, 1, 5, 1, 5, 1}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       do {
+         ctx.exeSimBlocks();
          CHECK_CLOSE(10.0, getOutput(3), EPS);
          CHECK_CLOSE(-5, getOutput(4), EPS);
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(Time)
    {
       cout << "-- Time" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
       const double delta_t{0.1};
-      dss::SimTime::set(delta_t, 1.0);
+      ctx.sim_time.set(delta_t, 1.0);
       sbf.configCheck("TIME", {1, {}, {}});
       sbf.configCheck("LOG", {2, {1}, {4, 1}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(1), EPS);
       do {
-         CHECK_CLOSE(dss::SimTime::t, getOutput(1), EPS);
-      } while (dss::SimTime::simulation_on());
+         ctx.exeSimBlocks();
+         CHECK_CLOSE(ctx.time(), getOutput(1), EPS);
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(Integrator)
    {
       cout << "-- Integrator" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
-      dss::SimTime::set(0.01, 1.0);
+      ctx.sim_time.set(0.01, 1.0);
       double c = 0.5;
       sbf.configCheck("CON", {1, {}, {c}});
       sbf.configCheck("CON", {2, {}, {c}});
       sbf.configCheck("INT", {3, {1, 2}, {0.0}});
       sbf.configCheck("LOG", {4, {1, 2, 3}, {4, 2, 4, 2, 4, 2}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       do {
-         CHECK_CLOSE(dss::SimTime::t * (getOutput(1) + getOutput(2)),
+         ctx.exeSimBlocks();
+         CHECK_CLOSE(ctx.time() * (getOutput(1) + getOutput(2)),
                      getOutput(3), EPS_DYN);
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(Limit)
    {
       cout << "-- Limit" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
-      dss::SimTime::set(1.0, 3.0);
+      ctx.sim_time.set(1.0, 3.0);
 
       dss::Constant con;
+      con.setContext(&ctx);
       double c = 1.0;
       con.config({1, {}, {c}});
 
       dss::Limit limit;
+      limit.setContext(&ctx);
       limit.config({2, {1}, {-10.0, 20.0}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       do {
+         ctx.exeSimBlocks();
          limit.input(0.0);
          CHECK_CLOSE(0.0, limit.output(), EPS);
          limit.input(-12.0);
          CHECK_CLOSE(-10.0, limit.output(), EPS);
          limit.input(22.0);
          CHECK_CLOSE(20.0, limit.output(), EPS);
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(OnOff)
    {
       cout << "-- OnOff" << endl;
 
+      ctx.clear();
       dss::OnOff onoff;
+      onoff.setContext(&ctx);
       double off = -2.0;
       double on = 2.0;
       double on_off = 1.0;
-      // OnOff has no input from other block (use id 0).
       onoff.config({1, {0}, {off, on, on_off}});
 
       onoff.input(-1.0);
@@ -192,36 +212,39 @@ SUITE(DySySim)
    {
       cout << "-- Step" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
       const double delta_t{0.1};
-      dss::SimTime::set(delta_t, 10 * delta_t);
+      ctx.sim_time.set(delta_t, 10 * delta_t);
       double off = -22.0;
       double on = 11.0;
       double t_on = 4 * delta_t;
       sbf.configCheck("STP", {1, {}, {off, on, t_on}});
       sbf.configCheck("LOG", {2, {1}, {5, 1}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       CHECK_CLOSE(off, getOutput(1), EPS);
       do {
-         if (dss::SimTime::t < 4 * delta_t) {
+         ctx.exeSimBlocks();
+         if (ctx.time() < t_on) {
             CHECK_CLOSE(off, getOutput(1), EPS);
          } else {
             CHECK_CLOSE(on, getOutput(1), EPS);
          }
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(Puls)
    {
       cout << "-- Puls" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
       const double delta_t{0.1};
-      dss::SimTime::set(delta_t, 10 * delta_t);
+      ctx.sim_time.set(delta_t, 10 * delta_t);
       double off = 0.0;
       double on = 1.0;
       double t_on = 5 * delta_t;
@@ -229,59 +252,63 @@ SUITE(DySySim)
       sbf.configCheck("PLS", {1, {}, {off, on, t_on, t_off}});
       sbf.configCheck("LOG", {2, {1}, {3, 1}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(1), EPS);
       do {
-         if (dss::SimTime::t < t_on) {
+         ctx.exeSimBlocks();
+         if (ctx.time() < t_on) {
             CHECK_CLOSE(off, getOutput(1), EPS);
          }
-         if (dss::SimTime::t >= t_on and dss::SimTime::t < t_off) {
+         if (ctx.time() >= t_on and ctx.time() < t_off) {
             CHECK_CLOSE(on, getOutput(1), EPS);
          }
-         if (dss::SimTime::t >= t_off + (5 * delta_t)) {
+         if (ctx.time() >= t_off + (5 * delta_t)) {
             CHECK_CLOSE(off, getOutput(1), EPS);
          }
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(Delay)
    {
       cout << "-- Delay" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
       const double delta_t{0.1};
       const double delayTime{3 * delta_t};
-      dss::SimTime::set(delta_t, 10 * delta_t);
+      ctx.sim_time.set(delta_t, 10 * delta_t);
       sbf.configCheck("LOG", {1, {2, 3}, {6, 2, 6, 2}});
       double t_on = 2 * delta_t;
       sbf.configCheck("STP", {2, {}, {0.0, 1.0, t_on}});
       sbf.configCheck("DLY", {3, {2}, {0.0, delayTime}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(3), EPS);
       do {
-         if (dss::SimTime::t < t_on + delayTime) {
+         ctx.exeSimBlocks();
+         if (ctx.time() < t_on + delayTime) {
             CHECK_CLOSE(0.0, getOutput(3), EPS);
          } else {
             CHECK_CLOSE(1.0, getOutput(3), EPS);
          }
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(FirstOrder)
    {
       cout << "-- FirstOrder" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
       const double delta_t{0.005};
       const double tau{10 * delta_t};
       const double stp{1.0};
       const double stp_t{5 * delta_t};
-      dss::SimTime::set(delta_t, 6 * tau);
+      ctx.sim_time.set(delta_t, 6 * tau);
       auto fio_response = [tau, stp_t, stp](double t) {
          return (t < stp_t) ? 0.0 : (stp * (1 - exp(-(t - stp_t) / tau)));
       };
@@ -290,12 +317,13 @@ SUITE(DySySim)
       sbf.configCheck("FIO", {2, {1}, {tau, 0.0}});
       sbf.configCheck("LOG", {3, {1, 2}, {6, 3, 6, 3}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(2), EPS);
       do {
-         CHECK_CLOSE(getOutput(2), fio_response(dss::SimTime::t), EPS_DYN);
-      } while (dss::SimTime::simulation_on());
+         ctx.exeSimBlocks();
+         CHECK_CLOSE(getOutput(2), fio_response(ctx.time()), EPS_DYN);
+      } while (ctx.sim_time.simulation_is_on());
    }
 
    TEST(Logic)
@@ -304,10 +332,10 @@ SUITE(DySySim)
       double zero{0.0};
       double one{1.0};
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
-      // No dynamic behavior
-      dss::SimTime::set(1.0, 5.0);
+      ctx.sim_time.set(1.0, 5.0);
 
       sbf.configCheck("CON", {1, {}, {zero}});
       sbf.configCheck("CON", {2, {}, {one}});
@@ -340,10 +368,11 @@ SUITE(DySySim)
       sbf.configCheck("XOR", {23, {2, 1}, {}});
       sbf.configCheck("XOR", {24, {2, 2}, {}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       CHECK_CLOSE(zero, getOutput(1), EPS);
       do {
+         ctx.exeSimBlocks();
          CHECK_CLOSE(zero, getOutput(3), EPS);
          CHECK_CLOSE(zero, getOutput(4), EPS);
          CHECK_CLOSE(zero, getOutput(5), EPS);
@@ -371,17 +400,17 @@ SUITE(DySySim)
          CHECK_CLOSE(one, getOutput(22), EPS);
          CHECK_CLOSE(one, getOutput(23), EPS);
          CHECK_CLOSE(zero, getOutput(24), EPS);
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
-   // **Arithmetic:** MUL (Multiplier), DIV (Divider), OFFSET (Offset), MAX (Max), MIN (Min)
+
    TEST(Arithmetic)
    {
       cout << "-- Arithmetic: DIV, MUL. MAX, MIN, OFFSET" << endl;
 
-      dss::SimBlockFactory sbf;
+      ctx.clear();
+      dss::SimBlockFactory sbf(ctx);
       sbf.init();
-      // No dynamic behavior
-      dss::SimTime::set(1.0, 5.0);
+      ctx.sim_time.set(1.0, 5.0);
 
       sbf.configCheck("CON", {1, {}, {1.0}});
       sbf.configCheck("CON", {2, {}, {2.0}});
@@ -391,15 +420,16 @@ SUITE(DySySim)
       sbf.configCheck("MIN", {6, {1, 2}, {}});
       sbf.configCheck("OFFSET", {7, {1, 2}, {2.0, 5.0}});
 
-      dss::SimBlock::setExeSequence();
-      dss::SimBlock::initSimBlocks();
+      ctx.setExeSequence();
+      ctx.initSimBlocks();
       do {
+         ctx.exeSimBlocks();
          CHECK_CLOSE(0.5, getOutput(3), EPS);
          CHECK_CLOSE(2.0, getOutput(4), EPS);
          CHECK_CLOSE(2.0, getOutput(5), EPS);
          CHECK_CLOSE(1.0, getOutput(6), EPS);
          CHECK_CLOSE(16.0, getOutput(7), EPS);
-      } while (dss::SimTime::simulation_on());
+      } while (ctx.sim_time.simulation_is_on());
    }
 }
 

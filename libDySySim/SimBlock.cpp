@@ -1,22 +1,27 @@
 #include "SimBlock.h"
-#include "ErrorCodes.h"
+#include "SimContext.h"
 
 #include <algorithm>
 #include <iostream>
 #include <source_location>
 
-double dysysim::SimTime::delta_t = 1;
-double dysysim::SimTime::end_t = 0.0;
-int dysysim::SimTime::width_t = 8;
-int dysysim::SimTime::precision_t = 3;
-double dysysim::SimTime::t = 0;
+static void reportError(const std::string &blockType, const std::string &message,
+                        const std::source_location &loc = std::source_location::current())
+{
+   std::cerr << "---- " << blockType << " error: " << message
+             << " [" << loc.file_name() << ":" << loc.line()
+             << " in " << loc.function_name() << "]\n";
+}
 
 double dysysim::SimBlock::sumInputs() const
 {
    double sum = 0.0;
    for (auto id : inputs_) {
       auto sign = (id < 0) ? -1 : 1;
-      sum += sign * SimBlock::allSimBlocks_s[abs(id)]->out_;
+      auto pSB = context_->getSimBlock(std::abs(id));
+      if (pSB) {
+         sum += sign * pSB->out_;
+      }
    }
    return sum;
 }
@@ -24,8 +29,8 @@ double dysysim::SimBlock::sumInputs() const
 double dysysim::SimBlock::andInputs() const
 {
    for (auto id : inputs_) {
-      // Lazy evaluation of inputs
-      if (dysysim::is_0(SimBlock::allSimBlocks_s[id]->out_)) {
+      auto pSB = context_->getSimBlock(std::abs(id));
+      if (pSB && dysysim::is_0(pSB->out_)) {
          return 0.0;
       }
    }
@@ -35,8 +40,8 @@ double dysysim::SimBlock::andInputs() const
 double dysysim::SimBlock::orInputs() const
 {
    for (auto id : inputs_) {
-      // Lazy evaluation of inputs
-      if (dysysim::is_1(SimBlock::allSimBlocks_s[id]->out_)) {
+      auto pSB = context_->getSimBlock(std::abs(id));
+      if (pSB && dysysim::is_1(pSB->out_)) {
          return 1.0;
       }
    }
@@ -45,128 +50,11 @@ double dysysim::SimBlock::orInputs() const
 
 double dysysim::SimBlock::notInput() const
 {
-   if (dysysim::is_1(SimBlock::allSimBlocks_s[inputs_[0]]->out_)) {
+   auto pSB = context_->getSimBlock(std::abs(inputs_[0]));
+   if (pSB && dysysim::is_1(pSB->out_)) {
       return 0.0;
    }
    return 1.0;
-}
-
-void dysysim::SimTime::set(double delta, double end)
-{
-   dysysim::SimBlock::clearSimBlocks();
-   reset();
-   delta_t = delta;
-   end_t = end;
-}
-
-bool dysysim::SimTime::simulation_on()
-{
-   if (t < end_t) {
-      dysysim::SimBlock::exeSimBlocks();
-   }
-   return t < end_t;
-}
-
-std::map<int, std::shared_ptr<dysysim::SimBlock>>
-   dysysim::SimBlock::allSimBlocks_s;
-std::vector<int> dysysim::SimBlock::exeSequence_s;
-
-bool dysysim::SimBlock::idIsUnique(int id)
-{
-   return allSimBlocks_s.find(id) == end(allSimBlocks_s);
-}
-
-std::error_code dysysim::SimBlock::addSimBlock(int id,
-                                               std::shared_ptr<SimBlock> pSB)
-{
-   if (idIsUnique(id)) {
-      allSimBlocks_s[id] = std::move(pSB);
-      return SimBlockErrc{};
-   }
-   return SimBlockErrc::IdIsNotUniqueError;
-}
-
-std::error_code dysysim::SimBlock::setExeSequence()
-{
-   exeSequence_s.clear();
-   auto const size = allSimBlocks_s.size();
-
-   // First select all input0 SimBlocks
-   for (const auto &[id, pSB] : allSimBlocks_s) {
-      if (pSB->getIOType() == SimBlock::ioType::input0) {
-         exeSequence_s.push_back(id);
-      }
-   }
-
-   auto size_exeSeq = exeSequence_s.size();
-   int max_count = 50;
-   int c = 0;
-   while (size_exeSeq < size && c < max_count) {
-      ++c;
-      for (const auto &[id, pSB] : allSimBlocks_s) {
-         if (not pSB->IdInExeSequence(id)) {
-            auto error = pSB->allInputsAvailable();
-            if (error != SimBlockErrc{}) {
-               return error;
-            } else {
-               exeSequence_s.push_back(id);
-               size_exeSeq = exeSequence_s.size();
-            }
-         }
-      }
-   }
-
-   std::cout << "..   exe sequence: ";
-   for (auto &id : exeSequence_s) {
-      std::cout << id << " ";
-   }
-   std::cout << std::endl;
-
-   if (exeSequence_s.size() != dysysim::SimBlock::allSimBlocks_s.size()) {
-      return SimBlockErrc::ModelIsInconsistentError;
-   }
-
-   return SimBlockErrc{};
-}
-
-void dysysim::SimBlock::setExeSequence(std::vector<int> &exeSequence)
-{
-   exeSequence_s = exeSequence;
-}
-
-void dysysim::SimBlock::initSimBlocks()
-{
-   for (auto id : exeSequence_s) {
-      auto pSB = getSimBlock(id);
-      if (pSB)
-      //  and ((pSB->getIOType() == SimBlock::ioType::input1Noutput0) or
-      //              (pSB->getIOType() == SimBlock::ioType::input1) or
-      //              (pSB->getIOType() == SimBlock::ioType::input2) or
-      //              (pSB->getIOType() == SimBlock::ioType::input3) or
-      //              (pSB->getIOType() == SimBlock::ioType::input2N))) 
-                   {
-         pSB->exe();
-      }
-   }
-}
-
-void dysysim::SimBlock::exeSimBlocks()
-{
-   dysysim::SimTime::next();
-   for (auto id : exeSequence_s) {
-      auto pSB = getSimBlock(id);
-      if (pSB) {
-         pSB->exe();
-      }
-   }
-}
-
-static void reportError(const std::string &blockType, const std::string &message,
-                        const std::source_location &loc = std::source_location::current())
-{
-   std::cerr << "---- " << blockType << " error: " << message
-             << " [" << loc.file_name() << ":" << loc.line()
-             << " in " << loc.function_name() << "]\n";
 }
 
 std::vector<std::error_code>
@@ -177,7 +65,7 @@ dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
       errs.push_back(SimBlockErrc::ConfigIdError);
       reportError(blockType_, "id = " + std::to_string(config.id) + " should be > 0");
    }
-   if (not SimBlock::idIsUnique(config.id)) {
+   if (context_ && !context_->idIsUnique(config.id)) {
       errs.push_back(SimBlockErrc::IdIsNotUniqueError);
       reportError(blockType_, "id = " + std::to_string(config.id) + " is not unique");
    }
@@ -233,32 +121,13 @@ dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
 std::error_code dysysim::SimBlock::allInputsAvailable()
 {
    for (auto id : inputs_) {
-      if ((dysysim::SimBlock::allSimBlocks_s.find(abs(id)) ==
-           end(dysysim::SimBlock::allSimBlocks_s))) {
+      int absId = std::abs(id);
+      if (!context_ || !context_->getSimBlock(absId)) {
          reportError(blockType_,
                      "block id " + std::to_string(id_) + " references input id "
-                        + std::to_string(abs(id)) + " which does not exist");
+                        + std::to_string(absId) + " which does not exist");
          return SimBlockErrc::ModelIsInconsistentError;
       }
    }
    return SimBlockErrc{};
-}
-
-bool dysysim::SimBlock::allInputsInExeSequence()
-{
-   for (auto id : inputs_) {
-      if (std::find(begin(dysysim::SimBlock::exeSequence_s),
-                    end(dysysim::SimBlock::exeSequence_s),
-                    abs(id)) == end(dysysim::SimBlock::exeSequence_s) and
-          (not dysysim::SimBlock::allSimBlocks_s[abs(id)]->has_history_)) {
-         return false;
-      }
-   }
-   return true;
-}
-
-bool dysysim::SimBlock::IdInExeSequence(int id)
-{
-   return (std::find(begin(exeSequence_s), end(exeSequence_s), id) !=
-           end(exeSequence_s));
 }

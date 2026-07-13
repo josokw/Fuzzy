@@ -3,7 +3,7 @@
 
 #include "Parser.h"
 #include "SimBlockFactory.h"
-#include "SimModel.h"
+#include "SimContext.h"
 
 #include <fstream>
 #include <string>
@@ -24,13 +24,15 @@ public:
    /// Executes simulation model.
    void execute();
 
+   SimContext &context() { return context_; }
+
 private:
+   SimContext context_;
    SimBlockFactory factory_;
    Parser parser_;
    std::vector<std::string> scriptLines_;
    int lineNumber_ = 0;
-   std::shared_ptr<SimBlock> pSimBlok_;
-   
+
 private:
    void initFactory();
 };

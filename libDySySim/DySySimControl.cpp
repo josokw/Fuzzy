@@ -37,13 +37,13 @@ dysysim::Hysteresis::configDataIsOK(const SimBlock::configData_t &config) const
       if (std::abs(config.parameters[0]) > 1) {
          errs.push_back(SimBlockErrc::ConfigParameterRangeError);
          std::cerr << "---- " << blockType_
-                   << " error: parameter 1 =" << config.parameters[2]
+                   << " error: parameter 1 = " << config.parameters[0]
                    << " should be <= 1 and >= -1\n";
       }
       if (config.parameters[1] <= 0.0) {
          errs.push_back(SimBlockErrc::ConfigParameterRangeError);
          std::cerr << "---- " << blockType_
-                   << " error: parameter 2 = " << config.parameters[2]
+                   << " error: parameter 2 = " << config.parameters[1]
                    << " should be > 0\n";
       }
       if (config.parameters[2] <= 0.0) {
@@ -88,7 +88,7 @@ dysysim::PI::configDataIsOK(const SimBlock::configData_t &config) const
       if (config.parameters[1] < 0) {
          errs.push_back(SimBlockErrc::ConfigParameterRangeError);
          std::cerr << "---- " << blockType_ << " error: parameter 2 "
-                   << config.parameters[2] << " should be >= 0\n";
+                   << config.parameters[1] << " should be >= 0\n";
       }
       if (config.parameters[2] < 0) {
          errs.push_back(SimBlockErrc::ConfigParameterRangeError);
@@ -107,9 +107,6 @@ dysysim::PID::PID()
    , out_int_{0.0}
    , out_dif_{0.0}
    , in_n_1_{0.0}
-// , _tau_I{0.0}
-// , _tau_D{0.0}
-// , _z{4, 0.0}
 {
    SimBlock::has_history_ = true;
 }
@@ -137,17 +134,17 @@ dysysim::PID::configDataIsOK(const SimBlock::configData_t &config) const
       if (config.parameters[1] < 0) {
          errs.push_back(SimBlockErrc::ConfigParameterRangeError);
          std::cerr << "---- " << blockType_ << " error: parameter 2 "
-                   << config.parameters[2] << " should be >= 0\n";
+                   << config.parameters[1] << " should be >= 0\n";
       }
       if (config.parameters[2] < 0) {
          errs.push_back(SimBlockErrc::ConfigParameterRangeError);
-         std::cerr << "---- " << blockType_ << " error: parameter 3"
+         std::cerr << "---- " << blockType_ << " error: parameter 3 "
                    << config.parameters[2] << " should be >= 0\n";
       }
       if (config.parameters[3] < 0) {
          errs.push_back(SimBlockErrc::ConfigParameterRangeError);
-         std::cerr << "---- " << blockType_ << " error: parameter 4"
-                   << config.parameters[2] << " should be >= 0\n";
+         std::cerr << "---- " << blockType_ << " error: parameter 4 "
+                   << config.parameters[3] << " should be >= 0\n";
       }
    }
    return errs;

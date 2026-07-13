@@ -6,14 +6,19 @@
 
 namespace dysysim {
 
+class SimContext;
+
 /// Creates dynamically SimBlock objects based on a unique std::string key
 /// value.
 class SimBlockFactory
 {
 public:
    using errors_t = std::vector<std::error_code>;
-   
-   SimBlockFactory() = default;
+
+   explicit SimBlockFactory(SimContext &context)
+      : context_{context}
+   {
+   }
    ~SimBlockFactory() = default;
 
    void add(const std::string &key, std::shared_ptr<SimBlock> tbm);
@@ -31,6 +36,7 @@ public:
    }
 
 private:
+   SimContext &context_;
    GenericFactory<dysysim::SimBlock> factory_;
 };
 

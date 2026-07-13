@@ -6,13 +6,14 @@
 #include "ErrorCodes.h"
 #include "Exceptions.h"
 #include "SimBlock.h"
+#include "SimContext.h"
 
 #include <source_location>
 
 void dysysim::SimBlockFactory::add(const std::string &key,
-                                    std::shared_ptr<SimBlock> tbm)
+                                   std::shared_ptr<SimBlock> tbm)
 {
-   if (not factory_.add(key, tbm)) {
+   if (!factory_.add(key, tbm)) {
       throw dysysim::FactoryAddError(key, std::source_location::current());
    }
 }
@@ -74,13 +75,15 @@ dysysim::SimBlockFactory::configCheck(const std::string &key,
       auto pSBfactory = factory_.get(key);
       errs = pSBfactory->configDataIsOK(cdata);
       if (errs.empty()) {
-         auto pSB = pSBfactory->create();
-         auto err = pSB->config(cdata);
-         SimBlock::allSimBlocks_s[pSB->getId()] = pSB;
+       auto pSB = pSBfactory->create();
+          pSB->setContext(&context_);
+          auto err = pSB->config(cdata);
+          auto id = pSB->getId();
+          context_.addSimBlock(id, std::move(pSB));
       }
-} else {
-       throw dysysim::FactoryUnknownTypeError(key, std::source_location::current());
-    }
-
+   } else {
+      throw dysysim::FactoryUnknownTypeError(key,
+                                             std::source_location::current());
+   }
    return errs;
 }

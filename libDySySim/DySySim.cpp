@@ -1,4 +1,5 @@
 #include "DySySim.h"
+#include "SimContext.h"
 
 dysysim::Constant::Constant()
    : SimBlock{"CON", SimBlock::ioType_t::input0, 1}
@@ -279,7 +280,6 @@ dysysim::Frequency::Frequency()
 {
 }
 
-// Sinus generator, amplitude = 1
 std::vector<std::error_code>
 dysysim::Frequency::config(const SimBlock::configData_t &config)
 {
@@ -414,7 +414,7 @@ dysysim::Delay::config(const SimBlock::configData_t &config)
    inputs_ = config.inputs;
    out_ = out_t0_ = config.parameters[0];
    delaytime_ = config.parameters[1];
-   for (int i = 0; i < int(delaytime_ / SimTime::delta_t); ++i) {
+   for (int i = 0; i < int(delaytime_ / context_->sim_time.delta_t); ++i) {
       buffer_.push(out_t0_);
    }
 
@@ -453,7 +453,7 @@ dysysim::FirstOrder::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
 
-   if (errs.size() == 0 and timeConstant_ <= 0.0) {
+   if (errs.size() == 0 and config.parameters[0] <= 0.0) {
       errs.push_back(SimBlockErrc::ConfigParameterRangeError);
    }
 
@@ -504,6 +504,7 @@ dysysim::Integrator::config(const SimBlock::configData_t &config)
    id_ = config.id;
    inputs_ = config.inputs;
    out_ = config.parameters[0];
+   initial_out_ = config.parameters[0];
 
    return errs;
 }
@@ -530,6 +531,7 @@ dysysim::IntegratorEuler::config(const SimBlock::configData_t &config)
    id_ = config.id;
    inputs_ = config.inputs;
    out_ = config.parameters[0];
+   initial_out_ = config.parameters[0];
 
    return errs;
 }
@@ -624,7 +626,7 @@ dysysim::SecondOrder::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
 
-   if (errs.size() == 0 and w_res_ <= 0.0) {
+   if (errs.size() == 0 and config.parameters[0] <= 0.0) {
       errs.push_back(SimBlockErrc::ConfigParameterRangeError);
    }
 
@@ -668,7 +670,6 @@ dysysim::Clock::Clock()
    out_ = 1.0;
 }
 
-// Sinus generator, amplitude = 1
 std::vector<std::error_code>
 dysysim::Clock::config(const SimBlock::configData_t &config)
 {
@@ -686,7 +687,7 @@ dysysim::Clock::configDataIsOK(const SimBlock::configData_t &config) const
 {
    auto errs = SimBlock::configDataIsOK(config);
    if (errs.size() == 0) {
-      if (frequency_ < 0) {
+      if (config.parameters[0] < 0) {
          errs.push_back(SimBlockErrc::ConfigParameterRangeError);
       }
    }

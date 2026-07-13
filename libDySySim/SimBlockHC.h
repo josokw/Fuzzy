@@ -78,9 +78,6 @@ public:
 
    virtual void exe() = 0;
 
-public:
-   static SimTime sim_time;
-
 protected:
    SimBlock &simblock_;
    size_t n_inputs_;
