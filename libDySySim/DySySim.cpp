@@ -414,17 +414,35 @@ dysysim::Delay::config(const SimBlock::configData_t &config)
    inputs_ = config.inputs;
    out_ = out_t0_ = config.parameters[0];
    delaytime_ = config.parameters[1];
-   for (int i = 0; i < int(delaytime_ / context_->sim_time.delta_t); ++i) {
-      buffer_.push(out_t0_);
-   }
+   buffer_initialized_ = false;
 
    return errs;
+}
+
+void dysysim::Delay::initBuffer()
+{
+   while (!buffer_.empty()) {
+      buffer_.pop();
+   }
+   int n = static_cast<int>(std::lround(delaytime_ / context_->sim_time.delta_t));
+   for (int i = 0; i < n; ++i) {
+      buffer_.push(out_t0_);
+   }
+   buffer_initialized_ = true;
 }
 
 std::vector<std::error_code>
 dysysim::Delay::configDataIsOK(const SimBlock::configData_t &config) const
 {
-   auto errs = SimBlock::configDataIsOK(config);
+   std::vector<std::error_code> errs = SimBlock::configDataIsOK(config);
+   if (errs.empty()) {
+      if (config.parameters[1] <= 0.0) {
+         errs.push_back(SimBlockErrc::ConfigParameterRangeError);
+         std::cerr << "---- " << blockType_
+                   << " error: delaytime = " << config.parameters[1]
+                   << " should be > 0\n";
+      }
+   }
    return errs;
 }
 

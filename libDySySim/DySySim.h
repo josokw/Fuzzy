@@ -426,7 +426,13 @@ public:
    std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { input(sumInputs()); }
+   void exe() override
+   {
+      if (!buffer_initialized_) {
+         initBuffer();
+      }
+      input(sumInputs());
+   }
 
    void input(double in)
    {
@@ -439,6 +445,9 @@ private:
    double out_t0_;
    double delaytime_;
    std::queue<double> buffer_;
+   bool buffer_initialized_{false};
+
+   void initBuffer();
 
    std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
