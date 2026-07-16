@@ -5,12 +5,13 @@
 #include <iostream>
 #include <source_location>
 
-static void reportError(const std::string &blockType, const std::string &message,
-                        const std::source_location &loc = std::source_location::current())
+static void
+reportError(const std::string &blockType, const std::string &message,
+            const std::source_location &loc = std::source_location::current())
 {
-   std::cerr << "---- " << blockType << " error: " << message
-             << " [" << loc.file_name() << ":" << loc.line()
-             << " in " << loc.function_name() << "]\n";
+   std::cerr << "---- " << blockType << " error: " << message << " ["
+             << loc.file_name() << ":" << loc.line() << " in "
+             << loc.function_name() << "]\n";
 }
 
 double dysysim::SimBlock::sumInputs() const
@@ -63,11 +64,13 @@ dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
    std::vector<std::error_code> errs;
    if (config.id <= 0) {
       errs.push_back(SimBlockErrc::ConfigIdError);
-      reportError(blockType_, "id = " + std::to_string(config.id) + " should be > 0");
+      reportError(blockType_,
+                  "id = " + std::to_string(config.id) + " should be > 0");
    }
    if (context_ && !context_->idIsUnique(config.id)) {
       errs.push_back(SimBlockErrc::IdIsNotUniqueError);
-      reportError(blockType_, "id = " + std::to_string(config.id) + " is not unique");
+      reportError(blockType_,
+                  "id = " + std::to_string(config.id) + " is not unique");
    }
 
    switch (getIOType()) {
@@ -112,7 +115,9 @@ dysysim::SimBlock::configDataIsOK(const SimBlock::configData_t &config) const
 
    if (config.parameters.size() != n_params(config)) {
       errs.push_back(SimBlockErrc::ConfigParameterError);
-      reportError(blockType_, "should have " + std::to_string(n_params(config)) + " parameter(s)");
+      reportError(blockType_, "should have " +
+                                 std::to_string(n_params(config)) +
+                                 " parameter(s)");
    }
 
    return errs;
@@ -123,9 +128,10 @@ std::error_code dysysim::SimBlock::allInputsAvailable()
    for (auto id : inputs_) {
       int absId = std::abs(id);
       if (!context_ || !context_->getSimBlock(absId)) {
-         reportError(blockType_,
-                     "block id " + std::to_string(id_) + " references input id "
-                        + std::to_string(absId) + " which does not exist");
+         reportError(blockType_, "block id " + std::to_string(id_) +
+                                    " references input id " +
+                                    std::to_string(absId) +
+                                    " which does not exist");
          return SimBlockErrc::ModelIsInconsistentError;
       }
    }

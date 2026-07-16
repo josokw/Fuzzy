@@ -1,9 +1,8 @@
 #include "AppInfo.h"
 #include "DySySim.h"
+#include "DySySimProgram.h"
 #include "FuzzyController.h"
 #include "LibInfoDySySim.h"
-#include "SimBlockFactory.h"
-#include "SimContext.h"
 
 #include <exception>
 #include <iomanip>
@@ -18,34 +17,29 @@ int main(int argc, char *argv[])
              << "-- uses " + dss::libName + " " << dss::libVersion << "\n\n";
 
    try {
-      dss::SimContext ctx;
-      dss::SimBlockFactory sbf(ctx);
-      sbf.init();
+      dss::DySySimProgram prog;
 
       FuzzyController fuzzyController;
       auto pFuzzyC = std::make_shared<dss::Function<double>>();
       pFuzzyC->setFunction([&fuzzyController](double in) {
          return fuzzyController.inferControl(in);
       });
-      sbf.add("FUZZYC", pFuzzyC);
+      prog.addBlock("FUZZYC", pFuzzyC);
 
       const double RCtime{0.47};
-      ctx.sim_time.set(0.05, 10.0);
+      prog.setSimTime(0.05, 10.0);
 
-      sbf.configCheck("STP", {1, {}, {0.5, 1, 0.1}});
-      sbf.configCheck("SUM", {2, {1, -4}, {}});
-      sbf.configCheck("FUZZYC", {3, {2}, {}});
-      sbf.configCheck("FIO", {4, {3}, {RCtime, 0.0}});
+      prog.configureBlock("STP", {1, {}, {0.5, 1, 0.1}});
+      prog.configureBlock("SUM", {2, {1, -4}, {}});
+      prog.configureBlock("FUZZYC", {3, {2}, {}});
+      prog.configureBlock("FIO", {4, {3}, {RCtime, 0.0}});
 
       std::ofstream simdata;
       if (argc == 2) {
          simdata.open(argv[1]);
       }
 
-      ctx.setExeSequence();
-      ctx.initSimBlocks();
-      do {
-         ctx.exeSimBlocks();
+      prog.setStepCallback([&, argc](dss::SimContext &ctx) {
          std::cout << "t = " << std::setw(6) << std::setprecision(1)
                    << ctx.time()
                    << "  Setpoint = " << std::setw(6) << ctx.getSimBlock(1)->output()
@@ -56,7 +50,14 @@ int main(int argc, char *argv[])
             simdata << ctx.time() << " " << ctx.getSimBlock(1)->output() << " "
                     << ctx.getSimBlock(3)->output() << " " << ctx.getSimBlock(4)->output() << std::endl;
          }
-      } while (ctx.sim_time.simulation_is_on());
+      });
+
+      auto errors = prog.run();
+      if (!errors.empty()) {
+         for (const auto &err : errors) {
+            std::cerr << "Error: " << err.message() << "\n";
+         }
+      }
 
       simdata.close();
    }

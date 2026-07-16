@@ -5,6 +5,7 @@ add_library(DySySim STATIC
     DySySimHC.cpp
     DySySimLogic.cpp
     DySySimMath.cpp
+    DySySimProgram.cpp
     ErrorCodes.cpp
     SimBlock.cpp
     SimBlockFactory.cpp

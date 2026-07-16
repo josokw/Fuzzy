@@ -32,11 +32,14 @@ SUITE(DySySim)
       ctx.sim_time.set(1.0, 4.0);
       dss::SimBlockFactory sbf(ctx);
       sbf.init();
-      sbf.configCheck("LOG", {1, {2}, {4, 1}});
+      auto errs1 = sbf.configCheck("LOG", {1, {2}, {4, 1}});
+      CHECK(errs1.empty());
       double c = 3.0;
-      sbf.configCheck("CON", {2, {}, {c}});
+      auto errs2 = sbf.configCheck("CON", {2, {}, {c}});
+      CHECK(errs2.empty());
 
-      ctx.setExeSequence();
+      auto err3 = ctx.setExeSequence();
+      CHECK(!err3);
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
@@ -52,13 +55,19 @@ SUITE(DySySim)
       dss::SimBlockFactory sbf(ctx);
       sbf.init();
       ctx.sim_time.set(1.0, 4.0);
-      sbf.configCheck("LOG", {1, {2, 3, 4, 5}, {4, 1, 4, 1, 4, 1, 4, 1}});
-      sbf.configCheck("CON", {2, {}, {1.0}});
-      sbf.configCheck("CON", {3, {}, {-2.0}});
-      sbf.configCheck("CON", {4, {}, {-2.0}});
-      sbf.configCheck("SUM", {5, {2, 3, -4}, {}});
+      auto errs1 = sbf.configCheck("LOG", {1, {2, 3, 4, 5}, {4, 1, 4, 1, 4, 1, 4, 1}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("CON", {2, {}, {1.0}});
+      CHECK(errs2.empty());
+      auto errs3 = sbf.configCheck("CON", {3, {}, {-2.0}});
+      CHECK(errs3.empty());
+      auto errs4 = sbf.configCheck("CON", {4, {}, {-2.0}});
+      CHECK(errs4.empty());
+      auto errs5 = sbf.configCheck("SUM", {5, {2, 3, -4}, {}});
+      CHECK(errs5.empty());
 
-      ctx.setExeSequence();
+      auto err6 = ctx.setExeSequence();
+      CHECK(!err6);
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
@@ -74,12 +83,17 @@ SUITE(DySySim)
       dss::SimBlockFactory sbf(ctx);
       sbf.init();
       ctx.sim_time.set(1.0, 4.0);
-      sbf.configCheck("LOG", {1, {2, 3, 4}, {4, 1, 4, 1, 4, 1}});
-      sbf.configCheck("CON", {2, {}, {1.0}});
-      sbf.configCheck("ATT", {3, {2}, {10.0}});
-      sbf.configCheck("ATT", {4, {2}, {-10.0}});
+      auto errs1 = sbf.configCheck("LOG", {1, {2, 3, 4}, {4, 1, 4, 1, 4, 1}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("CON", {2, {}, {1.0}});
+      CHECK(errs2.empty());
+      auto errs3 = sbf.configCheck("ATT", {3, {2}, {10.0}});
+      CHECK(errs3.empty());
+      auto errs4 = sbf.configCheck("ATT", {4, {2}, {-10.0}});
+      CHECK(errs4.empty());
 
-      ctx.setExeSequence();
+      auto err5 = ctx.setExeSequence();
+      CHECK(!err5);
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
@@ -96,13 +110,19 @@ SUITE(DySySim)
       dss::SimBlockFactory sbf(ctx);
       sbf.init();
       ctx.sim_time.set(1.0, 4.0);
-      sbf.configCheck("CON", {1, {}, {2.0}});
-      sbf.configCheck("CON", {2, {}, {1.0}});
-      sbf.configCheck("GAIN", {3, {1, -2}, {10.0}});
-      sbf.configCheck("GAIN", {4, {1, -2}, {-5.0}});
-      sbf.configCheck("LOG", {5, {1, 2, 3}, {5, 1, 5, 1, 5, 1}});
+      auto errs1 = sbf.configCheck("CON", {1, {}, {2.0}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("CON", {2, {}, {1.0}});
+      CHECK(errs2.empty());
+      auto errs3 = sbf.configCheck("GAIN", {3, {1, -2}, {10.0}});
+      CHECK(errs3.empty());
+      auto errs4 = sbf.configCheck("GAIN", {4, {1, -2}, {-5.0}});
+      CHECK(errs4.empty());
+      auto errs5 = sbf.configCheck("LOG", {5, {1, 2, 3}, {5, 1, 5, 1, 5, 1}});
+      CHECK(errs5.empty());
 
-      ctx.setExeSequence();
+      auto err6 = ctx.setExeSequence();
+      CHECK(!err6);
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
@@ -120,10 +140,13 @@ SUITE(DySySim)
       sbf.init();
       const double delta_t{0.1};
       ctx.sim_time.set(delta_t, 1.0);
-      sbf.configCheck("TIME", {1, {}, {}});
-      sbf.configCheck("LOG", {2, {1}, {4, 1}});
+      auto errs1 = sbf.configCheck("TIME", {1, {}, {}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("LOG", {2, {1}, {4, 1}});
+      CHECK(errs2.empty());
 
-      ctx.setExeSequence();
+      auto err3 = ctx.setExeSequence();
+      CHECK(!err3);
       ctx.initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(1), EPS);
       do {
@@ -141,12 +164,17 @@ SUITE(DySySim)
       sbf.init();
       ctx.sim_time.set(0.01, 1.0);
       double c = 0.5;
-      sbf.configCheck("CON", {1, {}, {c}});
-      sbf.configCheck("CON", {2, {}, {c}});
-      sbf.configCheck("INT", {3, {1, 2}, {0.0}});
-      sbf.configCheck("LOG", {4, {1, 2, 3}, {4, 2, 4, 2, 4, 2}});
+      auto errs1 = sbf.configCheck("CON", {1, {}, {c}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("CON", {2, {}, {c}});
+      CHECK(errs2.empty());
+      auto errs3 = sbf.configCheck("INT", {3, {1, 2}, {0.0}});
+      CHECK(errs3.empty());
+      auto errs4 = sbf.configCheck("LOG", {4, {1, 2, 3}, {4, 2, 4, 2, 4, 2}});
+      CHECK(errs4.empty());
 
-      ctx.setExeSequence();
+      auto err5 = ctx.setExeSequence();
+      CHECK(!err5);
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
@@ -167,13 +195,16 @@ SUITE(DySySim)
       dss::Constant con;
       con.setContext(&ctx);
       double c = 1.0;
-      con.config({1, {}, {c}});
+      auto errs1 = con.config({1, {}, {c}});
+      CHECK(errs1.empty());
 
       dss::Limit limit;
       limit.setContext(&ctx);
-      limit.config({2, {1}, {-10.0, 20.0}});
+      auto errs2 = limit.config({2, {1}, {-10.0, 20.0}});
+      CHECK(errs2.empty());
 
-      ctx.setExeSequence();
+      auto err3 = ctx.setExeSequence();
+      CHECK(!err3);
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
@@ -196,7 +227,8 @@ SUITE(DySySim)
       double off = -2.0;
       double on = 2.0;
       double on_off = 1.0;
-      onoff.config({1, {0}, {off, on, on_off}});
+      auto errs1 = onoff.config({1, {0}, {off, on, on_off}});
+      CHECK(errs1.empty());
 
       onoff.input(-1.0);
       CHECK_CLOSE(off, onoff.output(), EPS);
@@ -220,10 +252,13 @@ SUITE(DySySim)
       double off = -22.0;
       double on = 11.0;
       double t_on = 4 * delta_t;
-      sbf.configCheck("STP", {1, {}, {off, on, t_on}});
-      sbf.configCheck("LOG", {2, {1}, {5, 1}});
+      auto errs1 = sbf.configCheck("STP", {1, {}, {off, on, t_on}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("LOG", {2, {1}, {5, 1}});
+      CHECK(errs2.empty());
 
-      ctx.setExeSequence();
+      auto err3 = ctx.setExeSequence();
+      CHECK(!err3);
       ctx.initSimBlocks();
       CHECK_CLOSE(off, getOutput(1), EPS);
       do {
@@ -249,10 +284,13 @@ SUITE(DySySim)
       double on = 1.0;
       double t_on = 5 * delta_t;
       double t_off = 10 * delta_t;
-      sbf.configCheck("PLS", {1, {}, {off, on, t_on, t_off}});
-      sbf.configCheck("LOG", {2, {1}, {3, 1}});
+      auto errs1 = sbf.configCheck("PLS", {1, {}, {off, on, t_on, t_off}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("LOG", {2, {1}, {3, 1}});
+      CHECK(errs2.empty());
 
-      ctx.setExeSequence();
+      auto err3 = ctx.setExeSequence();
+      CHECK(!err3);
       ctx.initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(1), EPS);
       do {
@@ -279,12 +317,16 @@ SUITE(DySySim)
       const double delta_t{0.1};
       const double delayTime{3 * delta_t};
       ctx.sim_time.set(delta_t, 10 * delta_t);
-      sbf.configCheck("LOG", {1, {2, 3}, {6, 2, 6, 2}});
+      auto errs1 = sbf.configCheck("LOG", {1, {2, 3}, {6, 2, 6, 2}});
+      CHECK(errs1.empty());
       double t_on = 2 * delta_t;
-      sbf.configCheck("STP", {2, {}, {0.0, 1.0, t_on}});
-      sbf.configCheck("DLY", {3, {2}, {0.0, delayTime}});
+      auto errs2 = sbf.configCheck("STP", {2, {}, {0.0, 1.0, t_on}});
+      CHECK(errs2.empty());
+      auto errs3 = sbf.configCheck("DLY", {3, {2}, {0.0, delayTime}});
+      CHECK(errs3.empty());
 
-      ctx.setExeSequence();
+      auto err4 = ctx.setExeSequence();
+      CHECK(!err4);
       ctx.initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(3), EPS);
       do {
@@ -313,11 +355,15 @@ SUITE(DySySim)
          return (t < stp_t) ? 0.0 : (stp * (1 - exp(-(t - stp_t) / tau)));
       };
 
-      sbf.configCheck("STP", {1, {}, {0.0, stp, stp_t}});
-      sbf.configCheck("FIO", {2, {1}, {tau, 0.0}});
-      sbf.configCheck("LOG", {3, {1, 2}, {6, 3, 6, 3}});
+      auto errs1 = sbf.configCheck("STP", {1, {}, {0.0, stp, stp_t}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("FIO", {2, {1}, {tau, 0.0}});
+      CHECK(errs2.empty());
+      auto errs3 = sbf.configCheck("LOG", {3, {1, 2}, {6, 3, 6, 3}});
+      CHECK(errs3.empty());
 
-      ctx.setExeSequence();
+      auto err4 = ctx.setExeSequence();
+      CHECK(!err4);
       ctx.initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(2), EPS);
       do {
@@ -337,38 +383,63 @@ SUITE(DySySim)
       sbf.init();
       ctx.sim_time.set(1.0, 5.0);
 
-      sbf.configCheck("CON", {1, {}, {zero}});
-      sbf.configCheck("CON", {2, {}, {one}});
+      auto errs1 = sbf.configCheck("CON", {1, {}, {zero}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("CON", {2, {}, {one}});
+      CHECK(errs2.empty());
 
-      sbf.configCheck("AND", {3, {1, 1}, {}});
-      sbf.configCheck("AND", {4, {1, 2}, {}});
-      sbf.configCheck("AND", {5, {2, 1}, {}});
-      sbf.configCheck("AND", {6, {2, 2}, {}});
+      auto errs3 = sbf.configCheck("AND", {3, {1, 1}, {}});
+      CHECK(errs3.empty());
+      auto errs4 = sbf.configCheck("AND", {4, {1, 2}, {}});
+      CHECK(errs4.empty());
+      auto errs5 = sbf.configCheck("AND", {5, {2, 1}, {}});
+      CHECK(errs5.empty());
+      auto errs6 = sbf.configCheck("AND", {6, {2, 2}, {}});
+      CHECK(errs6.empty());
 
-      sbf.configCheck("OR", {7, {1, 1}, {}});
-      sbf.configCheck("OR", {8, {1, 2}, {}});
-      sbf.configCheck("OR", {9, {2, 1}, {}});
-      sbf.configCheck("OR", {10, {2, 2}, {}});
+      auto errs7 = sbf.configCheck("OR", {7, {1, 1}, {}});
+      CHECK(errs7.empty());
+      auto errs8 = sbf.configCheck("OR", {8, {1, 2}, {}});
+      CHECK(errs8.empty());
+      auto errs9 = sbf.configCheck("OR", {9, {2, 1}, {}});
+      CHECK(errs9.empty());
+      auto errs10 = sbf.configCheck("OR", {10, {2, 2}, {}});
+      CHECK(errs10.empty());
 
-      sbf.configCheck("NOT", {11, {1}, {}});
-      sbf.configCheck("NOT", {12, {2}, {}});
+      auto errs11 = sbf.configCheck("NOT", {11, {1}, {}});
+      CHECK(errs11.empty());
+      auto errs12 = sbf.configCheck("NOT", {12, {2}, {}});
+      CHECK(errs12.empty());
 
-      sbf.configCheck("NAND", {13, {1, 1}, {}});
-      sbf.configCheck("NAND", {14, {1, 2}, {}});
-      sbf.configCheck("NAND", {15, {2, 1}, {}});
-      sbf.configCheck("NAND", {16, {2, 2}, {}});
+      auto errs13 = sbf.configCheck("NAND", {13, {1, 1}, {}});
+      CHECK(errs13.empty());
+      auto errs14 = sbf.configCheck("NAND", {14, {1, 2}, {}});
+      CHECK(errs14.empty());
+      auto errs15 = sbf.configCheck("NAND", {15, {2, 1}, {}});
+      CHECK(errs15.empty());
+      auto errs16 = sbf.configCheck("NAND", {16, {2, 2}, {}});
+      CHECK(errs16.empty());
 
-      sbf.configCheck("NOR", {17, {1, 1}, {}});
-      sbf.configCheck("NOR", {18, {1, 2}, {}});
-      sbf.configCheck("NOR", {19, {2, 1}, {}});
-      sbf.configCheck("NOR", {20, {2, 2}, {}});
+      auto errs17 = sbf.configCheck("NOR", {17, {1, 1}, {}});
+      CHECK(errs17.empty());
+      auto errs18 = sbf.configCheck("NOR", {18, {1, 2}, {}});
+      CHECK(errs18.empty());
+      auto errs19 = sbf.configCheck("NOR", {19, {2, 1}, {}});
+      CHECK(errs19.empty());
+      auto errs20 = sbf.configCheck("NOR", {20, {2, 2}, {}});
+      CHECK(errs20.empty());
 
-      sbf.configCheck("XOR", {21, {1, 1}, {}});
-      sbf.configCheck("XOR", {22, {1, 2}, {}});
-      sbf.configCheck("XOR", {23, {2, 1}, {}});
-      sbf.configCheck("XOR", {24, {2, 2}, {}});
+      auto errs21 = sbf.configCheck("XOR", {21, {1, 1}, {}});
+      CHECK(errs21.empty());
+      auto errs22 = sbf.configCheck("XOR", {22, {1, 2}, {}});
+      CHECK(errs22.empty());
+      auto errs23 = sbf.configCheck("XOR", {23, {2, 1}, {}});
+      CHECK(errs23.empty());
+      auto errs24 = sbf.configCheck("XOR", {24, {2, 2}, {}});
+      CHECK(errs24.empty());
 
-      ctx.setExeSequence();
+      auto err25 = ctx.setExeSequence();
+      CHECK(!err25);
       ctx.initSimBlocks();
       CHECK_CLOSE(zero, getOutput(1), EPS);
       do {
@@ -412,15 +483,23 @@ SUITE(DySySim)
       sbf.init();
       ctx.sim_time.set(1.0, 5.0);
 
-      sbf.configCheck("CON", {1, {}, {1.0}});
-      sbf.configCheck("CON", {2, {}, {2.0}});
-      sbf.configCheck("DIV", {3, {1, 2}, {}});
-      sbf.configCheck("MUL", {4, {1, 2}, {}});
-      sbf.configCheck("MAX", {5, {1, 2}, {}});
-      sbf.configCheck("MIN", {6, {1, 2}, {}});
-      sbf.configCheck("OFFSET", {7, {1, 2}, {2.0, 5.0}});
+      auto errs1 = sbf.configCheck("CON", {1, {}, {1.0}});
+      CHECK(errs1.empty());
+      auto errs2 = sbf.configCheck("CON", {2, {}, {2.0}});
+      CHECK(errs2.empty());
+      auto errs3 = sbf.configCheck("DIV", {3, {1, 2}, {}});
+      CHECK(errs3.empty());
+      auto errs4 = sbf.configCheck("MUL", {4, {1, 2}, {}});
+      CHECK(errs4.empty());
+      auto errs5 = sbf.configCheck("MAX", {5, {1, 2}, {}});
+      CHECK(errs5.empty());
+      auto errs6 = sbf.configCheck("MIN", {6, {1, 2}, {}});
+      CHECK(errs6.empty());
+      auto errs7 = sbf.configCheck("OFFSET", {7, {1, 2}, {2.0, 5.0}});
+      CHECK(errs7.empty());
 
-      ctx.setExeSequence();
+      auto err8 = ctx.setExeSequence();
+      CHECK(!err8);
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();

@@ -4,10 +4,11 @@
 #include <system_error>
 
 enum class SimBlockErrc {
-   IdIsNotUniqueError = 10,
+   UnknownTypeError =10,
+   IdIsNotUniqueError,
    ConfigIdError,
    ConfigInputIdError,
-   ConfigParameterError, 
+   ConfigParameterError,
    ConfigNumberOfParametersError,
    ConfigParameterRangeError,
    ModelIsInconsistentError
@@ -19,17 +20,19 @@ struct is_error_code_enum<SimBlockErrc> : true_type {
 };
 } // namespace std
 
-std::error_code make_error_code(SimBlockErrc ec);
+[[nodiscard]] std::error_code make_error_code(SimBlockErrc ec);
 
 struct SimBlockErrCategory : std::error_category {
    const char *name() const noexcept override { return "dysysim"; }
    std::string message(int ev) const override
    {
       switch (static_cast<SimBlockErrc>(ev)) {
+         case SimBlockErrc::UnknownTypeError:
+            return "unknown simulation block type";
          case SimBlockErrc::IdIsNotUniqueError:
-            return "id is not unique";
+            return "id simulation block is not unique";
          case SimBlockErrc::ConfigIdError:
-            return "config id value < 0";
+            return "id simulation block value should be > 0";
          case SimBlockErrc::ConfigInputIdError:
             return "input id error";
          case SimBlockErrc::ConfigParameterError:
@@ -41,7 +44,7 @@ struct SimBlockErrCategory : std::error_category {
          case SimBlockErrc::ModelIsInconsistentError:
             return "model is inconsistent";
          default:
-            return "unknown error";
+            return "SYSTEM ERROR: unknown error";
       }
    }
 };

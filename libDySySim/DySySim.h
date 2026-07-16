@@ -30,13 +30,13 @@ public:
 
    size_t n_params(const configData_t &) const override { return 1; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override {}
 
 protected:
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -51,7 +51,7 @@ public:
       return std::make_shared<AlgebraicDelay>();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
@@ -64,7 +64,7 @@ public:
 
 private:
    double out_previous_;
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -81,7 +81,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 1; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
@@ -89,7 +89,7 @@ public:
    void input(double in) { out_ = in / attenuation_; }
 
 protected:
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 
 private:
@@ -107,7 +107,7 @@ public:
       return std::make_shared<Divider>();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
@@ -120,7 +120,7 @@ public:
    void input(double in1, double in2) { out_ = in1 / in2; }
 
 private:
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -137,7 +137,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 1; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
@@ -147,7 +147,7 @@ public:
 private:
    double gain_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -164,7 +164,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 2; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
@@ -175,7 +175,7 @@ private:
    double min_;
    double max_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -190,7 +190,7 @@ public:
       return std::make_shared<Max>();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
@@ -203,7 +203,7 @@ public:
    void input(double in1, double in2) { out_ = in1 > in2 ? in1 : in2; }
 
 private:
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -218,7 +218,7 @@ public:
       return std::make_shared<Min>();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
@@ -231,7 +231,7 @@ public:
    void input(double in1, double in2) { out_ = in1 < in2 ? in1 : in2; }
 
 private:
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -246,7 +246,7 @@ public:
       return std::make_shared<Multiplier>();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
@@ -259,7 +259,7 @@ public:
    void input(double in1, double in2) { out_ = in1 * in2; }
 
 private:
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -276,7 +276,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 2; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { out_ = scale_ * (sumInputs() + delta_); }
@@ -285,7 +285,7 @@ private:
    double scale_;
    double delta_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -300,13 +300,13 @@ public:
       return std::make_shared<Summator>();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { out_ = sumInputs(); }
 
 private:
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -324,7 +324,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 2; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
@@ -337,7 +337,7 @@ private:
    double frequency_;
    double phase_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -354,20 +354,17 @@ public:
 
    size_t n_params(const configData_t &) const override { return 3; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
-   void exe() override
-   {
-      out_ = (context_->time() < t_on_) ? off_ : on_;
-   }
+   void exe() override { out_ = (context_->time() < t_on_) ? off_ : on_; }
 
 private:
    double off_;
    double on_;
    double t_on_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -385,13 +382,13 @@ public:
 
    size_t n_params(const configData_t &) const override { return 4; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
    {
-      out_ = (context_->time() >= t_on_ and context_->time() < t_off_) ? on_
-                                                                        : off_;
+      out_ =
+         (context_->time() >= t_on_ and context_->time() < t_off_) ? on_ : off_;
    }
 
 private:
@@ -400,7 +397,7 @@ private:
    double t_on_;
    double t_off_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -416,13 +413,13 @@ public:
       return std::make_shared<Time>();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { out_ = context_->time(); }
 
 private:
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -439,7 +436,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 2; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
@@ -465,7 +462,7 @@ private:
 
    void initBuffer();
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -482,7 +479,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 2; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
@@ -495,7 +492,7 @@ public:
 private:
    double timeConstant_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -515,7 +512,7 @@ public:
       return std::make_shared<Function<T>>();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
@@ -527,7 +524,7 @@ public:
 private:
    std::function<double(T)> callback_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override
    {
       auto errs = SimBlock::configDataIsOK(config);
@@ -536,7 +533,7 @@ private:
 };
 
 template <typename T>
-std::vector<std::error_code>
+[[nodiscard]] std::vector<std::error_code>
 dysysim::Function<T>::config(const SimBlock::configData_t &config)
 {
    auto errs = configDataIsOK(config);
@@ -561,7 +558,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 3; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
@@ -573,7 +570,7 @@ private:
    double on_;
    double onoff_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -591,7 +588,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 1; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
@@ -602,13 +599,17 @@ public:
       in_previous = in;
    }
 
-   void reset() { out_ = initial_out_; in_previous = initial_out_; }
+   void reset()
+   {
+      out_ = initial_out_;
+      in_previous = initial_out_;
+   }
 
-   private:
+private:
    double initial_out_{0.0};
    double in_previous{initial_out_};
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -626,22 +627,19 @@ public:
 
    size_t n_params(const configData_t &) const override { return 1; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
 
-   void input(double in)
-   {
-      out_ += in * context_->sim_time.delta_t;
-   }
+   void input(double in) { out_ += in * context_->sim_time.delta_t; }
 
    void reset() { out_ = initial_out_; }
 
 private:
    double initial_out_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -662,15 +660,14 @@ public:
       return 2 * config.inputs.size();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
    {
       if (write_columns_) {
          std::string header =
-            std::format("#{:>{}s}", "t",
-                        context_->sim_time.width_t - 1);
+            std::format("#{:>{}s}", "t", context_->sim_time.width_t - 1);
          for (size_t index = 0; index < inputs_.size(); ++index) {
             int id = inputs_[index];
             int width = parameters_[2 * index];
@@ -680,8 +677,7 @@ public:
          write_columns_ = false;
       }
       std::string line =
-         std::format("{:{}.{}f}", context_->time(),
-                     context_->sim_time.width_t,
+         std::format("{:{}.{}f}", context_->time(), context_->sim_time.width_t,
                      context_->sim_time.precision_t);
       for (size_t index = 0; index < inputs_.size(); ++index) {
          auto pSB = context_->getSimBlock(inputs_[index]);
@@ -693,7 +689,7 @@ public:
    }
 
 private:
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
    bool write_columns_ = true;
    std::vector<int> parameters_;
@@ -713,7 +709,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 1; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
@@ -731,7 +727,7 @@ public:
 
 private:
    double ref_;
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -748,7 +744,7 @@ public:
 
    size_t n_params(const configData_t &) const override { return 3; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override { input(sumInputs()); }
@@ -774,7 +770,7 @@ private:
    IntegratorHC int_3_;
    double gain_4_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -789,7 +785,7 @@ public:
       return std::make_shared<Sign>();
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
@@ -798,7 +794,7 @@ public:
       out_ = (pSB && std::signbit(pSB->output())) ? 1.0 : 0.0;
    }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
@@ -815,22 +811,21 @@ public:
 
    size_t n_params(const configData_t &) const override { return 1; }
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    config(const SimBlock::configData_t &config) override;
 
    void exe() override
    {
-      out_ =
-         std::signbit(
-            std::sin(2 * std::numbers::pi * frequency_ * context_->time()))
-            ? 0.0
-            : 1.0;
+      out_ = std::signbit(
+                std::sin(2 * std::numbers::pi * frequency_ * context_->time()))
+                ? 0.0
+                : 1.0;
    }
 
 private:
    double frequency_;
 
-   std::vector<std::error_code>
+   [[nodiscard]] std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 

@@ -26,9 +26,9 @@ public:
    auto size() const { return factory_.size(); }
 
    /// Uses a SimBlock in the factory for checking the config data.
-   errors_t
-   configCheck(const std::string &key,
-               const SimBlock::configData_t &cdata) const;
+    [[nodiscard]] errors_t
+    configCheck(const std::string &key,
+                const SimBlock::configData_t &cdata) const;
 
    std::shared_ptr<dysysim::SimBlock> create(const std::string &key) const
    {

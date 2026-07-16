@@ -17,6 +17,7 @@ class SimContext;
 
 // For logic related simblocks
 inline constexpr double LOGIC01{0.5};
+
 inline bool is_0(double in)
 {
    return in < LOGIC01;
@@ -84,9 +85,10 @@ public:
    /// Returns the expected number of parameters for this block.
    virtual size_t n_params(const configData_t & /*config*/) const { return 0; }
    /// Checks all config data, returns a vector of all errors.
-   virtual std::vector<std::error_code>
+   [[nodiscard]] virtual std::vector<std::error_code>
    configDataIsOK(const SimBlock::configData_t &config) const;
-   virtual std::vector<std::error_code> config(const configData_t &config) = 0;
+   [[nodiscard]] virtual std::vector<std::error_code>
+   config(const configData_t &config) = 0;
    /// Calculate out_ for t = t_n
    virtual void exe()
    {
@@ -102,7 +104,7 @@ protected:
    bool has_history_;
    SimContext *context_;
 
-   std::error_code allInputsAvailable();
+   [[nodiscard]] std::error_code allInputsAvailable();
 };
 
 } // namespace dysysim

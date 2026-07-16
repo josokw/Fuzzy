@@ -75,15 +75,24 @@ dysysim::SimBlockFactory::configCheck(const std::string &key,
       auto pSBfactory = factory_.get(key);
       errs = pSBfactory->configDataIsOK(cdata);
       if (errs.empty()) {
-       auto pSB = pSBfactory->create();
-          pSB->setContext(&context_);
-          auto err = pSB->config(cdata);
-          auto id = pSB->getId();
-          context_.addSimBlock(id, std::move(pSB));
+         auto pSB = pSBfactory->create();
+         pSB->setContext(&context_);
+         auto err_config = pSB->config(cdata);
+         if (!err_config.empty()) {
+            errs.insert(errs.end(), err_config.begin(), err_config.end());
+         }
+         auto id = pSB->getId();
+         auto err_add = context_.addSimBlock(id, std::move(pSB));
+         if (err_add) {
+            errs.push_back(err_add);
+         }
       }
    } else {
-      throw dysysim::FactoryUnknownTypeError(key,
-                                             std::source_location::current());
+      errs.push_back(SimBlockErrc::UnknownTypeError);
+      std::cerr << "SimBlockFactory::configCheck() key: " << key
+                << " is not available in the factory\n";
+      // throw dysysim::FactoryUnknownTypeError(key,
+      //                                        std::source_location::current());
    }
    return errs;
 }

@@ -40,7 +40,13 @@ bool dysysim::Builder::operator()(std::ifstream &script)
          }
       }
       if (no_errors) {
-         context_.setExeSequence();
+         auto err = context_.setExeSequence();
+         if (!err) {
+            no_errors = false;
+            std::cerr << "setExeSequence() error: "
+                      << simblockErrCategory.message(err.value()) << "\n";
+            return no_errors;
+         }
          execute();
       }
    }

@@ -21,17 +21,17 @@ public:
 
    size_t n_params(const configData_t &) const override { return 1; }
 
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
+    [[nodiscard]] std::vector<std::error_code>
+    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { input(sumInputs()); }
+    void exe() override { input(sumInputs()); }
 
-   void input(double in) { out_ = multiplier_ * std::abs(in); }
+    void input(double in) { out_ = multiplier_ * std::abs(in); }
 
 private:
-   double multiplier_;
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
+    double multiplier_;
+    [[nodiscard]] std::vector<std::error_code>
+    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Cos : public SimBlock
@@ -47,18 +47,18 @@ public:
 
    size_t n_params(const configData_t &) const override { return 2; }
 
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
+    [[nodiscard]] std::vector<std::error_code>
+    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { input(sumInputs()); }
+    void exe() override { input(sumInputs()); }
 
-   void input(double in) { out_ = std::cos(in * multiplier_ + phase_); }
+    void input(double in) { out_ = std::cos(in * multiplier_ + phase_); }
 
 private:
-   double multiplier_;
-   double phase_;
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
+    double multiplier_;
+    double phase_;
+    [[nodiscard]] std::vector<std::error_code>
+    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Polynomial : public SimBlock
@@ -77,30 +77,30 @@ public:
       return static_cast<size_t>(config.parameters[0]) + 2;
    }
 
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
+    [[nodiscard]] std::vector<std::error_code>
+    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { input(sumInputs()); }
+    void exe() override { input(sumInputs()); }
 
-   void input(double inp)
-   {
-      auto power = inp;
-      for (auto indx = 0; auto coef : coefficients_) {
-         if (indx == 0) {
-            out_ = coef;
-         } else {
-            out_ += coef * power;
-            power *= inp;
-         }
-         ++indx;
-      }
-   }
+    void input(double inp)
+    {
+       auto power = inp;
+       for (auto indx = 0; auto coef : coefficients_) {
+          if (indx == 0) {
+             out_ = coef;
+          } else {
+             out_ += coef * power;
+             power *= inp;
+          }
+          ++indx;
+       }
+    }
 
 private:
-   int degree_;
-   std::vector<double> coefficients_;
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
+    int degree_;
+    std::vector<double> coefficients_;
+    [[nodiscard]] std::vector<std::error_code>
+    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class Sin : public SimBlock
@@ -116,19 +116,19 @@ public:
 
    size_t n_params(const configData_t &) const override { return 2; }
 
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
+    [[nodiscard]] std::vector<std::error_code>
+    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { input(sumInputs()); }
+    void exe() override { input(sumInputs()); }
 
-   void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
+    void input(double in) { out_ = std::sin(in * multiplier_ + phase_); }
 
 private:
-   double multiplier_;
-   double phase_;
+    double multiplier_;
+    double phase_;
 
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
+    [[nodiscard]] std::vector<std::error_code>
+    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 class SquareRoot : public SimBlock
@@ -144,18 +144,18 @@ public:
 
    size_t n_params(const configData_t &) const override { return 1; }
 
-   std::vector<std::error_code>
-   config(const SimBlock::configData_t &config) override;
+    [[nodiscard]] std::vector<std::error_code>
+    config(const SimBlock::configData_t &config) override;
 
-   void exe() override { input(sumInputs()); }
+    void exe() override { input(sumInputs()); }
 
-   void input(double in) { out_ = multiplier_ * std::sqrt(in); }
+    void input(double in) { out_ = multiplier_ * std::sqrt(in); }
 
 private:
-   double multiplier_;
+    double multiplier_;
 
-   std::vector<std::error_code>
-   configDataIsOK(const SimBlock::configData_t &config) const override;
+    [[nodiscard]] std::vector<std::error_code>
+    configDataIsOK(const SimBlock::configData_t &config) const override;
 };
 
 } // namespace dysysim

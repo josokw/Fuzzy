@@ -47,8 +47,9 @@ public:
 
    void clear();
    bool idIsUnique(int id) const;
-   std::error_code addSimBlock(int id, std::shared_ptr<SimBlock> pSB);
-   std::error_code setExeSequence();
+   [[nodiscard]] std::error_code addSimBlock(int id,
+                                             std::shared_ptr<SimBlock> pSB);
+   [[nodiscard]] std::error_code setExeSequence();
    void setExeSequence(std::vector<int> &exeSequence);
    void initSimBlocks();
    void exeSimBlocks();
