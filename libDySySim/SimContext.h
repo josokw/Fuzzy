@@ -51,6 +51,7 @@ public:
                                              std::shared_ptr<SimBlock> pSB);
    [[nodiscard]] std::error_code setExeSequence();
    void setExeSequence(std::vector<int> &exeSequence);
+   const auto getExeSequence() const { return exeSequence_; }
    void initSimBlocks();
    void exeSimBlocks();
 

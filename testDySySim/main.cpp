@@ -4,8 +4,8 @@
 #include "SimBlockFactory.h"
 #include "SimContext.h"
 
-#include <UnitTest++/UnitTest++.h>
 #include <UnitTest++/TestReporterStdout.h>
+#include <UnitTest++/UnitTest++.h>
 
 #include <iostream>
 
@@ -40,6 +40,9 @@ SUITE(DySySim)
 
       auto err3 = ctx.setExeSequence();
       CHECK(!err3);
+      auto exe_seq = ctx.getExeSequence();
+      CHECK(exe_seq == std::vector<int>({2, 1}));
+
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
@@ -55,7 +58,8 @@ SUITE(DySySim)
       dss::SimBlockFactory sbf(ctx);
       sbf.init();
       ctx.sim_time.set(1.0, 4.0);
-      auto errs1 = sbf.configCheck("LOG", {1, {2, 3, 4, 5}, {4, 1, 4, 1, 4, 1, 4, 1}});
+      auto errs1 =
+         sbf.configCheck("LOG", {1, {2, 3, 4, 5}, {4, 1, 4, 1, 4, 1, 4, 1}});
       CHECK(errs1.empty());
       auto errs2 = sbf.configCheck("CON", {2, {}, {1.0}});
       CHECK(errs2.empty());
@@ -68,6 +72,9 @@ SUITE(DySySim)
 
       auto err6 = ctx.setExeSequence();
       CHECK(!err6);
+      auto exe_seq = ctx.getExeSequence();
+      CHECK(exe_seq == std::vector<int>({2, 3, 4, 5, 1}));
+
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
@@ -94,6 +101,9 @@ SUITE(DySySim)
 
       auto err5 = ctx.setExeSequence();
       CHECK(!err5);
+      auto exe_seq = ctx.getExeSequence();
+      CHECK(exe_seq == std::vector<int>({2, 3, 4, 1}));
+
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
@@ -175,11 +185,14 @@ SUITE(DySySim)
 
       auto err5 = ctx.setExeSequence();
       CHECK(!err5);
+      auto exe_seq = ctx.getExeSequence();
+      CHECK(exe_seq == std::vector<int>({1, 2, 3, 4}));
+
       ctx.initSimBlocks();
       do {
          ctx.exeSimBlocks();
-         CHECK_CLOSE(ctx.time() * (getOutput(1) + getOutput(2)),
-                     getOutput(3), EPS_DYN);
+         CHECK_CLOSE(ctx.time() * (getOutput(1) + getOutput(2)), getOutput(3),
+                     EPS_DYN);
       } while (ctx.sim_time.simulation_is_on());
    }
 
@@ -327,6 +340,9 @@ SUITE(DySySim)
 
       auto err4 = ctx.setExeSequence();
       CHECK(!err4);
+      auto exe_seq = ctx.getExeSequence();
+      CHECK(exe_seq == std::vector<int>({2, 1, 3}));
+
       ctx.initSimBlocks();
       CHECK_CLOSE(0.0, getOutput(3), EPS);
       do {
@@ -440,6 +456,11 @@ SUITE(DySySim)
 
       auto err25 = ctx.setExeSequence();
       CHECK(!err25);
+      auto exe_seq = ctx.getExeSequence();
+      CHECK(exe_seq ==
+            std::vector<int>({1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+                              13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24}));
+
       ctx.initSimBlocks();
       CHECK_CLOSE(zero, getOutput(1), EPS);
       do {
@@ -512,7 +533,6 @@ SUITE(DySySim)
    }
 }
 
-
 int main()
 {
    cout << "\n== Tests DySySim lib: " << dss::libVersion << " "
@@ -520,7 +540,8 @@ int main()
 
    UnitTest::TestReporterStdout reporter;
    UnitTest::TestRunner runner(reporter);
-   auto result = runner.RunTestsIf(UnitTest::Test::GetTestList(), nullptr, UnitTest::True(), 0);
+   auto result = runner.RunTestsIf(UnitTest::Test::GetTestList(), nullptr,
+                                   UnitTest::True(), 0);
 
    cout << "\n" << string(80, '=') << endl;
 

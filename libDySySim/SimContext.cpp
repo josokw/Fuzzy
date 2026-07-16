@@ -28,7 +28,7 @@ bool dysysim::SimContext::idIsUnique(int id) const
 }
 
 std::error_code dysysim::SimContext::addSimBlock(int id,
-                                                  std::shared_ptr<SimBlock> pSB)
+                                                 std::shared_ptr<SimBlock> pSB)
 {
    if (idIsUnique(id)) {
       pSB->setContext(this);
@@ -38,7 +38,8 @@ std::error_code dysysim::SimContext::addSimBlock(int id,
    return SimBlockErrc::IdIsNotUniqueError;
 }
 
-std::shared_ptr<dysysim::SimBlock> dysysim::SimContext::getSimBlock(int id) const
+std::shared_ptr<dysysim::SimBlock>
+dysysim::SimContext::getSimBlock(int id) const
 {
    auto it = allSimBlocks_.find(id);
    if (it != allSimBlocks_.end()) {
@@ -71,7 +72,7 @@ std::error_code dysysim::SimContext::setExeSequence()
             for (auto inputId : pSB->getInputs()) {
                int absId = std::abs(inputId);
                if (std::find(exeSequence_.begin(), exeSequence_.end(), absId) ==
-                       exeSequence_.end() &&
+                      exeSequence_.end() &&
                    !allSimBlocks_[absId]->hasHistory()) {
                   allFound = false;
                   break;
@@ -84,12 +85,6 @@ std::error_code dysysim::SimContext::setExeSequence()
          }
       }
    }
-
-   std::cout << "..   exe sequence: ";
-   for (auto &id : exeSequence_) {
-      std::cout << id << " ";
-   }
-   std::cout << std::endl;
 
    if (exeSequence_.size() != allSimBlocks_.size()) {
       return SimBlockErrc::ModelIsInconsistentError;
